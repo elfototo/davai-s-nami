@@ -5,7 +5,7 @@ export default function Home() {
     <div>
       <section style={{
         height: '420px',
-        background: 'linear-gradient(90deg, rgba(78,19,179,1) 30%, rgba(245,45,133,1) 76%)',
+        background: 'pink',
       }}>
         <div
           className="container banner"
@@ -19,15 +19,8 @@ export default function Home() {
             margin: "0 auto",
           }}>
           <div>
-            <h1 style={{
-              fontSize: "81px",
-              margin: "0",
-            }}>Играй с нами!</h1>
-            <p style={{
-              fontSize: "20px",
-              maxWidth: "531px",
-              marginBottom: "20px"
-            }}>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
+            <h1 className='text-3xl font-bold underline'>Играй с нами!</h1>
+            <p>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
             <button 
             style={{
               padding: "5px 20px",
