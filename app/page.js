@@ -3,47 +3,26 @@ import './globals.css';
 export default function Home() {
   return (
     <div>
-      <section style={{
-        height: '420px',
-        background: 'pink',
-      }}>
-        <div
-          className="container banner"
-          style={{
-            position: "relative",
-            display: "flex",
-            color: "#fff",
-            overflow: "hidden",
-            height: "inherit",
-            width: "1140px",
-            margin: "0 auto",
-          }}>
-          <div>
-            <h1 className='text-3xl font-bold underline'>Играй с нами!</h1>
-            <p>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
-            <button 
-            style={{
-              padding: "5px 20px",
-              color: "#333",
-              backgroundColor: "#fff",
-            }}
-            >Мне повезет</button>
+      <section className='max-w-custom-container mx-auto'>
+
+      </section>
+      <section className='bg-accent-gradient h-[26rem] relative'>
+        <div className="flex justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden px-4 ">
+          <div className='flex items-start justify-center flex-col max-w-[35rem]'>
+            <h4 className='font-roboto font-bold text-secondary text-7xl mb-5'>Играй с нами!</h4>
+            <p className='font-roboto font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
+            <button className='font-roboto font-medium bg-secondary rounded-sm text-title-2 py-1 px-5'>Мне повезет</button>
           </div>
-          <img
-            src="/main-page-banner.png"
+          {/* <img
+            src="/img/main-page-banner.png"
             alt="banner"
-            style={{
-              width: "580px",
-              position: "absolute",
-              top: "75px",
-              right: "30px",
-            }}
-          />
+            className='hidden md:block h-auto object-contain absolute top-10 right-0 transition-transform ease-in-out opacity-0 md:opacity-100'
+            /> */}
         </div>
       </section>
-      <section>
-        <h2>Куда сходить</h2>
-        <ul>
+      <section className='max-w-custom-container mx-auto px-4'>
+        <h1 className='font-roboto font-bold'>Куда сходить</h1>
+        <ul className='font-roboto font-medium'>
           <li>Музыка</li>
           <li>Познавательное</li>
           <li>Кино</li>
@@ -52,6 +31,16 @@ export default function Home() {
           <li>Тусовки</li>
         </ul>
       </section>
+      <section className='max-w-custom-container mx-auto px-4'>
+        <h1 className='font-roboto font-bold'>Куда сходить</h1>
+
+      </section>
+      <section className='max-w-custom-container mx-auto px-4'>
+        <h1 className='font-roboto font-bold'>Куда сходить</h1>
+
+      </section>
+
+
     </div>
   );
 }
