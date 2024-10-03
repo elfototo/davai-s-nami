@@ -1,4 +1,6 @@
 import './globals.css';
+import Card from './components/Card';
+import Categories from './components/Categories';
 
 export default function Home() {
   return (
@@ -23,17 +25,15 @@ export default function Home() {
       <section className='max-w-custom-container mx-auto px-4'>
         <h1 className='font-roboto font-bold'>Куда сходить</h1>
         <ul className='font-roboto font-medium'>
-          <li>Музыка</li>
-          <li>Познавательное</li>
-          <li>Кино</li>
-          <li>Представления</li>
-          <li>Выставки</li>
-          <li>Тусовки</li>
+          <Categories/>
+          
         </ul>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
         <h1 className='font-roboto font-bold'>Куда сходить</h1>
-
+        <Card/>
+        <Card/>
+        <Card/>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
         <h1 className='font-roboto font-bold'>Куда сходить</h1>
