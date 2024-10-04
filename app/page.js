@@ -12,7 +12,7 @@ export default function Home() {
       </section>
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
         <div className="flex justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden pl-4">
-          <div className='flex items-start justify-center flex-col max-w-[35rem] md:max-w-[25rem] lg:max-w-[35rem]'>
+          <div className='flex items-start justify-center flex-col max-w-[35rem] md:max-w-[26rem] lg:max-w-[35rem] md:mr-5'>
             <h4 className='font-roboto font-bold text-secondary text-7xl mb-5'>Играй с нами!</h4>
             <p className='font-roboto font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
             <button className='px-6 py-2 font-medium tracking-wide text-[#333] capitalize transition-colors duration-300 transform bg-white rounded-lg hover:outline-none hover:ring hover:ring-pink-100 hover:ring-opacity-1/2">'>Мне повезет</button>
