@@ -1,10 +1,9 @@
 'use client';
-import { useState } from "react";
 
 function Category({ value }) {
 
     return (
-        <div className="relative bg-[#D9D9D9] h-[150px] md:h-[200px] rounded-[40px]">
+        <div className="relative bg-[#D9D9D9] h-[150px] md:h-[200px] rounded-[40px] cursor-pointer hover:bg-[#e6e6e6] transition-colors duration-300 transform">
             <h2 className=" absolute top-10 left-10">
                 {value}
             </h2>
@@ -23,7 +22,6 @@ function Categories() {
             <Category value="Выставки" />
             <Category value="Тусовки" />
         </div>
-    )
-}
-
+    );
+};
 export default Categories;
