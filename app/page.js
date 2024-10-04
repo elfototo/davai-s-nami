@@ -35,7 +35,7 @@ export default function Home() {
       <section className='max-w-custom-container mx-auto px-4'>
         <div className='flex justify-between items-baseline'>
           <h1 className='font-roboto font-bold'>Горячие новинки месяца</h1>
-          <Link href="/events" className='text-[#777] underline'>
+          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
@@ -51,7 +51,7 @@ export default function Home() {
       <section className='max-w-custom-container mx-auto px-4'>
         <div className='flex justify-between items-baseline'>
           <h1 className='font-roboto font-bold'>Куда сходить сегодня и завтра</h1>
-          <Link href="/events" className='text-[#777] underline'>
+          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
@@ -67,7 +67,7 @@ export default function Home() {
       <section className='max-w-custom-container mx-auto px-4'>
         <div className='flex justify-between items-baseline'>
           <h1 className='font-roboto font-bold'>Куда сходить в выходные</h1>
-          <Link href="/events" className='text-[#777] underline'>
+          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
