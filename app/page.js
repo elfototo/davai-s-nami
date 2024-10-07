@@ -15,7 +15,7 @@ export default function Home() {
           <div className='flex items-start justify-center flex-col max-w-[35rem] md:max-w-[26rem] lg:max-w-[35rem] md:mr-5'>
             <h4 className='font-roboto font-bold text-secondary text-7xl mb-5'>Играй с нами!</h4>
             <p className='font-roboto font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
-            <button className='px-6 py-2 font-medium tracking-wide text-[#333] capitalize transition-colors duration-300 transform bg-white rounded-lg hover:outline-none hover:ring hover:ring-pink-100 hover:ring-opacity-1/2">'>Мне повезет</button>
+            <button className='px-6 py-2 font-medium tracking-wide text-[#333] transition-colors duration-300 transform bg-white rounded-lg hover:outline-none hover:ring hover:ring-pink-100 hover:ring-opacity-1/2">'>Мне повезет</button>
           </div>
           <div className='h-full w-1/2 overflow-hidden relative hidden md:block'>
             <div className="absolute top-10 left-0 w-full h-full bg-cover bg-no-repeat"
@@ -27,10 +27,9 @@ export default function Home() {
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
         <h1 className='font-roboto font-bold'>Куда сходить</h1>
-        <ul className='font-roboto font-medium'>
+        <div className='font-roboto font-medium'>
           <Categories />
-
-        </ul>
+        </div>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
         <div className='flex justify-between items-baseline'>
