@@ -1,24 +1,47 @@
+'use client'
 import './globals.css';
 import Card from './components/Card';
 import Categories from './components/Categories';
 import Link from 'next/link';
+import 'animate.css';
+import { useEffect, useState } from 'react';
+
 
 export default function Home() {
+  
+  const [isAnimated, setIsAnimated] = useState(true);
+  useEffect(() => {
+    setIsAnimated(true);
+
+    const timer = setTimeout(() => {
+      setIsAnimated(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div>
       <section className='max-w-custom-container mx-auto'>
 
       </section>
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
-        <div className="flex justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden pl-4">
-          <div className='flex items-start justify-center flex-col max-w-[35rem] md:max-w-[26rem] lg:max-w-[35rem] md:mr-5'>
-            <h4 className='font-roboto font-bold text-secondary text-7xl mb-5'>Играй с нами!</h4>
-            <p className='font-roboto font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
-            <button className='px-6 py-2 font-medium tracking-wide text-[#333] transition-colors duration-300 transform bg-white rounded-lg hover:outline-none hover:ring hover:ring-pink-100 hover:ring-opacity-1/2">'>Мне повезет</button>
+        <div className="flex justify-center md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden pl-4">
+          <div className='flex items-center md:items-start justify-center flex-col md:max-w-[50%]'>
+            <h4 className='font-roboto font-bold text-secondary text-6xl mb-5  whitespace-nowrap'>Играй с нами!</h4>
+            <p className='font-roboto text-center md:text-start font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное <br /> мероприятие на свой уикенд в Санкт - Петербурге</p>
+            <button
+              className={`font-roboto w-full sm:w-3/4 py-4 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
+              transform transition-transform duration-300 hover:scale-105
+              ${isAnimated ? 'animate__animated animate__pulse animate__repeat-2' : ''}
+              `}>Мне повезет</button>
           </div>
-          <div className='h-full w-[70%] relative hidden md:block pr-10'>
-            <div className="w-full absolute left-0 top-10 h-full bg-cover bg-no-repeat"
-              style={{ backgroundImage: `url('/img/banner.png')`}}>
+          {/* sm-screen */}
+          
+
+          {/* md-screen */}
+          <div className='h-full w-[60%] relative hidden md:block'>
+            <div className="w-full absolute left-0 top-5 h-full bg-cover bg-no-repeat md:bg-[url('/img/sm-banner.png')] lg:bg-[url('/img/banner.png')]">
             </div>
           </div>
         </div>
@@ -38,7 +61,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
             <Card type='max' />
             <Card type='max' />
             <Card type='max' />
@@ -54,7 +77,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
             <Card type='max' />
             <Card type='max' />
             <Card type='max' />
