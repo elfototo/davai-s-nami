@@ -5,10 +5,11 @@ import Categories from './components/Categories';
 import Link from 'next/link';
 import 'animate.css';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 
 export default function Home() {
-  
+
   const [isAnimated, setIsAnimated] = useState(true);
   useEffect(() => {
     setIsAnimated(true);
@@ -28,15 +29,21 @@ export default function Home() {
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
         <div className="flex justify-center md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden pl-4">
           <div className='flex items-center md:items-start justify-center flex-col md:max-w-[50%]'>
-            <h4 className='font-roboto font-bold text-secondary text-6xl mb-5  whitespace-nowrap'>Играй с нами!</h4>
+            <h4 className='font-roboto font-bold text-secondary text-5xl md:text-6xl mb-5  whitespace-nowrap'>Играй с нами!</h4>
             <p className='font-roboto text-center md:text-start font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное <br /> мероприятие на свой уикенд в Санкт - Петербурге</p>
             <button
-              className={`font-roboto w-full sm:w-3/4 py-4 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
+              className={`font-roboto  w-3/4 py-4 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
               transform transition-transform duration-300 hover:scale-105
               ${isAnimated ? 'animate__animated animate__pulse animate__repeat-2' : ''}
               `}>Мне повезет</button>
           </div>
           {/* sm-screen */}
+          {/* <Image
+            src="/img/name_2.png"
+            alt="name"
+            width={300}
+            height={300}
+            className="md:hidden absolute top-0 -right-[20%]" /> */}
           
 
           {/* md-screen */}
