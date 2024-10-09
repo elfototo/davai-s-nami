@@ -3,14 +3,12 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Navbar() {
-    // const [isOpen, setIsOpen] = useState(false);
 
     return (
         <nav className="relative bg-accent-gradient shadow dark:bg-gray-800">
             <div className="max-w-custom-container px-6 py-3 mx-auto">
                 <div className="flex flex-col">
 
-                    {/* Search input on desktop screen */}
                     <div className="flex">
                         <div className="relative w-[100%]">
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -94,7 +92,7 @@ export default function Navbar() {
                     </Link>
                     <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
                         Article
-                    </Link> 
+                    </Link>
                 </div>
             </div>
 

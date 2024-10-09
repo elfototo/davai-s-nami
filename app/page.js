@@ -1,7 +1,6 @@
 import './globals.css';
 import Card from './components/Card';
 import Categories from './components/Categories';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Home() {
@@ -17,9 +16,9 @@ export default function Home() {
             <p className='font-roboto font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное мероприятие на свой уикенд в Санкт - Петербурге</p>
             <button className='px-6 py-2 font-medium tracking-wide text-[#333] transition-colors duration-300 transform bg-white rounded-lg hover:outline-none hover:ring hover:ring-pink-100 hover:ring-opacity-1/2">'>Мне повезет</button>
           </div>
-          <div className='h-full w-1/2 overflow-hidden relative hidden md:block'>
-            <div className="absolute top-10 left-0 w-full h-full bg-cover bg-no-repeat"
-              style={{ backgroundImage: `url('/img/banner.svg')`, backgroundPosition: 'left center' }}>
+          <div className='h-full w-[70%] relative hidden md:block pr-10'>
+            <div className="w-full absolute left-0 top-10 h-full bg-cover bg-no-repeat"
+              style={{ backgroundImage: `url('/img/banner.png')`}}>
             </div>
           </div>
         </div>
@@ -39,11 +38,11 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
+            <Card type='max' />
+            <Card type='max' />
+            <Card type='max' />
+            <Card type='max' />
           </div>
         </div>
       </section>
@@ -55,11 +54,11 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
+            <Card type='max' />
+            <Card type='max' />
+            <Card type='max' />
+            <Card type='max' />
           </div>
         </div>
       </section>
@@ -71,11 +70,11 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
+            <Card type='max' />
+            <Card type='max' />
+            <Card type='max' />
+            <Card type='max' />
           </div>
         </div>
       </section>

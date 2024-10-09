@@ -1,22 +1,37 @@
 import HeroSearch from '../components/HeroSearsh';
+import Filtres from '../components/Filtres';
+import Card from '../components/Card';
 
 export default function Events() {
   return (
     <div>
-        <HeroSearch />
-      <div className=''>
-        <aside style={{ width: '20%' }}>
-          <h3>Фильтры</h3>
-          <div>Когда: Сегодня, Завтра...</div>
-          <div>Теги...</div>
+      <HeroSearch />
+      <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center'>
+        <aside className='lg:w-[20%] w-full h-auto mb-3 mr-3'>
+          <Filtres />
         </aside>
-        <section style={{ width: '80%' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {/* Шаблон событий */}
-            <div style={{ width: '30%', backgroundColor: "#f4f4f9", height: "50px" }}>Событие 1</div>
-            <div style={{ width: '30%', backgroundColor: "#f4f4f9", height: "50px" }}>Событие 2</div>
-            <div style={{ width: '30%', backgroundColor: "#f4f4f9", height: "50px" }}>Событие 3</div>
-            {/* ... */}
+        <section className='lg:w-[80%] w-full'>
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4'>
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
+            <Card type='mini' />
           </div>
         </section>
       </div>
