@@ -27,9 +27,9 @@ export default function Home() {
 
       </section>
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
-        <div className="flex justify-center md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden pl-4">
+        <div className="flex justify-center md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden px-4 md:pl-10 md:pr-0">
           <div className='flex items-center md:items-start justify-center flex-col md:max-w-[50%]'>
-            <h4 className='font-roboto font-bold text-secondary text-5xl md:text-6xl mb-5  whitespace-nowrap'>Играй с нами!</h4>
+            <h4 className='font-roboto font-bold text-secondary text-6xl mb-5  whitespace-nowrap'>Играй с нами!</h4>
             <p className='font-roboto text-center md:text-start font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное <br /> мероприятие на свой уикенд в Санкт - Петербурге</p>
             <button
               className={`font-roboto  w-3/4 py-4 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 

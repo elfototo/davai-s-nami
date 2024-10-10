@@ -102,7 +102,7 @@ module.exports = {
 	plugins: [
 		plugin(function ({ addBase }) {
 			addBase({
-				'h1': { fontSize: '2.25rem', fontWeight: 'medium', marginBottom: '2.5rem', marginTop: '5rem', color: '#333' },
+				'h1': { fontSize: '1.8rem', fontWeight: 'medium', marginBottom: '2.5rem', marginTop: '5rem', color: '#333' },
 				'h2': { fontSize: '1.6rem', fontWeight: 'bold' },
 				'h3': { fontSize: '1.875rem', fontWeight: 'medium' },
 				'h4': { fontSize: '1rem', fontWeight: 'medium' },
