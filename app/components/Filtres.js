@@ -1,75 +1,178 @@
 'use client';
 
 import { useState } from 'react';
-import { FaFilter } from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { addDays } from 'date-fns';
+
+const FilterButton = ({ onClick, children, isVisible }) => (
+    <button
+        onClick={onClick}
+        className={`mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${isVisible ? 'block' : 'hidden'}`}
+    >
+        {children}
+    </button>
+);
 
 const Filtres = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    // Toggle filter visibility on mobile
-    const toggleFilter = () => {
-        setIsOpen(!isOpen);
-    };
-
     const [selectedTags, setSelectedTags] = useState([]);
-    const tags = ['Театры', 'Кинопоказы', 'Концерты', 'Оркестр', 'Игра на палочке', 'Музыка'];
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
+    const [selectedButton, setSelectedButton] = useState('');
+    const [bgColor, setBgColor] = useState('bg-white');
+
+
+    const tags = ['Театры', 'Кинопоказы', 'Концерты', 'Оркестр', 'Музыка', 'Cтендапы', 'Лекции', 'Выставки'];
+
+    const toggleFilter = () => {
+        setIsOpen((prev) => !prev);
+    };
 
     const toggleTag = (tag) => {
-        if (selectedTags.includes(tag)) {
-            setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag));
-        } else {
-            setSelectedTags([...selectedTags, tag]);
-        }
+        setSelectedTags((prev) => {
+            if (prev.includes(tag)) {
+                return prev.filter((selectedTag) => selectedTag !== tag);
+            } else {
+                return [...prev, tag];
+            }
+        });
     };
 
+    const formatDate = (date) => {
+        if (!date) return '';
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return date.toLocaleDateString('ru-RU', options);
+    };
+
+    const selectToday = () => {
+        setStartDate(new Date());
+        setEndDate(null);
+        setBgColor('bg-pink-500');
+        setSelectedButton('today');
+    }
+
+    const selectTomorrow = () => {
+        setStartDate(addDays(new Date(), 1));
+        setEndDate(null);
+        setBgColor('bg-pink-500');
+        setSelectedButton('tomorrow');
+    }
+
+    const selectWeekends = () => {
+        const today = new Date();
+        const day = today.getDay();
+        let saturday, sunday;
+
+        if (day === 6) {
+            saturday = today;
+            sunday = addDays(today, 1)
+        } else if (day === 0) {
+            saturday = addDays(today, -1);
+            sunday = today;
+        } else {
+            saturday = addDays(today, 6 - day);
+            sunday = addDays(saturday, 1);
+        }
+
+        setStartDate(saturday);
+        setEndDate(sunday);
+        setBgColor('bg-pink-500');
+        setSelectedButton('weekend');
+    };
+
+    const clearSelection = () => {
+        setStartDate(null);
+        setEndDate(null);
+        setBgColor('bg-white');
+        setSelectedButton('');
+    };
+
+    const cancelFilter = () => {
+        clearSelection();
+        toggleFilter();
+        setSelectedTags([]);
+    }
 
     return (
-        <div className='rounded-lg bg-white border max-w-custom-container border-[#D9D9D9] shadow-lg'>
-            {/* Filter button for mobile */}
-            <div className='lg:hidden px-2 py-2 flex justify-center'>
-                <button
-                    onClick={toggleFilter}
-                    className="mx-2 items-center justify-center py-2 px-2 bg-[#f4f4f9] rounded-md"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                        <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
-                    </svg>
-                </button>
-                <button
-                    onClick={toggleFilter}
-                    className="mx-2 items-center justify-center py-2 px-2 bg-[#f4f4f9] rounded-md"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                        <path fill-rule="evenodd" d="M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                    </svg>
+        <div className={`relative rounded-lg ${isOpen ? 'bg-white' : 'bg-[#f4f4f9]'} lg:border lg:border-[#D9D9D9] lg:shadow-lg`}>
 
-                </button>
+            {/* Filter button for mobile */}
+            <div className={`${isOpen ? 'absolute' : 'block'}`}>
+                <div className='lg:hidden px-2 py-2 flex justify-start -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden'>
+                    <FilterButton onClick={toggleFilter} isVisible={!isOpen}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                            <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
+                        </svg>
+                    </FilterButton>
+
+                    {['Цена', 'Сегодня', 'Завтра', 'Выходные'].map((label) => (
+                        <FilterButton key={label} onClick={toggleFilter} isVisible={!isOpen}>
+                            {label}
+                        </FilterButton>
+                    ))}
+                </div>
             </div>
 
             {/* Filter content, hidden by default on mobile */}
-            <div className={`${isOpen ? 'block' : 'hidden'} lg:block w-full  p-4 relative`}>
+            <div className={`${isOpen ? 'block' : 'hidden'} lg:block w-full p-4 relative`}>
                 {/* Date selection */}
                 <div className="mb-5">
-                    <h3 className="text-lg mb-2">Когда</h3>
-                    <div className="flex gap-2">
-                        <button className="flex-1 py-2 bg-gray-100 rounded-md">Сегодня</button>
-                        <button className="flex-1 py-2 bg-gray-100 rounded-md">Завтра</button>
+                    {/* title */}
+                    <div className='flex justify-between items-baseline  mb-3'>
+                        <h3 className="text-lg">Когда</h3>
+                        <button
+                            className='underline text-blue-600'
+                            onClick={cancelFilter}>
+                            Отмена
+                        </button>
                     </div>
-                    <button className="w-full mt-2 py-2 bg-gray-100 rounded-md">Выходные</button>
-                    <input type="date" placeholder="John Doe" className="block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-blue-300" />
+                    {/* date */}
+                    <div className="flex gap-2 mt-3">
+                        <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} flex-1 py-2 rounded-md`}>Сегодня</button>
+                        <button onClick={selectTomorrow} className={`${selectedButton === 'tomorrow' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} flex-1 py-2 rounded-md`}>Завтра</button>
+                    </div>
+                    <button onClick={selectWeekends} className={`${selectedButton === 'weekend' ? 'bg-pink-400  text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} flex-1 py-2 w-full mt-2 rounded-md`}>Выходные</button>
+                    <div className='flex justify-center mt-5'>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => {
+                                if (endDate && date > endDate) {
+                                    setEndDate(null);
+                                }
+                                setStartDate(date);
+                            }}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            className="w-full px-2 py-1 border rounded-md "
+                            placeholderText="Дата начала"
+                        />
+                        <p className='mx-2'>-</p>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate} // Ограничиваем выбор даты конца диапазона
+                            className="w-full px-2 py-1 border rounded-md"
+                            placeholderText="Дата окончания"
+                        />
+                    </div>
                 </div>
 
                 {/* Tag selection */}
                 <div>
-                   
-                    <h3 className="text-lg mb-2">Теги</h3>
+                    <h3 className="text-lg mb-3">Теги</h3>
                     <div className="flex flex-wrap gap-2">
                         {tags.map((tag) => (
                             <button
                                 key={tag}
                                 onClick={() => toggleTag(tag)}
-                                className={`px-2 py-1 rounded-xl ${selectedTags.includes(tag) ? 'bg-pink-500 text-white' : 'bg-gray-200'
-                                    }`}
+                                className={`px-2 py-1 rounded-xl ${selectedTags.includes(tag) ? 'bg-pink-500 text-white' : 'bg-gray-200'}`}
                             >
                                 {tag}
                             </button>
@@ -80,15 +183,12 @@ const Filtres = () => {
                 {/* Hide button for mobile */}
                 <button
                     onClick={toggleFilter}
-                    className="lg:hidden mt-4 text-blue-600 underline"
+                    className="lg:hidden font-roboto mt-5 w-full py-4 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg shadow-lg transform transition-transform duration-300 hover:bg-pink-400"
                 >
-                    Скрыть
+                    Сохранить
                 </button>
             </div>
-
         </div>
-
-
     );
 };
 
