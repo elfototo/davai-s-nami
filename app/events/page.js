@@ -1,6 +1,9 @@
+'use client';
+
 import HeroSearch from '../components/HeroSearsh';
 import Filtres from '../components/Filtres';
 import Card from '../components/Card';
+import { useState } from 'react';
 
 export default function Events() {
   const events = [
@@ -9,7 +12,7 @@ export default function Events() {
       category: 'Кинопоказ',
       price: '250',
       title: 'Название мероприятия',
-      date: '11/10/2024',
+      date: '11-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -17,7 +20,7 @@ export default function Events() {
       category: 'Музыка',
       price: '1800',
       title: 'Название мероприятия',
-      date: '12/10/2024',
+      date: '12-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -25,7 +28,7 @@ export default function Events() {
       category: 'Стендап',
       price: '1500',
       title: 'Название мероприятия',
-      date: '13/10/2024',
+      date: '13-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -33,7 +36,7 @@ export default function Events() {
       category: 'Оркестр',
       price: '900',
       title: 'Название мероприятия',
-      date: '13/10/2024',
+      date: '13-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -41,7 +44,7 @@ export default function Events() {
       category: 'Лекция',
       price: '1500',
       title: 'Название мероприятия',
-      date: '11/10/2024',
+      date: '11-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -49,7 +52,7 @@ export default function Events() {
       category: 'Тусовка',
       price: '700',
       title: 'Название мероприятия',
-      date: '10/10/2024',
+      date: '10-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -57,7 +60,7 @@ export default function Events() {
       category: 'Музыка',
       price: '1800',
       title: 'Название мероприятия',
-      date: '12/10/2024',
+      date: '12-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -65,7 +68,7 @@ export default function Events() {
       category: 'Стендап',
       price: '690',
       title: 'Название мероприятия',
-      date: '13/10/2024',
+      date: '13-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -73,7 +76,7 @@ export default function Events() {
       category: 'Театр',
       price: '1500',
       title: 'Название мероприятия',
-      date: '11/10/2024',
+      date: '11-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -81,7 +84,7 @@ export default function Events() {
       category: 'Выставка',
       price: '550',
       title: 'Название мероприятия',
-      date: '13/10/2024',
+      date: '13-10-2024',
       place: 'Эрмитаж',
     },
     {
@@ -89,21 +92,44 @@ export default function Events() {
       category: 'Кинопоказ',
       price: '200',
       title: 'Название мероприятия',
-      date: '15/10/2024',
+      date: '15-10-2024',
       place: 'Эрмитаж',
     }
   ];
-  
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const filteredEvents = events.filter((event) => {
+    const [day, month, year] = event.date.split('-');
+    const eventDate = new Date(year, month - 1, day);
+
+    const isInDateRange = startDate && endDate ? eventDate >= startDate && eventDate <= endDate : true;
+
+    const isInSelectedTags = selectedTags.length === 0 || selectedTags.includes(event.category);
+
+    return isInDateRange && isInSelectedTags;
+
+  });
+
   return (
     <div>
       <HeroSearch />
       <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center'>
         <aside className='lg:w-[20%] w-full h-auto mb-3 mr-3'>
-          <Filtres />
+          <Filtres
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
         </aside>
         <section className='lg:w-[80%] w-full'>
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4'>
-            {events.map((event) => (
+            {filteredEvents.map((event) => (
               <Card
                 type='mini'
                 category={event.category}
@@ -111,12 +137,13 @@ export default function Events() {
                 title={event.title}
                 date={event.date}
                 place={event.place}
-                id={event.id} 
-                />
+                key={event.id}
+                id={event.id}
+              />
             ))}
           </div>
         </section>
       </div>
     </div>
   );
-}
+};

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Navbar() {
+    const tags = ['Концерты', 'Хобби и творчество', 'Выставка', 'Танцевальная драма', 'Мастер-класс', 'Интервью', 'Библиотеки', 'Кино', 'Перформанс', 'Лекция', 'Вечеринка', 'Презентация', 'Театры', 'Фестиваль', 'Танцевальный вечер', 'Кинопоказ', 'Искусство и культура', 'Экскурсии и путешествия'];
 
     return (
         <nav className="relative bg-accent-gradient shadow dark:bg-gray-800">
@@ -39,60 +40,11 @@ export default function Navbar() {
                 </div>
                 <p className='text-white underline mt-4'>Категории</p>
                 <div className="py-2 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden text-white">
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-underline duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-underline duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link><Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-underline duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link><Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-underline duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-underline duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link><Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
-                    <Link href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform  hover:underline md:my-0">
-                        Article
-                    </Link>
+                    {tags.map((tag) => (
+                        <Link id={tag} href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline  cursor-pointermd:my-0">
+                            {tag}
+                        </Link>
+                    ))}
                 </div>
             </div>
 

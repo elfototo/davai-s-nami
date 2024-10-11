@@ -14,16 +14,13 @@ const FilterButton = ({ onClick, children, isVisible }) => (
     </button>
 );
 
-const Filtres = () => {
+const Filtres = ({ startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags }) => {
+
     const [isOpen, setIsOpen] = useState(false);
-
-    const [selectedTags, setSelectedTags] = useState([]);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-
+    const [bgColor, setBgColor] = useState('');
     const [selectedButton, setSelectedButton] = useState('');
 
-    const tags = ['Театры', 'Кинопоказы', 'Концерты', 'Оркестр', 'Музыка', 'Cтендапы', 'Лекции', 'Выставки'];
+    const tags = ['Концерты', 'Хобби и творчество', 'Выставка', 'Танцевальная драма', 'Мастер-класс', 'Интервью', 'Библиотеки', 'Кино', 'Перформанс', 'Лекция', 'Вечеринка', 'Презентация', 'Театры', 'Фестиваль', 'Танцевальный вечер', 'Кинопоказ', 'Искусство и культура', 'Экскурсии и путешествия'];
 
     const toggleFilter = () => {
         setIsOpen((prev) => !prev);
@@ -41,14 +38,14 @@ const Filtres = () => {
 
     const selectToday = () => {
         setStartDate(new Date());
-        setEndDate(null);
+        setEndDate(new Date());
         setBgColor('bg-pink-500');
         setSelectedButton('today');
     }
 
     const selectTomorrow = () => {
         setStartDate(addDays(new Date(), 1));
-        setEndDate(null);
+        setEndDate(addDays(new Date(), 1));
         setBgColor('bg-pink-500');
         setSelectedButton('tomorrow');
     }
@@ -80,12 +77,12 @@ const Filtres = () => {
         setEndDate(null);
         setBgColor('bg-white');
         setSelectedButton('');
+        setSelectedTags([]);
     };
 
     const cancelFilter = () => {
         clearSelection();
         toggleFilter();
-        setSelectedTags([]);
     }
 
     return (
@@ -133,6 +130,7 @@ const Filtres = () => {
 
                     <div className='flex lg:flex-col items-start justify-center mt-3'>
                         <p className='mx-2 my-1'>с:</p>
+
                         <DatePicker
                             selected={startDate}
                             onChange={(date) => {
@@ -151,7 +149,9 @@ const Filtres = () => {
                         <p className='mx-2 my-1'>по:</p>
                         <DatePicker
                             selected={endDate}
-                            onChange={(date) => setEndDate(date)}
+                            onChange={(date) => {
+                                setEndDate(date)
+                            }}
                             selectsEnd
                             startDate={startDate}
                             endDate={endDate}
@@ -183,7 +183,7 @@ const Filtres = () => {
                 <div className='flex justify-center items-center'>
                     <button
                         onClick={toggleFilter}
-                        className="font-roboto mt-5 w-full py-4 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg shadow-lg transform transition-transform duration-300 hover:bg-pink-400"
+                        className="lg:hidden font-roboto mt-5 w-full py-4 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg shadow-lg transform transition-transform duration-300 hover:bg-pink-400"
                     >
                         Сохранить
                     </button>
