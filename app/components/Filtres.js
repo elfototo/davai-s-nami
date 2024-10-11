@@ -22,8 +22,6 @@ const Filtres = () => {
     const [endDate, setEndDate] = useState(null);
 
     const [selectedButton, setSelectedButton] = useState('');
-    const [bgColor, setBgColor] = useState('bg-white');
-
 
     const tags = ['Театры', 'Кинопоказы', 'Концерты', 'Оркестр', 'Музыка', 'Cтендапы', 'Лекции', 'Выставки'];
 
@@ -39,12 +37,6 @@ const Filtres = () => {
                 return [...prev, tag];
             }
         });
-    };
-
-    const formatDate = (date) => {
-        if (!date) return '';
-        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        return date.toLocaleDateString('ru-RU', options);
     };
 
     const selectToday = () => {
@@ -120,80 +112,83 @@ const Filtres = () => {
             <div className={`${isOpen ? 'block' : 'hidden'} lg:block w-full p-4 relative`}>
                 {/* Date selection */}
                 <div className="mb-5">
-                {/* title */}
-                <div className='flex justify-between items-baseline  mb-3'>
-                    <h3 className="text-lg">Когда</h3>
+                    {/* title */}
+                    <div className='flex justify-between items-baseline  mb-3'>
+                        <h3 className="text-lg">Когда</h3>
+                        <button
+                            className='underline text-blue-600'
+                            onClick={cancelFilter}>
+                            Отмена
+                        </button>
+                    </div>
+                    {/* date */}
+
+                    <div className="flex gap-2 mt-3">
+                        <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} w-1/2 py-2 rounded-md`}>Сегодня</button>
+                        <button onClick={selectTomorrow} className={`${selectedButton === 'tomorrow' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} w-1/2 py-2 rounded-md`}>Завтра</button>
+                    </div>
+                    <div className='flex justify-center items-center mt-2'>
+                        <button onClick={selectWeekends} className={`${selectedButton === 'weekend' ? 'bg-pink-400  text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} w-1/2 lg:w-full py-2 px-4 rounded-md`}>Выходные</button>
+                    </div>
+
+                    <div className='flex lg:flex-col items-start justify-center mt-3'>
+                        <p className='mx-2 my-1'>с:</p>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={(date) => {
+                                if (endDate && date > endDate) {
+                                    setEndDate(null);
+                                }
+                                setStartDate(date);
+                            }}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            dateFormat="dd-MM-yyyy"
+                            className="w-full px-2 py-1 border rounded-md "
+                            placeholderText="Дата начала"
+                        />
+                        <p className='mx-2 my-1'>по:</p>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate}
+                            dateFormat="dd-MM-yyyy"
+                            className="w-full px-2 py-1 border rounded-md"
+                            placeholderText="Дата окончания"
+                        />
+                    </div>
+                </div>
+
+                {/* Tag selection */}
+                <div>
+                    <h3 className="text-lg mb-3">Теги</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                            <button
+                                key={tag}
+                                onClick={() => toggleTag(tag)}
+                                className={`px-2 py-1 rounded-xl ${selectedTags.includes(tag) ? 'bg-pink-500 text-white' : 'bg-gray-200'}`}
+                            >
+                                {tag}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Hide button for mobile */}
+                <div className='flex justify-center items-center'>
                     <button
-                        className='underline text-blue-600'
-                        onClick={cancelFilter}>
-                        Отмена
+                        onClick={toggleFilter}
+                        className="font-roboto mt-5 w-full py-4 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg shadow-lg transform transition-transform duration-300 hover:bg-pink-400"
+                    >
+                        Сохранить
                     </button>
                 </div>
-                {/* date */}
-
-                <div className="flex gap-2 mt-3">
-                    <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} w-1/2 py-2 rounded-md`}>Сегодня</button>
-                    <button onClick={selectTomorrow} className={`${selectedButton === 'tomorrow' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} w-1/2 py-2 rounded-md`}>Завтра</button>
-                </div>
-                <div className='flex justify-center items-center mt-2'>
-                    <button onClick={selectWeekends} className={`${selectedButton === 'weekend' ? 'bg-pink-400  text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} w-1/2 py-2 rounded-md`}>Выходные</button>
-                </div>
-
-                <div className='flex justify-center mt-5'>
-                    <DatePicker
-                        selected={startDate}
-                        onChange={(date) => {
-                            if (endDate && date > endDate) {
-                                setEndDate(null);
-                            }
-                            setStartDate(date);
-                        }}
-                        selectsStart
-                        startDate={startDate}
-                        endDate={endDate}
-                        className="w-full px-2 py-1 border rounded-md "
-                        placeholderText="Дата начала"
-                    />
-                    <p className='mx-2'>-</p>
-                    <DatePicker
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        selectsEnd
-                        startDate={startDate}
-                        endDate={endDate}
-                        minDate={startDate} // Ограничиваем выбор даты конца диапазона
-                        className="w-full px-2 py-1 border rounded-md"
-                        placeholderText="Дата окончания"
-                    />
-                </div>
             </div>
-
-            {/* Tag selection */}
-            <div>
-                <h3 className="text-lg mb-3">Теги</h3>
-                <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                        <button
-                            key={tag}
-                            onClick={() => toggleTag(tag)}
-                            className={`px-2 py-1 rounded-xl ${selectedTags.includes(tag) ? 'bg-pink-500 text-white' : 'bg-gray-200'}`}
-                        >
-                            {tag}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Hide button for mobile */}
-            <div className='flex justify-center items-center'>
-                <button
-                    onClick={toggleFilter}
-                    className="font-roboto mt-5 w-full py-4 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg shadow-lg transform transition-transform duration-300 hover:bg-pink-400"
-                >
-                    Сохранить
-                </button>
-            </div>
-        </div>
         </div >
     );
 };
