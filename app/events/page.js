@@ -7,110 +7,33 @@ import { useState } from 'react';
 
 export default function Events() {
   const events = [
-    {
-      id: 1,
-      category: 'Кинопоказ',
-      price: '250',
-      title: 'Название мероприятия',
-      date: '11-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 2,
-      category: 'Музыка',
-      price: '1800',
-      title: 'Название мероприятия',
-      date: '12-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 3,
-      category: 'Стендап',
-      price: '1500',
-      title: 'Название мероприятия',
-      date: '13-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 4,
-      category: 'Оркестр',
-      price: '900',
-      title: 'Название мероприятия',
-      date: '13-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 5,
-      category: 'Лекция',
-      price: '1500',
-      title: 'Название мероприятия',
-      date: '11-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 6,
-      category: 'Тусовка',
-      price: '700',
-      title: 'Название мероприятия',
-      date: '10-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 7,
-      category: 'Музыка',
-      price: '1800',
-      title: 'Название мероприятия',
-      date: '12-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 8,
-      category: 'Стендап',
-      price: '690',
-      title: 'Название мероприятия',
-      date: '13-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 9,
-      category: 'Театр',
-      price: '1500',
-      title: 'Название мероприятия',
-      date: '11-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 10,
-      category: 'Выставка',
-      price: '550',
-      title: 'Название мероприятия',
-      date: '13-10-2024',
-      place: 'Эрмитаж',
-    },
-    {
-      id: 11,
-      category: 'Кинопоказ',
-      price: '200',
-      title: 'Название мероприятия',
-      date: '15-10-2024',
-      place: 'Эрмитаж',
-    }
+    { id: 1, category: 'Кинопоказ', price: '250', title: 'Название мероприятия', date: '15-10-2024', place: 'Эрмитаж' },
+    { id: 2, category: 'Музыка', price: '1800', title: 'Название мероприятия', date: '16-10-2024', place: 'Эрмитаж' },
+    { id: 3, category: 'Стендап', price: '1500', title: 'Название мероприятия', date: '16-10-2024', place: 'Эрмитаж' },
+    { id: 4, category: 'Оркестр', price: '900', title: 'Название мероприятия', date: '17-10-2024', place: 'Эрмитаж' },
+    { id: 5, category: 'Лекция', price: '1500', title: 'Название мероприятия', date: '18-10-2024', place: 'Эрмитаж' },
+    { id: 6, category: 'Тусовка', price: '700', title: 'Название мероприятия', date: '19-10-2024', place: 'Эрмитаж' },
+    { id: 7, category: 'Музыка', price: '1800', title: 'Название мероприятия', date: '20-10-2024', place: 'Эрмитаж' },
+    { id: 8, category: 'Стендап', price: '690', title: 'Название мероприятия', date: '15-10-2024', place: 'Эрмитаж' },
+    { id: 9, category: 'Театр', price: '1500', title: 'Название мероприятия', date: '22-10-2024', place: 'Эрмитаж' },
+    { id: 10, category: 'Выставка', price: '550', title: 'Название мероприятия', date: '16-10-2024', place: 'Эрмитаж' },
+    { id: 11, category: 'Кинопоказ', price: '200', title: 'Название мероприятия', date: '19-10-2024', place: 'Эрмитаж' }
   ];
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [bgColor, setBgColor] = useState('');
+  const [selectedButton, setSelectedButton] = useState('');
 
   const filteredEvents = events.filter((event) => {
     const [day, month, year] = event.date.split('-');
-    const eventDate = new Date(year, month - 1, day);
-
-    const isInDateRange = startDate && endDate ? eventDate >= startDate && eventDate <= endDate : true;
-
-    const isInSelectedTags = selectedTags.length === 0 || selectedTags.includes(event.category);
-
-    return isInDateRange && isInSelectedTags;
-
+    const eventDate = new Date(`${year}-${month}-${day}`);
+    
+    // Check date range
+    const isInDateRange = (!startDate || eventDate >= startDate) && (!endDate || eventDate <= endDate);
+  
+    return isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category));
   });
 
   return (
@@ -125,6 +48,9 @@ export default function Events() {
             setEndDate={setEndDate}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
+            selectedButton={selectedButton}
+            setSelectedButton={setSelectedButton}
+            setBgColor={setBgColor}
           />
         </aside>
         <section className='lg:w-[80%] w-full'>

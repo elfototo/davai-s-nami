@@ -38,14 +38,17 @@ export default function Navbar() {
 
                     </div>
                 </div>
-                <p className='text-white underline mt-4'>Категории</p>
+
+                {/* Category: */}
+
+                {/* <p className='text-white underline mt-4'>Категории</p>
                 <div className="py-2 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden text-white">
                     {tags.map((tag) => (
                         <Link id={tag} href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline  cursor-pointermd:my-0">
                             {tag}
                         </Link>
                     ))}
-                </div>
+                </div> */}
             </div>
 
 
