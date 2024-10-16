@@ -31,6 +31,16 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  .grid-item:nth-child(7n + 1) {
+    /* Calendar component rounded in range selection */
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+  }
+  .grid-item:nth-child(7n){
+    /* Calendar component rounded in range selection */
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+  }
 }
 
 @layer base {

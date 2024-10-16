@@ -96,6 +96,11 @@ module.exports = {
 				sm: 'calc(var(--radius) - 4px)',
 				md: 'calc(var(--radius) - 2px)',
 				lg: 'var(--radius)'
+			},
+			utilities: {
+				'.unicode-bidi-isolate': {
+					'unicode-bidi': 'isolate',
+				},
 			}
 		}
 	},

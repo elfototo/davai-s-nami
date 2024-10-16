@@ -1,4 +1,6 @@
 'use client';
+
+import '../globals.css';
 import React, { useState } from 'react';
 
 const daysInWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -56,7 +58,7 @@ const CalendarModal = () => {
 
         // Empty cells for alignment
         for (let i = 0; i < firstDayOfMonth.getDay() - 1; i++) {
-            days.push(<div key={`empty-${i}`} className="w-1/7 h-10" />);
+            days.push(<div key={`empty-${i}`} className='w-[2.25rem] h-[2.25rem]' />);
         }
 
         // Days of the month
@@ -67,22 +69,27 @@ const CalendarModal = () => {
             const isEndSelected = selectedEndDate && date.toDateString() === selectedEndDate.toDateString();
             const isInRange =
                 selectedStartDate && selectedEndDate &&
-                ((date > selectedStartDate && date < selectedEndDate) || (date < selectedStartDate && date > selectedEndDate));
+                ((date >= selectedStartDate && date <= selectedEndDate) || (date <= selectedStartDate && date >= selectedEndDate));
 
+            const isFirstInRange = isStartSelected;
+            const isLastInRange = isEndSelected;
             // Text color based on date
             const textColor = date < today ? 'text-gray-400' : 'text-black';
-            const isTodayClass = isToday ? 'border border-pink-400' : '';
+            const isTodayClass = isToday ? 'border border-pink-400 rounded-full' : '';
             const isSelectedClass = isStartSelected || isEndSelected ? 'bg-pink-400 text-white' : '';
-            const isInRangeClass = isInRange ? 'bg-pink-100' : '';
+            const isInRangeClass = isInRange
+                ? `bg-pink-200 ${isFirstInRange ? 'rounded-tl-[50%] rounded-bl-[50%]' : ''} ${isLastInRange ? 'rounded-tr-[50%] rounded-br-[50%]' : ''}` : 'rounded-full';
 
             days.push(
-                <div
-                    key={day}
-                    className={`w-[3rem] h-[3rem] my-1 flex items-center justify-center cursor-pointer transition-colors duration-200 rounded-full 
-            ${isTodayClass} ${isSelectedClass} ${isInRangeClass} hover:bg-pink-100 ${textColor}`}
-                    onClick={() => handleDateClick(date)}
-                >
-                    <span>{day}</span>
+                <div className={`${isInRangeClass} my-1 flex items-center justify-center grid-item`}>
+                    <div
+                        key={day}
+                        className={`w-[3.6rem] h-[3.6rem] rounded-full leading-normal text-[1rem] flex items-center justify-center text-center cursor-pointer duration-200 transform transition-colors duration-[250ms] ease-[cubic-bezier(0.4, 0, 0.2, 1)]
+                    ${isTodayClass} ${isSelectedClass} hover:border-pink-400 hover:border-[1px] ${textColor}`}
+                        onClick={() => handleDateClick(date)}
+                    >
+                        <span>{day}</span>
+                    </div>
                 </div>
             );
         }
@@ -122,7 +129,9 @@ const CalendarModal = () => {
                                 onClick={() => changeMonth(-1)}
                                 className="p-1 text-pink-500 hover:bg-gray-200 rounded transition duration-200"
                             >
-                                &lt;
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                    <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clipRule="evenodd" />
+                                </svg>
                             </button>
                             <h2 className="text-lg font-semibold">
                                 {currentDate.toLocaleString('ru-RU', { month: 'long', year: 'numeric' })}
@@ -131,7 +140,9 @@ const CalendarModal = () => {
                                 onClick={() => changeMonth(1)}
                                 className="p-1 text-pink-500 hover:bg-gray-200 rounded transition duration-200"
                             >
-                                &gt;
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                    <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clipRule="evenodd" />
+                                </svg>
                             </button>
                         </div>
                         <div className="grid grid-cols-7 text-center font-bold">
