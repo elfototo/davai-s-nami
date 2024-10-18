@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import CalendarModal from './Calendar';
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+
+dayjs.extend(isoWeek);
 
 const Filtres = ({ selectedTags, setSelectedTags, setBgColor }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -44,6 +47,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor }) => {
         setStartDate(startOfWeek);
         setEndDate(sunday);
         setSelectedButton('weekend');
+        console.log(startOfWeek, sunday)
     };
 
     const clearSelection = () => {
@@ -90,7 +94,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor }) => {
                     <div className='flex justify-center items-center mt-2'>
                         <button onClick={selectWeekends} className={`${selectedButton === 'weekend' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-gray-100 hover:bg-gray-200'} w-1/2 lg:w-full py-2 px-4 rounded-md`}>Выходные</button>
                     </div>
-                    <div className='flex lg:flex-col items-start justify-center mt-3'>
+                    <div className='flex lg:flex-col items-start justify-center w-full mt-2'>
                         {/* CalendarModal with passed props */}
                         <CalendarModal
                             startDate={startDate}
