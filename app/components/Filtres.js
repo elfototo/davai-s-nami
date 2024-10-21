@@ -7,7 +7,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 
 dayjs.extend(isoWeek);
 
-const Filtres = ({ selectedTags, setSelectedTags, setBgColor }) => {
+const Filtres = ({ selectedTags, setSelectedTags, setBgColor, filterCards }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedButton, setSelectedButton] = useState('');
     const [startDate, setStartDate] = useState(null);
@@ -30,24 +30,33 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor }) => {
     };
 
     const selectToday = () => {
-        setStartDate(dayjs());
-        setEndDate(dayjs());
+        const todayDate = dayjs().startOf('day');
+        setStartDate(todayDate);
+        setEndDate(todayDate);
         setSelectedButton('today');
+        console.log(todayDate);
+        console.log(startDate);
+        filterCards();
     };
 
     const selectTomorrow = () => {
-        setStartDate(dayjs().add(1, 'day'));
-        setEndDate(dayjs().add(1, 'day'));
+        const tomorrowDate = dayjs().add(1, 'day').startOf('day');
+        setStartDate(tomorrowDate);
+        setEndDate(tomorrowDate);
         setSelectedButton('tomorrow');
+        console.log(tomorrowDate);
+        filterCards();
     };
 
     const selectWeekends = () => {
-        const startOfWeek = dayjs().isoWeekday(6); // Суббота текущей недели
-        const sunday = startOfWeek.add(1, 'day'); // Воскресенье текущей недели
-        setStartDate(startOfWeek);
-        setEndDate(sunday);
+        const startOfWeekend = dayjs().isoWeekday(6).startOf('day');
+        // const sunday = startOfWeek.add(1, 'day');
+        const endOfWeekend = startOfWeekend.add(1, 'day');
+        setStartDate(startOfWeekend);
+        setEndDate(endOfWeekend);
         setSelectedButton('weekend');
-        console.log(startOfWeek, sunday)
+        filterCards();
+
     };
 
     const clearSelection = () => {
@@ -103,6 +112,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor }) => {
                             setEndDate={setEndDate}
                             isOpen={isOpen}
                             setIsOpen={setIsOpen}
+                            filterCards={filterCards}
                         />
                     </div>
                 </div>

@@ -3,38 +3,69 @@
 import HeroSearch from '../components/HeroSearsh';
 import Filtres from '../components/Filtres';
 import Card from '../components/Card';
-import { useState } from 'react';
+import { events } from '../data/events';
+import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 export default function Events() {
-  const events = [
-    { id: 1, category: 'Кинопоказ', price: '250', title: 'Название мероприятия', date: '15-10-2024', place: 'Эрмитаж' },
-    { id: 2, category: 'Музыка', price: '1800', title: 'Название мероприятия', date: '16-10-2024', place: 'Эрмитаж' },
-    { id: 3, category: 'Стендап', price: '1500', title: 'Название мероприятия', date: '16-10-2024', place: 'Эрмитаж' },
-    { id: 4, category: 'Оркестр', price: '900', title: 'Название мероприятия', date: '17-10-2024', place: 'Эрмитаж' },
-    { id: 5, category: 'Лекция', price: '1500', title: 'Название мероприятия', date: '18-10-2024', place: 'Эрмитаж' },
-    { id: 6, category: 'Тусовка', price: '700', title: 'Название мероприятия', date: '19-10-2024', place: 'Эрмитаж' },
-    { id: 7, category: 'Музыка', price: '1800', title: 'Название мероприятия', date: '20-10-2024', place: 'Эрмитаж' },
-    { id: 8, category: 'Стендап', price: '690', title: 'Название мероприятия', date: '15-10-2024', place: 'Эрмитаж' },
-    { id: 9, category: 'Театр', price: '1500', title: 'Название мероприятия', date: '22-10-2024', place: 'Эрмитаж' },
-    { id: 10, category: 'Выставка', price: '550', title: 'Название мероприятия', date: '16-10-2024', place: 'Эрмитаж' },
-    { id: 11, category: 'Кинопоказ', price: '200', title: 'Название мероприятия', date: '19-10-2024', place: 'Эрмитаж' }
-  ];
+
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [bgColor, setBgColor] = useState('');
   const [selectedButton, setSelectedButton] = useState('');
+  const [filteredCards, setFilteredCards] = useState(events);
 
-  const filteredEvents = events.filter((event) => {
-    const [day, month, year] = event.date.split('-');
-    const eventDate = new Date(`${year}-${month}-${day}`);
-    
-    // Check date range
-    const isInDateRange = (!startDate || eventDate >= startDate) && (!endDate || eventDate <= endDate);
-  
-    return isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category));
-  });
+
+  const filterCards = () => {
+    const startISO = startDate ? startDate.toISOString() : null;
+    const endISO = endDate ? endDate.toISOString() : null;
+
+
+    const filtered = events.filter(event => {
+
+      const cardDate = dayjs(event.date, 'DD-MM-YYYY');
+      console.log(cardDate.format());
+
+      if (!cardDate.isValid()) {
+        console.error(`Invalid date for event: ${event.title} with date: ${event.date}`);
+        return false; // Если дата недействительна, пропускаем это событие
+      }
+      const isAfterStart = !startDate || cardDate.isSameOrAfter(dayjs(startISO));
+      const isBeforeEnd = !endDate || cardDate.isSameOrBefore(dayjs(endISO));
+
+      console.log("Comparing:", cardDate.format(), startISO, endISO);
+      
+      return isAfterStart && isBeforeEnd;
+    });
+    setFilteredCards(filtered); // Обновляем отфильтрованные карточки
+  };
+
+  useEffect(() => {
+    if (startDate || endDate) {
+        filterCards(); // Фильтрация будет выполняться при изменении startDate или endDate
+    }
+}, [startDate, endDate]); 
+
+  // const filteredEvents = events.filter((event) => {
+  //   const [day, month, year] = event.date.split('-');
+  //   const eventDate = dayjs(`${year}-${month}-${day}`).startOf('day');
+  //   console.log(eventDate);
+
+  //   // Check date range
+  //   // const isInDateRange = (!startDate || eventDate >= startDate) && (!endDate || eventDate <= endDate);
+  //   const isInDateRange = (!startDate || eventDate.isSame(startDate, 'day')) ||
+  //                         (!endDate || eventDate.isSame(endDate, 'day')) ||
+  //                         (startDate && endDate && eventDate.isAfter(startDate) && eventDate.isBefore(endDate));
+  //                         // (eventDate.isAfter(startDate) && eventDate.isBefore(endDate));
+  //   console.log(isInDateRange)
+
+
+  //   return isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category));
+  // });
 
   return (
     <div>
@@ -51,20 +82,22 @@ export default function Events() {
             selectedButton={selectedButton}
             setSelectedButton={setSelectedButton}
             setBgColor={setBgColor}
+            filterCards={filterCards}
           />
         </aside>
         <section className='lg:w-[80%] w-full'>
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4'>
-            {filteredEvents.map((event) => (
+            {filteredCards.map((card) => (
               <Card
                 type='mini'
-                category={event.category}
-                price={event.price}
-                title={event.title}
-                date={event.date}
-                place={event.place}
-                key={event.id}
-                id={event.id}
+                category={card.category}
+                price={card.price}
+                title={card.title}
+                date={card.date}
+                place={card.place}
+                key={card.id}
+                id={card.id}
+                data={card}
               />
             ))}
           </div>

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-const Card = ({ type, category, title, date, place, price }) => {
+const Card = ({ type, category, title, date, place, price, data }) => {
   const heightImage = {
     mini: 'object-cover object-center w-full h-[200px]',
     max: 'object-cover object-center w-full h-auto',

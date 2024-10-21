@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 const daysInWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate, isOpen, setIsOpen }) => {
+const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate, filterCards }) => {
     // const [selectedStartDate, setSelectedStartDate] = useState(null);
     // const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -50,6 +50,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate, isOpen, s
                 setEndDate(null); // Reset end date
             }
         }
+        filterCards();
     };
 
     const renderDays = () => {
@@ -66,10 +67,15 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate, isOpen, s
         for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
             const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
             const isToday = date.toDateString() === today.toDateString();
-            const isStartSelected = startDate && date.toDateString() === startDate.toDateString();
-            const isEndSelected = endDate && date.toDateString() === endDate.toDateString();
+            // const isStartSelected = startDate && date.toDateString() === startDate.toDateString();
+            // const isEndSelected = endDate && date.toDateString() === endDate.toDateString();
+            const isStartSelected = startDate && date.toDateString() === dayjs(startDate).toDate().toDateString();
+            const isEndSelected = endDate && date.toDateString() === dayjs(endDate).toDate().toDateString();
+
+
+
             const isInRange =
-            startDate && endDate &&
+                startDate && endDate &&
                 ((date >= startDate && date <= endDate) || (date <= startDate && date >= endDate));
 
             const isFirstInRange = isStartSelected;
