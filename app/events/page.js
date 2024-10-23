@@ -20,7 +20,7 @@ export default function Events() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [sortPrice, setSortPrice] = useState('');
+  const [sortPrice, setSortPrice] = useState(null);
   const [bgColor, setBgColor] = useState('');
 
   const filteredEvents = events.filter((event) => {
@@ -28,7 +28,12 @@ export default function Events() {
     const eventDate = dayjs(`${year}-${month}-${day}`).utc(+3).startOf('day');
 
     const sortedEvents = sortPrice ? events.sort((a, b) => {
+      // Проверяем сортировку по цене или по id
+      if (sortPrice === 'default') {
+        return a.id - b.id;
+      } else {
         return sortPrice === 'asc' ? a.price - b.price : b.price - a.price;
+      }
     }) : events;
 
     const isInDateRange = (!startDate || eventDate.isSame(startDate, 'day')) ||
