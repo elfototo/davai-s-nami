@@ -5,8 +5,6 @@ import Categories from './components/Categories';
 import Link from 'next/link';
 import 'animate.css';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
-
 
 export default function Home() {
 
@@ -36,15 +34,7 @@ export default function Home() {
               transform transition-transform duration-300 hover:scale-105
               ${isAnimated ? 'animate__animated animate__pulse animate__repeat-2' : ''}
               `}>Мне повезет</button>
-          </div>
-          {/* sm-screen */}
-          {/* <Image
-            src="/img/name_2.png"
-            alt="name"
-            width={300}
-            height={300}
-            className="md:hidden absolute top-0 -right-[20%]" /> */}
-          
+          </div>         
 
           {/* md-screen */}
           <div className='h-full w-[60%] relative hidden md:block'>

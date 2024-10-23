@@ -5,12 +5,11 @@ import CalendarModal from './Calendar';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
-dayjs.locale('ru');
-dayjs.extend(utc);
-
 import isoWeek from 'dayjs/plugin/isoWeek';
 
 dayjs.extend(isoWeek);
+dayjs.locale('ru');
+dayjs.extend(utc);
 
 const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate }) => {
     const [isOpen, setIsOpen] = useState(false);

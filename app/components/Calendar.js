@@ -5,6 +5,9 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import utc from 'dayjs/plugin/utc';
+import 'dayjs/locale/ru';
+dayjs.locale('ru');
+
 dayjs.extend(utc);
 dayjs.extend(isBetween);
 
@@ -25,7 +28,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
     };
 
     const handleDateClick = (day) => {
-        const dayJsDate = dayjs(day).utc(+3); // Convert clicked date to a Day.js object
+        const dayJsDate = dayjs(day); // Convert clicked date to a Day.js object
         if (!startDate) {
             setStartDate(dayJsDate);
             setEndDate(null);
@@ -54,8 +57,8 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
 
     const renderDays = () => {
         // First and last day of the current month using dayjs
-        const firstDayOfMonth = dayjs(currentDate).utc(+3).startOf('month');
-        const lastDayOfMonth = dayjs(currentDate).utc(+3).endOf('month');
+        const firstDayOfMonth = dayjs(currentDate).startOf('month');
+        const lastDayOfMonth = dayjs(currentDate).endOf('month');
         const days = [];
 
         // Empty cells for alignment
@@ -73,12 +76,10 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
             const startDay = startDate ? dayjs(startDate).utc(+3).startOf('day') : null;
             const endDay = endDate ? dayjs(endDate).utc(+3).startOf('day') : null;
 
-            // console.log('date:', date.format('YYYY-MM-DD'), 'startDay:', startDay ? startDay.format('YYYY-MM-DD') : null, 'endDay:', endDay ? endDay.format('YYYY-MM-DD') : null);
-
-            const isInRange = startDay && endDay && 
-            (date.isBetween(startDay, endDay, null, '[]') || 
-             date.isSame(startDay, 'day') || 
-             date.isSame(endDay, 'day'));
+            const isInRange = startDay && endDay &&
+                (date.isBetween(startDay, endDay, null, '[]') ||
+                    date.isSame(startDay, 'day') ||
+                    date.isSame(endDay, 'day'));
 
             const isFirstInRange = isStartSelected || date.isSame(startDay, 'day');;
             const isLastInRange = isEndSelected || date.isSame(endDay, 'day');;
@@ -116,8 +117,6 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
 
     const handleInputClick = () => {
         toggleCalendar();
-        // console.log(startDate);
-        // console.log(endDate); 
     };
 
 
@@ -170,7 +169,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                                 </svg>
                             </button>
                             <h2 className="text-lg font-semibold">
-                                {currentDate.toLocaleString('ru-RU', { month: 'long', year: 'numeric' })}
+                                {dayjs(currentDate).format('MMMM YYYY')}
                             </h2>
                             <button
                                 onClick={() => changeMonth(1)}
@@ -193,7 +192,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                             onClick={toggleCalendar}
                             className='font-roboto mt-5 w-full py-4 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg shadow-lg transform transition-transform duration-300 hover:bg-pink-400'
                         >
-                            Закрыть
+                            Применить
                         </button>
                     </div>
                 </div>

@@ -6,16 +6,12 @@ import Card from '../components/Card';
 import { events } from '../data/events';
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import 'dayjs/locale/ru';
-dayjs.locale('ru');
-dayjs.extend(isSameOrAfter);
-dayjs.extend(isSameOrBefore);
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
-
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.locale('ru');
+dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 export default function Events() {
@@ -25,18 +21,6 @@ export default function Events() {
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [bgColor, setBgColor] = useState('');
-  const [selectedButton, setSelectedButton] = useState('');
-  const [isInDateRange, setIsInDateRange] = useState([]);
-  // const [selectedDate, setSelectedDate] = useState('');
-
-  // const filteredEvents = events.filter(event => {
-  //   const eventDate = dayjs(event.date, 'DD-MM-YYYY');
-  //   const start = dayjs(startDate);
-  //   const end = dayjs(endDate);
-
-  //   // Фильтр, который проверяет, что дата события находится в диапазоне
-  //   return eventDate.isSameOrAfter(start, 'day') && eventDate.isSameOrBefore(end, 'day');
-  // });
 
   const filteredEvents = events.filter((event) => {
     const [day, month, year] = event.date.split('-');
@@ -48,16 +32,8 @@ export default function Events() {
                           (!endDate || eventDate.isSame(endDate, 'day')) ||
                           (startDate && endDate && eventDate.isAfter(startDate) && eventDate.isBefore(endDate));
 
-    console.log(isInDateRange);
-    console.log(eventDate);
-
-    // console.log(eventDate.format('YYYY-MM-DD'));
-
-    // console.log(startDate, endDate);
-    // console.log(selectedTags);
-
-    return isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category));
-
+    return isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category)) || 
+    (selectedTags.length === 0 || selectedTags.includes(event.category)) && isInDateRange;
   });
 
   return (
@@ -72,13 +48,7 @@ export default function Events() {
             setEndDate={setEndDate}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
-            isInDateRange={isInDateRange}
-            setIsInDateRange={setIsInDateRange}
-            selectedButton={selectedButton}
-            setSelectedButton={setSelectedButton}
-            setBgColor={setBgColor}
-            filteredEvents={filteredEvents}
-            
+            setBgColor={setBgColor}            
           />
         </aside>
         <section className='lg:w-[80%] w-full'>
