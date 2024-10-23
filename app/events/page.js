@@ -20,20 +20,23 @@ export default function Events() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [sortPrice, setSortPrice] = useState('');
   const [bgColor, setBgColor] = useState('');
 
   const filteredEvents = events.filter((event) => {
     const [day, month, year] = event.date.split('-');
     const eventDate = dayjs(`${year}-${month}-${day}`).utc(+3).startOf('day');
 
-
+    const sortedEvents = sortPrice ? events.sort((a, b) => {
+        return sortPrice === 'asc' ? a.price - b.price : b.price - a.price;
+    }) : events;
 
     const isInDateRange = (!startDate || eventDate.isSame(startDate, 'day')) ||
-                          (!endDate || eventDate.isSame(endDate, 'day')) ||
-                          (startDate && endDate && eventDate.isAfter(startDate) && eventDate.isBefore(endDate));
+      (!endDate || eventDate.isSame(endDate, 'day')) ||
+      (startDate && endDate && eventDate.isAfter(startDate) && eventDate.isBefore(endDate));
 
-    return isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category)) || 
-    (selectedTags.length === 0 || selectedTags.includes(event.category)) && isInDateRange;
+    return sortedEvents && isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category)) ||
+      (selectedTags.length === 0 || selectedTags.includes(event.category)) && isInDateRange && sortedEvents;
   });
 
   return (
@@ -48,7 +51,9 @@ export default function Events() {
             setEndDate={setEndDate}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
-            setBgColor={setBgColor}            
+            setBgColor={setBgColor}
+            sortPrice={sortPrice}
+            setSortPrice={setSortPrice}
           />
         </aside>
         <section className='lg:w-[80%] w-full'>
