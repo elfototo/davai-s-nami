@@ -1,4 +1,7 @@
 import Image from 'next/image';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ru'; 
+dayjs.locale('ru');
 
 const Card = ({ type, category, title, date, place, price, data }) => {
   const heightImage = {
@@ -38,7 +41,7 @@ const Card = ({ type, category, title, date, place, price, data }) => {
               <svg className="text-[#777] w-4 h-auto fill-current mr-1 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                 <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clipRule="evenodd" />
               </svg>
-              <p className="text-[#777]">{date}</p>
+              <p className="text-[#777]">{dayjs(date, 'DD-MM-YYYY').format('DD MMMM YYYY')}</p>
             </div>
             <div className='flex items-center'>
               <svg className="text-[#777] w-4 h-auto fill-current mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">

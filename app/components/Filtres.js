@@ -3,15 +3,18 @@
 import { useState } from 'react';
 import CalendarModal from './Calendar';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import 'dayjs/locale/ru';
+dayjs.locale('ru');
+dayjs.extend(utc);
+
 import isoWeek from 'dayjs/plugin/isoWeek';
 
 dayjs.extend(isoWeek);
 
-const Filtres = ({ selectedTags, setSelectedTags, setBgColor, filterCards }) => {
+const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedButton, setSelectedButton] = useState('');
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
 
     const tags = ['Концерты', 'Хобби и творчество', 'Выставка', 'Танцевальная драма', 'Мастер-класс', 'Интервью', 'Библиотеки', 'Кино', 'Перформанс', 'Лекция', 'Вечеринка', 'Презентация', 'Театры', 'Фестиваль', 'Танцевальный вечер', 'Кинопоказ', 'Искусство и культура', 'Экскурсии и путешествия', 'Музыка'];
 
@@ -30,33 +33,25 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, filterCards }) => 
     };
 
     const selectToday = () => {
-        const todayDate = dayjs().startOf('day');
+        const todayDate = dayjs().utc(+3).startOf('day');
         setStartDate(todayDate);
         setEndDate(todayDate);
         setSelectedButton('today');
-        console.log(todayDate);
-        console.log(startDate);
-        filterCards();
     };
 
     const selectTomorrow = () => {
-        const tomorrowDate = dayjs().add(1, 'day').startOf('day');
+        const tomorrowDate = dayjs().add(1, 'day').utc(+3).startOf('day');
         setStartDate(tomorrowDate);
         setEndDate(tomorrowDate);
         setSelectedButton('tomorrow');
-        console.log(tomorrowDate);
-        filterCards();
     };
 
     const selectWeekends = () => {
-        const startOfWeekend = dayjs().isoWeekday(6).startOf('day');
-        // const sunday = startOfWeek.add(1, 'day');
+        const startOfWeekend = dayjs().isoWeekday(6).utc(+3).startOf('day');
         const endOfWeekend = startOfWeekend.add(1, 'day');
         setStartDate(startOfWeekend);
         setEndDate(endOfWeekend);
         setSelectedButton('weekend');
-        filterCards();
-
     };
 
     const clearSelection = () => {
@@ -110,9 +105,6 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, filterCards }) => 
                             setStartDate={setStartDate}
                             endDate={endDate}
                             setEndDate={setEndDate}
-                            isOpen={isOpen}
-                            setIsOpen={setIsOpen}
-                            filterCards={filterCards}
                         />
                     </div>
                 </div>
