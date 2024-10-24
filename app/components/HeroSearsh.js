@@ -2,9 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-export default function Navbar() {
-    const tags = ['Концерты', 'Хобби и творчество', 'Выставка', 'Танцевальная драма', 'Мастер-класс', 'Интервью', 'Библиотеки', 'Кино', 'Перформанс', 'Лекция', 'Вечеринка', 'Презентация', 'Театры', 'Фестиваль', 'Танцевальный вечер', 'Кинопоказ', 'Искусство и культура', 'Экскурсии и путешествия'];
-
+export default function Navbar({search, setSearch}) {
     return (
         <nav className="relative bg-accent-gradient shadow dark:bg-gray-800">
             <div className="max-w-custom-container px-6 py-3 mx-auto">
@@ -30,6 +28,7 @@ export default function Navbar() {
 
                             <input
                                 type="text"
+                                onChange={(e) => setSearch(e.target.value)}
                                 className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-tl-lg rounded-bl-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
                                 placeholder="Найти мероприятие"
                             />
@@ -38,20 +37,7 @@ export default function Navbar() {
 
                     </div>
                 </div>
-
-                {/* Category: */}
-
-                {/* <p className='text-white underline mt-4'>Категории</p>
-                <div className="py-2 -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden text-white">
-                    {tags.map((tag) => (
-                        <Link id={tag} href="#" className="text-white mx-3 text-sm leading-5 transition-colors duration-300 transform hover:underline  cursor-pointermd:my-0">
-                            {tag}
-                        </Link>
-                    ))}
-                </div> */}
             </div>
-
-
         </nav >
     );
 }
