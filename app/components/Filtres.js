@@ -140,8 +140,8 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                                 <button
                                     key={tag}
                                     onClick={() => toggleTag(tag)}
-                                    className={`mx-1 my-1 py-2 px-4 text-left rounded-md ${selectedTags.includes(tag) ? 'bg-pink-400 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                                >
+                                    className={`mx-1 my-1 py-1 px-4 text-left rounded-full ${selectedTags.includes(tag) ? 'bg-pink-400 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
+                                >   
                                     {tag}
                                 </button>
                             ))}
