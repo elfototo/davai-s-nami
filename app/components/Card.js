@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Tags from './Tag';
 import dayjs from 'dayjs';
-import 'dayjs/locale/ru'; 
+import 'dayjs/locale/ru';
 dayjs.locale('ru');
 
 const Card = ({ type, category, title, date, place, price, data }) => {
@@ -15,22 +15,27 @@ const Card = ({ type, category, title, date, place, price, data }) => {
       {/* Header card */}
       <div className='relative border-b border-[#D9D9D9]'>
         <Image className={heightImage[type]}
-          src="/img/card.svg"
+          src="/img/cat.png"
           width={250}
           height={250}
           alt="avatar" />
 
+        <div className='flex items-baseline absolute top-3 left-3 rounded-full px-3 py-1 border border-[#D9D9D9] bg-[#fff]'>
+          <p className='text-[#444] mr-1 font-roboto font-bold'>от</p>
+          <p className="text-[#444] font-roboto font-bold dark:text-white">{price}₽</p>
+        </div>
+
         {/* Category template */}
-        <Tags category={category}/>
+        <Tags category={category} />
+
       </div>
 
       {/* Card content */}
       <div className='h-[150] px-5 py-5'>
+        <div className="mb-3">
+          <p className="text-[#444] font-medium font-roboto">{title}</p>
+        </div>
         <div className='flex items-center justify-between flex-wrap'>
-          <div className='flex items-baseline mr-3'>
-            <p className='text-[#444] mr-1 font-roboto font-bold'>от</p>
-            <h2 className="text-[#444] font-roboto font-medium dark:text-white">{price}₽</h2>
-          </div>
 
           <div className=''>
             <div className='flex items-center'>
@@ -47,9 +52,7 @@ const Card = ({ type, category, title, date, place, price, data }) => {
             </div>
           </div>
         </div>
-        <div className="mt-3">
-          <p className="text-[#444] font-medium font-roboto">{title}</p>
-        </div>
+
       </div>
     </div>
 

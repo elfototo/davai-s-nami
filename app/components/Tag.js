@@ -89,7 +89,7 @@ const Tags = ({ category }) => {
     const currentCategory = categories.find((item) => item.category === category);
 
     return (
-        <div className={`absolute left-5 bottom-5 rounded-full flex items-center px-3 py-1 ${currentCategory ? currentCategory.color : 'bg-[#111]'}`}>
+        <div className={`absolute left-3 bottom-3 rounded-full flex items-center px-3 py-1 ${currentCategory ? currentCategory.color : 'bg-[#111]'}`}>
             {currentCategory ? currentCategory.icon : null}
             <h4 className="text-[1rem] font-roboto text-white">{category}</h4>
         </div>
