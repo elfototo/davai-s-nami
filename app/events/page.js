@@ -55,7 +55,7 @@ export default function Events() {
         setSearch={setSearch}
       />
       <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center'>
-        <aside className='lg:w-[20%] w-full h-auto mb-3 mr-3'>
+        <aside className='lg:w-[20%] w-full mb-3 mr-3'>
           <Filtres
             startDate={startDate}
             setStartDate={setStartDate}

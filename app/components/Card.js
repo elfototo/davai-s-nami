@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Tags from './Tag';
+import Tag from './Tag';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 dayjs.locale('ru');
@@ -26,7 +26,7 @@ const Card = ({ type, category, title, date, place, price, data }) => {
         </div>
 
         {/* Category template */}
-        <Tags category={category} />
+        <Tag category={category} />
 
       </div>
 
