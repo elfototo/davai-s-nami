@@ -2,6 +2,7 @@
 
 import './globals.css';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer'
 
 export default function RootLayout({ children }) {
 
@@ -12,6 +13,9 @@ export default function RootLayout({ children }) {
           <Navbar/>
         </header>
         <main>{children}</main>
+        <footer className='bg-[#333]'>
+          <Footer/>
+        </footer>
       </body>
     </html>
   );

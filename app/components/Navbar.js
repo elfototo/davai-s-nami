@@ -16,7 +16,7 @@ const Navbar = () => {
       <div className="container px-6 py-4 mx-auto max-w-custom-container">
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="flex items-center justify-between">
-            <Link onClick={toggleMenu} href="/" className='mr-5 text-[1.8rem] font-bold text-[#444]'>
+            <Link onClick={toggleMenu} href="/" className='mr-5 text-[1.8rem] font-roboto font-bold text-[#444]'>
               Давай с нами!
             </Link>
 
