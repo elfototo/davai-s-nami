@@ -2,7 +2,6 @@
 
 import { categories } from '../data/events';
 import { useState } from 'react';
-import { RiInstagramFill } from "react-icons/ri";
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaVk } from "react-icons/fa";
 
@@ -44,7 +43,7 @@ const Footer = () => {
 
                 <div className="">
                     <p className=" font-bold font-roboto text-white">Категории:</p>
-                    <ul className='grid grid-cols-2 md:grid-cols-3 gap-x-5'>
+                    <ul className='grid grid-cols-3  lg:grid-cols-4 gap-x-10'>
                         {dataCategories.map((category) => (
                             <li key={category} className='hover:text-white hover:underline cursor-pointer my-2 text-gray-300'>{category}</li>
                         ))}
