@@ -74,7 +74,8 @@ module.exports = {
 				sm: '480px',
 				md: '768px',
 				lg: '976px',
-				xl: '1440px'
+				xl: '1440px',
+				special: '1110px', // for hover effect categories
 			},
 			maxWidth: {
 				'custom-container': '77.5rem'

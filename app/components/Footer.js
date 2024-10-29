@@ -13,7 +13,7 @@ const Footer = () => {
     const [dataCategories, setDataCategories] = useState(categories);
 
     return (
-        <div className='max-w-custom-container text-white mt-10 px-6 py-8 mx-auto'>
+        <div className='max-w-custom-container text-white px-6 py-8 mx-auto'>
 
             <div className='flex flex-col'>
                 <Link href="/" className='text-[1.8rem] font-medium text-white'>
