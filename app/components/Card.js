@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 dayjs.locale('ru');
 
-const Card = ({ type, category, title, date, place, price, id }) => {
+const Card = ({ type, category, title, date, place, price, id, image }) => {
   const heightImage = {
     mini: 'object-cover object-center w-full h-[200px] transform transition duration-300 hover:scale-105',
     max: 'object-cover object-center w-full h-auto transform transition duration-300 hover:scale-105',
@@ -18,9 +18,9 @@ const Card = ({ type, category, title, date, place, price, id }) => {
         {/* Header card */}
         <div className='relative overflow-hidden border border-[#D9D9D9]'>
           <Image className={heightImage[type]}
-            src="/img/cat.png"
-            width={300}
-            height={300}
+            src={image}
+            width={500}
+            height={500}
             alt="avatar" />
 
           <div className='flex items-baseline absolute top-3 left-3 rounded-full px-3 py-1 border border-[#D9D9D9] bg-[#fff]'>

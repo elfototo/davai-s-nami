@@ -26,7 +26,7 @@ export default function EventPage({ params }) {
 
           <div className='mt-5 lg:mt-20 lg:flex lg:items-start'>
             <Image className='object-cover object-center w-full lg:w-[32rem] rounded-lg h-96 md:shadow-xl'
-              src="/img/cat.png"
+              src={event.image}
               width={1000}
               height={1000}
               alt="avatar" />

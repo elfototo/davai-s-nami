@@ -83,6 +83,7 @@ export default function Events() {
                 key={card.id}
                 id={card.id}
                 data={card}
+                image={card.image}
               />
             ))}
           </div>
