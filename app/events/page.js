@@ -54,23 +54,25 @@ export default function Events() {
         search={search}
         setSearch={setSearch}
       />
-      <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center'>
-        <aside className='lg:w-[20%] w-full mb-3 mr-3'>
-          <Filtres
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-            setBgColor={setBgColor}
-            sortPrice={sortPrice}
-            setSortPrice={setSortPrice}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-          />
+      <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center '>
+        <aside className='lg:w-[20%] w-full mb-3 mr-3 relative'>
+          <div className='block inset-0 lg:sticky lg:top-4 z-10'>
+            <Filtres
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+              selectedTags={selectedTags}
+              setSelectedTags={setSelectedTags}
+              setBgColor={setBgColor}
+              sortPrice={sortPrice}
+              setSortPrice={setSortPrice}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+            />
+          </div>
         </aside>
-        <section className={`lg:w-[80%] w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
+        <section className={`lg:w-[80%]  w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <div className={`grid gap-3 grid-cols-2 md:grid-cols-4`}>
             {filteredEvents.map((card) => (
               <Card

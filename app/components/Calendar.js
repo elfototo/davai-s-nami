@@ -153,7 +153,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                 </div>
             </div>
             {showCalendar && (
-                <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white border border-gray-300 rounded shadow-md p-4 max-w-md w-full">
                         <div className="flex justify-between mb-2">
                             <button

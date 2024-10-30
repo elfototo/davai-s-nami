@@ -8,8 +8,8 @@ dayjs.locale('ru');
 
 const Card = ({ type, category, title, date, place, price, id, image }) => {
   const heightImage = {
-    mini: 'object-cover object-center w-full h-[200px] transform transition duration-300 hover:scale-105',
-    max: 'object-cover object-center w-full h-auto transform transition duration-300 hover:scale-105',
+    mini: 'object-cover object-center w-full h-[200px] transform transition duration-300 hover:scale-105 relative',
+    max: 'object-cover object-center w-full h-auto transform transition duration-300 hover:scale-105 relative',
   };
 
   return (
@@ -17,6 +17,7 @@ const Card = ({ type, category, title, date, place, price, id, image }) => {
       <div className="w-full h-auto max-w-sm overflow-hidden bg-white rounded-lg border border-[#D9D9D9] hover:border-pink-400  cursor-pointer">
         {/* Header card */}
         <div className='relative overflow-hidden border border-[#D9D9D9]'>
+          
           <Image className={heightImage[type]}
             src={image}
             width={500}
