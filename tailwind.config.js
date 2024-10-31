@@ -10,6 +10,9 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			boxShadow: {
+				'custom': '0px 0px 20px rgba(0, 0, 0, 0.1)',
+			  },
 			backgroundImage: {
 				'accent-gradient': 'linear-gradient(90deg, rgba(78,19,179,1) 9%, rgba(245,45,133,1) 100%)'
 			},

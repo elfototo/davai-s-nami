@@ -2,6 +2,8 @@
 import './globals.css';
 import Card from './components/Card';
 import Categories from './components/Categories';
+import Categories_2 from './components/Categories_2';
+
 import Link from 'next/link';
 import 'animate.css';
 import { useEffect, useState } from 'react';
@@ -48,6 +50,12 @@ export default function Home() {
         <h1 className='font-roboto font-bold'>Куда сходить</h1>
         <div className='font-roboto font-medium'>
           <Categories />
+        </div>
+      </section>
+      <section className='max-w-custom-container mx-auto px-4'>
+        <h1 className='font-roboto font-bold'>Куда сходить</h1>
+        <div className='font-roboto font-medium'>
+          <Categories_2 />
         </div>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
