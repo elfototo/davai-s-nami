@@ -36,7 +36,7 @@ export default function Home() {
               transform transition-transform duration-300 hover:scale-105
               ${isAnimated ? 'animate__animated animate__pulse animate__repeat-2' : ''}
               `}>Мне повезет</button>
-          </div>         
+          </div>
 
           {/* md-screen */}
           <div className='h-full w-[60%] relative hidden md:block'>
@@ -44,7 +44,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-
+        <section className='max-w-custom-container mx-auto px-4'>
+          <h1 className='font-roboto font-bold'>Куда сходить</h1>
+          <div className='font-roboto font-medium'>
+            <Categories />
+          </div>
+        </section>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
         <h1 className='font-roboto font-bold'>Куда сходить</h1>

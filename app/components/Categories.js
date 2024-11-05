@@ -38,11 +38,7 @@ function Category({ value, className }) {
 
     return (
         <div className={`relative group flex justify-center items-center h-[90px] md:h-[150px] lg:h-[200px] overflow-hidden cursor-pointer ${className} hover:shadow-custom`}>
-            {/* <div className='absolute -left-[90%] transition-all duration-300 rotate-45 lg:group-hover:ml-[58%] special:group-hover:ml-[65%] transform bg-white w-[90px] md:w-[150px] lg:w-[170px] h-[90px] md:h-[150px] lg:h-[170px] rounded-xl'>
-            </div> */}
-            {/* <div className='absolute inset-0 bg-gradient-to-tl from-white/40 to-transparent '>
-                {currentCategory ? currentCategory.icon : <IoStar size={40} color='white' className='absolute top-[36%] -left-[30%] transition-all duration-300 transform' />}
-            </div> */}
+            
             <h2 className='md:absolute md:top-10 md:left-10 text-[1.4rem] md:text-[1.6rem] text-[#333]'>
                 {value}
             </h2>
