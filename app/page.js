@@ -44,17 +44,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <section className='max-w-custom-container mx-auto px-4'>
-          <h1 className='font-roboto font-bold'>Куда сходить</h1>
-          <div className='font-roboto font-medium'>
-            <Categories />
-          </div>
-        </section>
+
       </section>
+
       <section className='max-w-custom-container mx-auto px-4'>
         <h1 className='font-roboto font-bold'>Куда сходить</h1>
         <div className='font-roboto font-medium'>
-          <Categories_2 />
+          <Categories />
         </div>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
