@@ -7,7 +7,7 @@ import { data } from '../data/events';
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
-import utc from 'dayjs/plugin/utc';
+import utc from 'dayjs/plugin/utc'; 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.locale('ru');
@@ -28,8 +28,7 @@ export default function Events() {
   const filteredEvents = events.filter((event) => {
 
     // sort date
-    const [day, month, year] = event.date.split('-');
-    const eventDate = dayjs(`${year}-${month}-${day}`).utc(+3).startOf('day');
+    const eventDate = dayjs(event.from_date).utcOffset(+3).startOf('day');
     const isInDateRange = (!startDate || eventDate.isSame(startDate, 'day')) ||
       (!endDate || eventDate.isSame(endDate, 'day')) ||
       (startDate && endDate && eventDate.isAfter(startDate) && eventDate.isBefore(endDate));
@@ -73,16 +72,16 @@ export default function Events() {
           </div>
         </aside>
         <section className={`lg:w-[80%]  w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
-          <div className={`grid gap-3 grid-cols-2 md:grid-cols-4`}>
+          <div className={`grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch`}>
             {filteredEvents.map((card) => (
               <Card
                 type='mini'
                 category={card.category}
                 price={card.price}
                 title={card.title}
-                date={card.date}
-                place={card.place}
-                key={card.id}
+                from_date={card.from_date}
+                address={card.address}
+                key={card.event_id}
                 id={card.id}
                 data={card}
                 image={card.image}

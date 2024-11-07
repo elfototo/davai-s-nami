@@ -1,20 +1,40 @@
 'use client'
+
 import { data } from '../../data/events';
 import Image from 'next/image';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
 import 'dayjs/locale/ru';
 import { useState } from 'react';
 import { IoShareSocialSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
+import { BsCheckAll } from "react-icons/bs";
+
 
 
 dayjs.locale('ru');
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 
 export default function EventPage({ params }) {
 
   const [showPhoto, setShowPhoto] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const styleCopied = 'bg-green-500 border px-4 py-2 mt-3 text-white flex items-center rounded-xl cursor-pointer hover:bg-white hover:border-green-500 hover:text-green-500 transform transition-colors duration-300 ';
+  const styleNoCopied = 'bg-[#F52D85] border px-4 py-2 mt-3 text-white flex items-center rounded-xl cursor-pointer hover:bg-white hover:border-[#F52D85] hover:text-[#F52D85] transform transition-colors duration-300 ';
+
   const togglePhoto = () => {
     setShowPhoto(!showPhoto);
+  };
+
+  const hadleCopy = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+    });
   }
 
   const { id } = params;
@@ -52,12 +72,11 @@ export default function EventPage({ params }) {
                     <IoMdClose className='text-[2rem] text-[#fff]' />
                   </button>
                 </div>
-
               </div>
             }
 
-            <div>
-              <Image className='object-cover object-center w-full lg:w-[32rem] rounded-lg h-96 shadow-xl'
+            <div className='overflow-hidden shadow-xl h-96'>
+              <Image className='object-cover object-center w-full lg:w-[32rem] rounded-lg h-96  cursor-pointer hover:scale-105 transform transition-all duration-300'
                 src={event.image}
                 width={1000}
                 height={1000}
@@ -68,44 +87,44 @@ export default function EventPage({ params }) {
             <div className='mt-8 lg:px-10 lg:mt-0'>
 
               <h1 className="text-2xl font-bold text-[#333] lg:text-3xl my-0 font-roboto mb-5 mx-1">
-                {event.category} <br /> <span className="text-[#F52D85]">{event.title}</span>
+                {event.title}
               </h1>
 
-              <div className='mx-1 mb-3 p-5 bg-[#f4f4f9] rounded-2xl w-full lg:w-[300px]'>
+              <div className='mx-1 mb-3 p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]'>
                 <div className='flex mb-3'>
                   <p className='text-[#777]'>Цена: </p>
-                  <p className='font-roboto text-[#333] text-gray-[#333]  lg:w-72 ml-6'>
-                    {event.price} ₽</p>
+                  <p className='font-roboto text-[#333] text-gray-[#333]  lg:w-72 ml-8'>
+                    {event.price}</p>
                 </div>
-                <div className='flex my-3 lg:w-72 '>
-                  <span className='text-[#777]'>Дата: </span>
-                  <div className='flex flex-col ml-7'>
-                    <p className='font-roboto text-[#333] text-gray-[#333] mb-1'>
-                      с 20:00, 29 окт. 2024
-                    </p>
-                    <p className='font-roboto text-[#333] text-gray-[#333] '>
-                      по 23:00, 29 окт. 2024
+                <div className='flex items-baseline my-3 lg:w-72 '>
+                  <p className='text-[#777]'>Дата: </p>
+                  <div className='flex flex-col ml-9'>
+                    <p className='font-roboto text-[#333] text-gray-[#333]'>
+                      {dayjs(event.from_date).format('DD MMMM')}
                     </p>
                   </div>
-
                 </div>
-                <div className='flex my-3 lg:w-72  '>
+                <div className='flex items-baseline my-3 lg:w-72 '>
+                  <p className='text-[#777]'>Начало:</p>
+                  <p className='font-roboto text-[#333] ml-4'>
+                    {dayjs(event.from_date).utc().tz('Europe/Moscow', true).format('HH:mm')}
+                  </p>
+                </div>
+                <div className='flex items-baseline my-3 '>
                   <p className='text-[#777]'>Место: </p>
-                  <p className='font-roboto text-[#333] hover:text-[#F52D85] ml-4 cursor-pointer'>
-                    {event.place}</p>
-                </div>
-                <div className='flex mt-3 lg:w-72 '>
-                  <p className='text-[#777]'>Адрес: </p>
-                  <p className='font-roboto text-[#333] hover:text-[#F52D85] ml-5 cursor-pointer'>
-                    улица 20</p>
+                  <p className='font-roboto text-[#333] hover:text-[#F52D85] ml-6 cursor-pointer'>
+                    {event.address}</p>
                 </div>
               </div>
 
-              <div className='flex'>
-                <div className='bg-[#F52D85] border px-4 py-2 mt-3 text-white flex items-center rounded-xl cursor-pointer hover:bg-white hover:border-[#F52D85] hover:text-[#F52D85] transform transition-colors duration-300'>
-                  <IoShareSocialSharp size={18} className='mr-2 ' />
+              <div className='flex relative'>
+                <button
+                  onClick={hadleCopy}
+                  className={copied ? styleCopied : styleNoCopied}>
+                  {copied ? <BsCheckAll size={18} className='mr-2 ' /> : <IoShareSocialSharp size={18} className='mr-2 ' />}
+
                   <p>Поделиться</p>
-                </div>
+                </button>
               </div>
 
 
@@ -114,7 +133,7 @@ export default function EventPage({ params }) {
           </div>
           {/* <div className='bg-[#F52D85] h-[1px] w-2/3'></div> */}
           <p className=' font-roboto font-bold text-[#777] text-gray-[#333] lg:w-72 mt-10'>Описание:</p>
-          <p className='text-[#777] font-roboto'>{event.content}</p>
+          <p className='text-[#777] font-roboto'>{event.full_text}</p>
         </div>
       </div>
     </div>
