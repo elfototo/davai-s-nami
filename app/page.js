@@ -2,24 +2,46 @@
 import './globals.css';
 import Card from './components/Card';
 import Categories from './components/Categories';
-import Categories_2 from './components/Categories_2';
-
 import Link from 'next/link';
 import 'animate.css';
 import { useEffect, useState } from 'react';
+import { data } from './data/events';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isoWeek from 'dayjs/plugin/isoWeek';
+
+
+dayjs.extend(isoWeek);
+dayjs.locale('ru');
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function Home() {
 
-  const [isAnimated, setIsAnimated] = useState(true);
-  useEffect(() => {
-    setIsAnimated(true);
+  const [events, setEvents] = useState(data);
 
-    const timer = setTimeout(() => {
-      setIsAnimated(false);
-    }, 1000);
+  const filterEventsTodayTomorrow = events.filter((event) => {
+    const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
+    const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
+    const tomorrow = today.add(1, 'day').startOf('day');
 
-    return () => clearTimeout(timer);
-  }, []);
+    const isToday = eventDate.isSame(today, 'day');
+    const isTomorrow = eventDate.isSame(tomorrow, 'day');
+
+    return isToday || isTomorrow;
+  });
+
+  const filterEventsWeekend = events.filter((event) => {
+    const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
+    const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
+    const endOfWeekend = startOfWeekend.add(1, 'day');
+    const isStartOfWeekend = eventDate.isSame(startOfWeekend, 'day');
+    const isEndOfWeekend = eventDate.isSame(endOfWeekend, 'day');
+
+    return isStartOfWeekend || isEndOfWeekend;
+  });
 
   return (
     <div>
@@ -34,7 +56,6 @@ export default function Home() {
             <button
               className={`font-roboto  w-3/4 py-4 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
               transform transition-transform duration-300 hover:scale-105
-              ${isAnimated ? 'animate__animated animate__pulse animate__repeat-2' : ''}
               `}>Мне повезет</button>
           </div>
 
@@ -61,11 +82,20 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
-            <Card type='max' />
-            <Card type='max' />
-            <Card type='max' />
-            <Card type='max' />
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
+            {filterEventsTodayTomorrow.slice(0, 4).map((card) => (
+              <Card
+                type='mini'
+                category={card.category}
+                price={card.price}
+                title={card.title}
+                from_date={card.from_date}
+                address={card.address}
+                key={card.event_id}
+                id={card.id}
+                data={card}
+                image={card.image} />
+            ))}
           </div>
         </div>
       </section>
@@ -76,12 +106,22 @@ export default function Home() {
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
-        <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
-            <Card type='max' />
-            <Card type='max' />
-            <Card type='max' />
-            <Card type='max' />
+        <div className='flex justify-center items-center flex-wrap'>
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
+            {filterEventsTodayTomorrow.slice(0, 4).map((card) => (
+              <Card
+                type='mini'
+                category={card.category}
+                price={card.price}
+                title={card.title}
+                from_date={card.from_date}
+                address={card.address}
+                key={card.event_id}
+                id={card.id}
+                data={card}
+                image={card.image} />
+            ))}
+
           </div>
         </div>
       </section>
@@ -92,13 +132,21 @@ export default function Home() {
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
-        <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 lg:grid-cols-4'>
-            <Card type='max' />
-            <Card type='max' />
-            <Card type='max' />
-            <Card type='max' />
-          </div>
+        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
+          {filterEventsWeekend.slice(0, 4).map((card) => (
+            <Card
+              type='mini'
+              category={card.category}
+              price={card.price}
+              title={card.title}
+              from_date={card.from_date}
+              address={card.address}
+              key={card.event_id}
+              id={card.id}
+              data={card}
+              image={card.image} />
+          ))}
+
         </div>
       </section>
 

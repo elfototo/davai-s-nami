@@ -5,12 +5,17 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-
+import Link from 'next/link';
 import 'dayjs/locale/ru';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { useState } from 'react';
 import { IoShareSocialSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { BsCheckAll } from "react-icons/bs";
+import { FaArrowRight } from "react-icons/fa6";
+
 
 
 
@@ -24,8 +29,8 @@ export default function EventPage({ params }) {
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const styleCopied = 'bg-green-500 border px-4 py-2 mt-3 text-white flex items-center rounded-xl cursor-pointer hover:bg-white hover:border-green-500 hover:text-green-500 transform transition-colors duration-300 ';
-  const styleNoCopied = 'bg-[#F52D85] border px-4 py-2 mt-3 text-white flex items-center rounded-xl cursor-pointer hover:bg-white hover:border-[#F52D85] hover:text-[#F52D85] transform transition-colors duration-300 ';
+  const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300 ';
+  const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
 
   const togglePhoto = () => {
     setShowPhoto(!showPhoto);
@@ -125,15 +130,32 @@ export default function EventPage({ params }) {
 
                   <p>Поделиться</p>
                 </button>
+                <Link
+                  href={event.url}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='bg-[#F52D85] hover:opacity-80 border px-4 py-2 mt-3 text-white flex items-center rounded-xl cursor-pointer transform transition-colors duration-300 ml-3'>
+                    {event.price === 'Бесплатно' || event.price === 'во встрече' ? 'На сайт мероприятия' : 'Купить билеты'}
+                  
+                  <FaArrowRight size={18} className='ml-3 ' />
+                </Link>
               </div>
 
-
+              <div className='flex'>
+              </div>
             </div>
-
           </div>
-          {/* <div className='bg-[#F52D85] h-[1px] w-2/3'></div> */}
-          <p className=' font-roboto font-bold text-[#777] text-gray-[#333] lg:w-72 mt-10'>Описание:</p>
-          <p className='text-[#777] font-roboto'>{event.full_text}</p>
+
+
+          <p className=' font-roboto font-bold text-[#777] text-gray-[#333] lg:w-72 mt-10'>{event.full_text ? 'Описание' : ''}:</p>
+          <ReactMarkdown
+            className="prose prose-sm md:prose-lg lg:prose-xl text-gray-800 leading-relaxed mt-4"
+            remarkPlugins={[remarkGfm]}>
+
+            {event.full_text}
+
+          </ReactMarkdown>
+
         </div>
       </div>
     </div>

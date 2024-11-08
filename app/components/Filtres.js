@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { events } from '../data/events';
 
 
 dayjs.extend(isoWeek);

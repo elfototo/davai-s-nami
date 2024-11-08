@@ -7,7 +7,7 @@ import { data } from '../data/events';
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
-import utc from 'dayjs/plugin/utc'; 
+import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.locale('ru');
@@ -42,7 +42,12 @@ export default function Events() {
       }
     }) : events;
 
-    const sortSearch = search.toLocaleLowerCase() === '' ? event : event.title.toLocaleLowerCase().includes(search) || event.category.toLocaleLowerCase().includes(search) || event.place.toLocaleLowerCase().includes(search);
+    const sortSearch =
+      (search?.toLocaleLowerCase() || '') === '' ? event :
+        (event.title?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '') ||
+        (event.category?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '') ||
+        (event.address?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '');
+
 
     return sortSearch && sortedEvents && isInDateRange && (selectedTags.length === 0 || selectedTags.includes(event.category));
   });

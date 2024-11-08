@@ -11,7 +11,7 @@ export const data = [
     "address": "ДОМ МОД, Каменноостровский пр., 37, Универмаг \"ДОМ МОД\", 3 этаж",
     "explored_date": "2024-10-25 00:00:07.248876 +00:00",
     "post_date": "2024-10-26 08:30:00.000000 +00:00",
-    "from_date": "2024-11-01 16:00:00.000000 +00:00",
+    "from_date": "2024-11-08 16:00:00.000000 +00:00",
     "to_date": "2024-11-01 18:00:00.000000 +00:00",
     "id": 4727,
     "place_id": 34,
@@ -34,9 +34,9 @@ export const data = [
     "price": "1200₽",
     "address": "Театр \"ТОК\"",
     "explored_date": "2024-10-22 00:00:14.524370 +00:00",
-    "post_date": "2024-10-24 13:20:00.000000 +00:00",
-    "from_date": "2024-10-29 17:00:00.000000 +00:00",
-    "to_date": "2024-10-29 18:00:00.000000 +00:00",
+    "post_date": "2024-11-24 13:20:00.000000 +00:00",
+    "from_date": "2024-11-29 17:00:00.000000 +00:00",
+    "to_date": "2024-11-29 18:00:00.000000 +00:00",
     "id": 4708,
     "place_id": 246,
     "full_text": "Спектакль «Любовник» — это история о любви и обмане, которая захватит зрителей с первых минут. Под маской идеальной семьи скрывается загадочная игра чувств и эмоций. Приготовьтесь к настоящему психологическому триллеру, где поиск истины может разрушить привычный мир героев",
@@ -59,8 +59,8 @@ export const data = [
     "address": "Культурный центр «Сердце»",
     "explored_date": "2024-10-25 00:00:07.248876 +00:00",
     "post_date": "2024-10-28 07:00:00.000000 +00:00",
-    "from_date": "2024-11-02 17:00:00.000000 +00:00",
-    "to_date": "2024-11-02 17:00:00.000000 +00:00",
+    "from_date": "2024-11-09 17:00:00.000000 +00:00",
+    "to_date": "2024-11-09 17:00:00.000000 +00:00",
     "id": 4723,
     "place_id": 19,
     "full_text": "Российская гранж-группа «7РАСА» приглашает поклонников на презентацию нового альбома в клубе «Сердце». Их насыщенное звучание и глубокая лирика снова удивят слушателей. На концерте прозвучат как новые, так и полюбившиеся хиты — это отличный шанс стать одним из первых, кто услышит их вживую.",
@@ -83,8 +83,8 @@ export const data = [
     "address": "Центр Добрососедства Театров \"Дом\", Мончегорская 10б",
     "explored_date": "2024-10-22 00:00:14.524370 +00:00",
     "post_date": "2024-10-23 13:20:00.000000 +00:00",
-    "from_date": "2024-10-29 17:00:00.000000 +00:00",
-    "to_date": "2024-10-29 18:00:00.000000 +00:00",
+    "from_date": "2024-11-29 17:00:00.000000 +00:00",
+    "to_date": "2024-11-29 18:00:00.000000 +00:00",
     "id": 4703,
     "place_id": 11,
     "full_text": "Коллектив \"Неноватор\" приглашает на уникальную читку \"Тюремный тариф премиум класса: на стульях\". Ожидается необычное соединение театрального искусства с элементами сюжета, навеянного темой тюремной жизни. Это первая открытая читка нового состава, где зрителям предложат совершенно новый взгляд на давно знакомую историю. Вход свободный, поэтому не упустите возможность стать частью этого необычного события!",
@@ -107,8 +107,8 @@ export const data = [
     "address": "Zoccolo 2.0",
     "explored_date": "2024-10-27 00:00:33.853677 +00:00",
     "post_date": "2024-10-28 09:00:00.000000 +00:00",
-    "from_date": "2024-11-01 16:00:00.000000 +00:00",
-    "to_date": "2024-11-01 20:00:00.000000 +00:00",
+    "from_date": "2024-11-08 16:00:00.000000 +00:00",
+    "to_date": "2024-11-08 20:00:00.000000 +00:00",
     "id": 4743,
     "place_id": 56,
     "full_text": "Эмо-гидра Bird Bone, Пекинский Велосипед и veresk объединились, чтобы устроить незабываемый вечер, который станет эпической встречей самых главных представителей эмо-сцены России. Это будет микс из душевных гимнов, зажигательных напутствий и чувственных боевиков. Не упустите шанс погрузиться в атмосферу настоящей эмо-волны!",
@@ -131,7 +131,7 @@ export const data = [
     "address": "Лиговский проспект, 50Ц",
     "explored_date": "2024-10-22 00:00:14.524370 +00:00",
     "post_date": "2024-10-24 09:00:00.000000 +00:00",
-    "from_date": "2024-10-29 17:00:00.000000 +00:00",
+    "from_date": "2024-11-09 17:00:00.000000 +00:00",
     "to_date": "2024-10-29 19:00:00.000000 +00:00",
     "id": 4706,
     "place_id": 221,
@@ -251,7 +251,7 @@ export const data = [
     "address": "Молодёжный центр Эрмитажа, Дворцовая пл., 6/8",
     "explored_date": "2024-10-24 00:00:15.710721 +00:00",
     "post_date": "2024-10-26 08:00:00.000000 +00:00",
-    "from_date": "2024-10-30 16:00:00.000000 +00:00",
+    "from_date": "2024-11-30 16:00:00.000000 +00:00",
     "to_date": "2024-10-30 18:00:00.000000 +00:00",
     "id": 4715,
     "place_id": 5,
@@ -275,7 +275,7 @@ export const data = [
     "address": "LOONA, Арсенальная набережная, 1",
     "explored_date": "2024-10-27 00:00:33.853677 +00:00",
     "post_date": "2024-10-30 07:00:00.000000 +00:00",
-    "from_date": "2024-11-02 20:50:00.000000 +00:00",
+    "from_date": "2024-11-10 20:50:00.000000 +00:00",
     "to_date": "2024-11-03 03:00:00.000000 +00:00",
     "id": 4742,
     "place_id": null,
@@ -299,7 +299,7 @@ export const data = [
     "address": "Клуб Factory 3, Кожевенная линия, 40",
     "explored_date": "2024-10-27 00:00:33.853677 +00:00",
     "post_date": "2024-10-31 07:00:00.000000 +00:00",
-    "from_date": "2024-11-03 00:00:00.000000 +00:00",
+    "from_date": "2024-11-08 00:00:00.000000 +00:00",
     "to_date": "2024-11-04 00:00:00.000000 +00:00",
     "id": 4747,
     "place_id": 69,
@@ -323,7 +323,7 @@ export const data = [
     "address": "Библиотека «Лиговская», Лиговский пр-кт., д. 99",
     "explored_date": "2024-10-23 00:00:15.000000 +00:00",
     "post_date": "2024-10-25 07:00:00.000000 +00:00",
-    "from_date": "2024-11-01 16:00:00.000000 +00:00",
+    "from_date": "2024-11-09 16:00:00.000000 +00:00",
     "to_date": "2024-11-01 18:00:00.000000 +00:00",
     "id": 4717,
     "place_id": 247,
@@ -1032,5 +1032,2259 @@ export const data = [
     "main_category_id": 7
   }
 ];
+
+export const places = [
+  {
+    "id": 45,
+    "place_name": "Подписные издания",
+    "place_address": "\u200BЛитейный пр., 57",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/g9nce4",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 2,
+    "place_name": "Библиотека Планетарий 1",
+    "place_address": "наб. Обводного канала 74Ц",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/v2vv4",
+    "place_metro": "Обводный канал",
+    "place_city": "SPb"
+  },
+  {
+    "id": 1,
+    "place_name": "Севкабель Порт",
+    "place_address": "Кожевенная линия 40Д",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/q8an8",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 3,
+    "place_name": "Лендок",
+    "place_address": "наб. Крюкова канала 12",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/bowyh",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 4,
+    "place_name": "Warpp Live",
+    "place_address": "Литейный пр. 53",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/4w5l1b",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 5,
+    "place_name": "Молодёжный центр Эрмитажа",
+    "place_address": "Дворцовая пл., 6/8",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/buv22",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 6,
+    "place_name": "Открытая Гостиная",
+    "place_address": "Литейный, 17-19",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/p2kbb",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 7,
+    "place_name": "brew-bar Rotacia",
+    "place_address": "Каменноостровский пр., 37",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/d122gi",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 8,
+    "place_name": "Ласточка",
+    "place_address": "Транспортный пер. 10А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/knzxt",
+    "place_metro": "Лиговский Проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 10,
+    "place_name": "Цифергауз",
+    "place_address": "Новая Голландия",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/aiund7",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 11,
+    "place_name": "Центр добрососедства театров «Дом»",
+    "place_address": "\u200BМончегорская ул., 10Б",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/lz38mk",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 12,
+    "place_name": "Ферма Бенуа",
+    "place_address": "Тихорецкий пр., 17Г",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1jo1g6",
+    "place_metro": "Академическая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 13,
+    "place_name": "Aurora Concert Hall",
+    "place_address": "Пироговская наб., 5/2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/p1o2w",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 14,
+    "place_name": "Центр петербурговедения (Маяковка)",
+    "place_address": "наб. р. Фонтанки, 44",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/xqh40t",
+    "place_metro": "Достоевская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 15,
+    "place_name": "MOD club",
+    "place_address": "Арсенальная наб., 1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/s913a",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 16,
+    "place_name": "ЦСИ им. Сергея Курёхина",
+    "place_address": "Лиговский пр., 73",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/w0uct",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 17,
+    "place_name": "Манеж",
+    "place_address": "\u200BИсаакиевская пл., 1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/g1e9xv",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 18,
+    "place_name": "Stage StandUp Club",
+    "place_address": "ул. Восстания, 24/27Б",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/djvvtn",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 20,
+    "place_name": "Ленфильм",
+    "place_address": "Каменноостровский, 10",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1ynms",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 21,
+    "place_name": "Гигант Холл",
+    "place_address": "Кондратьевский просп., 44",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/43svk",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 22,
+    "place_name": "Упсала-Цирк",
+    "place_address": "Свердловская набережная, 44Ю",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1i0l2",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 23,
+    "place_name": "Студия СДВИГ",
+    "place_address": "Гражданская ул., 13-15",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/y5w39x",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 24,
+    "place_name": "Бертгольд центр",
+    "place_address": "\u200BГражданская ул., 13-15",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tspnz",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 25,
+    "place_name": "KGallery",
+    "place_address": "наб. реки Фонтанки, 24",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/h8lsk8",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 26,
+    "place_name": "Union Bar",
+    "place_address": "Литейный пр., 55",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/yfktd",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 27,
+    "place_name": "Бар Поддон",
+    "place_address": "Лиговский просп., 50У",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/3k7qh",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 28,
+    "place_name": "Французский институт",
+    "place_address": "Невский проспект, 12",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/qrs15",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 29,
+    "place_name": "Sound",
+    "place_address": "\u200BКожевенная линия, 40Б",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/oeuzfj",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 30,
+    "place_name": "галерея \"УЖЕ\"",
+    "place_address": "Биржевая линия, 12",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/3tc35",
+    "place_metro": "Спортивная",
+    "place_city": "SPb"
+  },
+  {
+    "id": 31,
+    "place_name": "Сад Меншикова",
+    "place_address": "Биржевая линия, 8-10",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/pwxo8",
+    "place_metro": "Спортивная",
+    "place_city": "SPb"
+  },
+  {
+    "id": 32,
+    "place_name": "Двор Гостинки",
+    "place_address": "Невский пр., 35В",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/i5krx",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 33,
+    "place_name": "Левашовский хлебозавод",
+    "place_address": "барочная ул., 4а",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/vwb9u",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 34,
+    "place_name": "Дом мод",
+    "place_address": "Каменноостровский пр., 37",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/guu3g",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 35,
+    "place_name": "Здание Технической академии Росатома",
+    "place_address": "Аэродромная улица, 4",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/6zx0a",
+    "place_metro": "Чёрная речка",
+    "place_city": "SPb"
+  },
+  {
+    "id": 37,
+    "place_name": "Культурный квартал Брусницын",
+    "place_address": "\u200BКожевенная линия, 30",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/cy9sj",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 38,
+    "place_name": "Театральная площадка Зал 3 (Ленполиграфмаш)",
+    "place_address": "пр. Медиков, 3А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/vp1a9gu",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 39,
+    "place_name": "Ленполиграфмаш",
+    "place_address": "\u200BАптекарский пр., 4",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/j9m78",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 40,
+    "place_name": "Новая сцена Александринского театра",
+    "place_address": "наб. реки Фонтанки, 49А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/grmim",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 9,
+    "place_name": "Новая Голландия",
+    "place_address": "\u200Bнаб. Адмиралтейского канала, 2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/8aka3",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 41,
+    "place_name": "Никольские ряды",
+    "place_address": "Садовая ул., 62А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/vqy9q",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 42,
+    "place_name": "Бар «Темнеет»",
+    "place_address": "Биржевая линия, 12",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/6pnesq",
+    "place_metro": "Спортивная-2",
+    "place_city": "SPb"
+  },
+  {
+    "id": 43,
+    "place_name": "Петрикирхе",
+    "place_address": "Невский пр., 22-24",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/wiltc",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 44,
+    "place_name": "Библиотека Комиксов",
+    "place_address": "7-ая Красноармейская ул., 30",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/izmnkg",
+    "place_metro": "Технологический Институт",
+    "place_city": "SPb"
+  },
+  {
+    "id": 46,
+    "place_name": "Анненкирхе",
+    "place_address": "кирочная ул., 8В",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/31e7v",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 47,
+    "place_name": "Дворец Белосельских-Белозерских",
+    "place_address": "\u200BНевский проспект, 41",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/anmi0",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 48,
+    "place_name": "Центр искусства и науки Университета ИТМО",
+    "place_address": "Биржевая линия 16",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/xe9vy",
+    "place_metro": "Спортивная-2",
+    "place_city": "SPb"
+  },
+  {
+    "id": 49,
+    "place_name": "Бар Мачты",
+    "place_address": "Кожевенная линия, 40Е",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/y5f5p",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 50,
+    "place_name": "Порядок слов",
+    "place_address": "\u200BНабережная реки Фонтанки, 15",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/9mb8s",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 51,
+    "place_name": "Площадка Скороход",
+    "place_address": "Московский пр-т., 107к5",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/jqmbn",
+    "place_metro": "Московские ворота",
+    "place_city": "SPb"
+  },
+  {
+    "id": 254,
+    "place_name": "Библиотека Ленина",
+    "place_address": "ул. Воскова, д. 2",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 52,
+    "place_name": "Fish Fabrique Nouvelle",
+    "place_address": "Лиговский пр. 53",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/0ym3ih",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 53,
+    "place_name": "Библиотека «На Стремянной»",
+    "place_address": "\u200BСтремянная ул., 20",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/27f6zc",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 55,
+    "place_name": "Клуб Sound (Севкабель Порт)",
+    "place_address": "Кожевенная линия, 40б",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/oeuzfj",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 56,
+    "place_name": "Zoccolo 2.0",
+    "place_address": "Лиговский пр., 50к3",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/ue6zpa",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 57,
+    "place_name": "МИСП",
+    "place_address": "наб. канала Грибоедова, 103",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/r8tvc",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 58,
+    "place_name": "One's Mind Gallery",
+    "place_address": "Шведский переулок, 2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/fbmwr",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 59,
+    "place_name": "Кинотеатр Аврора",
+    "place_address": "\u200BНевский проспект, 60",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/g3x2p",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 60,
+    "place_name": "Third Place",
+    "place_address": "Литейный пр., 62",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/xzwqh",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 61,
+    "place_name": "Beriozka gallery",
+    "place_address": "\u200BЛермонтовский проспект, 43/1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/43tva",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 62,
+    "place_name": "Музей музыки (Шереметевский дворец)",
+    "place_address": "\u200Bнаб. реки Фонтанки, 34",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/hkgdg",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 63,
+    "place_name": "Росфото",
+    "place_address": "ул. Большая Морская, д. 35",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/mv0dn",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 64,
+    "place_name": "Triglinki",
+    "place_address": "\u200BРузовская, 21",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/f597v",
+    "place_metro": "Пушкинская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 65,
+    "place_name": "Культурный квартал Брусницын",
+    "place_address": "Кожевенная линия, 30",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/76m1b",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 66,
+    "place_name": "Place",
+    "place_address": "\u200BУлица Маршала Говорова, 47",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/bcelj",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 67,
+    "place_name": "Мраморный дворец",
+    "place_address": "\u200BУлица Миллионная, 5/1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/9lry4",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 19,
+    "place_name": "Культурный центр «Сердце»",
+    "place_address": "Лиговский пр. 50к16",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/gvl0u",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 90,
+    "place_name": "Музей-квартира Л.Н.Бенуа",
+    "place_address": "3-я линия в.о., дом 20, кв. 8",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tdjih",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 69,
+    "place_name": "Клуб Factory 3",
+    "place_address": "Кожевенная линия 40Д",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/kn5u7",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 92,
+    "place_name": "Центр британской книги",
+    "place_address": "7-я Красноармейская, 30",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/3gxr8",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 68,
+    "place_name": "Ерундопель-театр",
+    "place_address": "Лиговский проспект, д. 53",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1n4dzw",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 70,
+    "place_name": "Музей звука",
+    "place_address": "\u200BЛиговский пр., 53\u200B",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/z6ym1",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 71,
+    "place_name": "Нормальное место",
+    "place_address": "(\u200BИсткабель), Кожевенная линия, 34а",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/oqw5e",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 72,
+    "place_name": "Молодёжный центр \"Квадрат\"",
+    "place_address": "ул. Передовиков, 16к2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/k1kuv",
+    "place_metro": "Ладожская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 73,
+    "place_name": "ТЕАТРАЛКА",
+    "place_address": "наб. Адмиралтейского канала, 27",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1un38",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 74,
+    "place_name": "Русский Музей (корпус Бенуа)",
+    "place_address": "\u200BИнженерная ул., 2-4",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/2ubqci",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 75,
+    "place_name": "Мраморный дворец",
+    "place_address": "\u200BУлица Миллионная, 5/1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/iabr9",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 76,
+    "place_name": "Kazanskaya Page",
+    "place_address": "Казанская ул.д. 3А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/wnn51",
+    "place_metro": "Невский Проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 77,
+    "place_name": "Галерея Формат",
+    "place_address": "2-я линия в.о., 17",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/77cs6",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 78,
+    "place_name": "Зимний Дворец (Эрмитаж)",
+    "place_address": "\u200BДворцовая площадь, 2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/32032",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 79,
+    "place_name": "Галерея «Цифергауз»",
+    "place_address": "Остров «Новая Голландия», \u200Bнаб. Адмиралтейского канала, 2, корпус 12а",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/e2e8e",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 80,
+    "place_name": "Отель We&I Ramada",
+    "place_address": "Орджоникидзе, 44А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/f5wkl",
+    "place_metro": "Московская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 81,
+    "place_name": "Кофейня «Стрелка»",
+    "place_address": "4 линия в.о., 59",
+    "place_url": "https://go.2gis.com/xlfe5",
+    "url_to_address": "https://go.2gis.com/xlfe5",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 82,
+    "place_name": "MYTH Gallery",
+    "place_address": "ул.\u200BЧайковского, 61",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/2eea1",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 83,
+    "place_name": "Арт-Сад",
+    "place_address": "Невский пр., 65",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/iow7n",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 84,
+    "place_name": "Площадка 51",
+    "place_address": "Большая Конюшенная ул., 9",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/bp5ja",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 85,
+    "place_name": "Теплица",
+    "place_address": "\u200Bнаб. реки Фонтанки, 96",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/uqaq4",
+    "place_metro": "Спасская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 86,
+    "place_name": "ДК им.Кирова",
+    "place_address": "Большой проспект В.О., 83",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/xdmw7",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 87,
+    "place_name": "Артмуза",
+    "place_address": "13 линия в.о., д 70",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/5resw",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 88,
+    "place_name": "Temple of Deer",
+    "place_address": "\u200BАрсенальная набережная, 1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tvusl",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 89,
+    "place_name": "Театр \"Сова\"",
+    "place_address": "ул. Марата, 86",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/w8s81",
+    "place_metro": "Звенигородская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 93,
+    "place_name": "Оранжерея Таврического сада",
+    "place_address": "ул. Потемкинская, 2, лит. Г",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/jmh1v0",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 94,
+    "place_name": "Яани Кирик",
+    "place_address": "Ул. Декабристов, 54",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/q6d9s",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 95,
+    "place_name": "МИСП",
+    "place_address": "наб. к. Грибоедова, 103",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/3urzsz",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 96,
+    "place_name": "Арт-бар \"Сухой закон\"",
+    "place_address": "Кирочная ул., 11",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/rapfd",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 97,
+    "place_name": "Библиотека Кировских островов",
+    "place_address": "Кемская ул. 8/3",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/e0506",
+    "place_metro": "Крестовский остров",
+    "place_city": "SPb"
+  },
+  {
+    "id": 98,
+    "place_name": "Фантастический театр \"ВЫХОД\"",
+    "place_address": "Каменноостровский пр., 27Г",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/qpqze",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 99,
+    "place_name": "Клуб Космонавт",
+    "place_address": "\u200BБронницкая, 24",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/7huga",
+    "place_metro": "Технологический Институт",
+    "place_city": "SPb"
+  },
+  {
+    "id": 91,
+    "place_name": "Bashmakov gallery",
+    "place_address": "пр. Медиков д. 3",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/j9m78",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 100,
+    "place_name": "Библиотека им.А.П.Чехова",
+    "place_address": "ул.Турку, д.11, к.1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/4k13b",
+    "place_metro": "Международная",
+    "place_city": "SPb"
+  },
+  {
+    "id": 101,
+    "place_name": "Клуб \"Cult\"",
+    "place_address": "Лиговский пр., 43-45Г",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tshc5r",
+    "place_metro": "Лиговский Проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 102,
+    "place_name": "Бутафорский цех (галерея)",
+    "place_address": "Михайловский пер., 7а",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/kwyqgw",
+    "place_metro": "Нарвская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 103,
+    "place_name": "Мастерская «Горка»",
+    "place_address": "Дегтярная ул., 5-7",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/cl03a",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 104,
+    "place_name": "Библиотека на Карповке (Лавренёва)",
+    "place_address": "наб. р.Карповки, д.28",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/vtcql",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 105,
+    "place_name": "Студия «Я творю»",
+    "place_address": "наб.реки Мойки 67/69",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/d6zem",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 106,
+    "place_name": "Angleterre Cinema Lounge",
+    "place_address": "Малая Морская ул., 24",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/gvxju",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 107,
+    "place_name": "Театр Цехъ",
+    "place_address": "Чкаловский проспект 12/20В",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/6cw68",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 108,
+    "place_name": "Мастерская Аникушина",
+    "place_address": "Вяземский пер., д. 8",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/kwbh5",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 109,
+    "place_name": "Планетарий №1",
+    "place_address": "наб. Обводного канала 74Ц",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/e8dyv",
+    "place_metro": "Обводный канал",
+    "place_city": "SPb"
+  },
+  {
+    "id": 110,
+    "place_name": "Библиотека им. А.И.Герцена",
+    "place_address": "ул. новгородская, д.27",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/zachm",
+    "place_metro": "Площадь Александра Невского",
+    "place_city": "SPb"
+  },
+  {
+    "id": 111,
+    "place_name": "Svalka",
+    "place_address": "\u200BКожевенная линия, 34",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/ka38b",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 112,
+    "place_name": "Театр \"и ТэДэ\"",
+    "place_address": "Матисов пер., 4лит3",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/yk1wj",
+    "place_metro": "Спасская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 119,
+    "place_name": "Антикафе \"12 комнат\"",
+    "place_address": "Думская ул., 4",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/gil0s",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 120,
+    "place_name": "Михайловский замок",
+    "place_address": "ул. Садовая, 2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/afxmz",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 121,
+    "place_name": "Клуб Blank",
+    "place_address": "\u200BАрсенальная набережная, 1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/quu6w",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 122,
+    "place_name": "Центр «Антон тут рядом»",
+    "place_address": "Невский пр., 104",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/prhn3",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 123,
+    "place_name": "Санкт-Петербургский Планетарий",
+    "place_address": "\u200BАлександровский парк, 4",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/gm9fb",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 124,
+    "place_name": "Европейский университет",
+    "place_address": "ул. Шпалерная, д. 1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/h7uy4",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 125,
+    "place_name": "Факультет Свободных искусств и наук (СПбГУ)",
+    "place_address": "Галерная ул., 58-60",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/14bc5",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 126,
+    "place_name": "Дом Бильдерлингов",
+    "place_address": "Большая Морская ул., д.53/8",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/j3rc3",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 127,
+    "place_name": "VNVNC Concert Hall",
+    "place_address": "Конюшенная площадь, 2В",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/zvxwg",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 128,
+    "place_name": "Клуб TONES",
+    "place_address": "Казанская ул., 7Р",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/8qin8",
+    "place_metro": "Невский Проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 129,
+    "place_name": "МТС Live Холл",
+    "place_address": "Приморский пр., 80",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tfiksq",
+    "place_metro": "Беговая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 130,
+    "place_name": "ДК им. И.И.Газа",
+    "place_address": "пр.Стачек, 72",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/xe19p",
+    "place_metro": "Кировский завод",
+    "place_city": "SPb"
+  },
+  {
+    "id": 131,
+    "place_name": "Abramova Gallery (DAA)",
+    "place_address": "\u200BКрасногвардейская площадь, 3",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/lctxm",
+    "place_metro": "Новочеркасская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 132,
+    "place_name": "Камерный литературный театр «На Первой линии»",
+    "place_address": "\u200B1-я линия В.О., 52,",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/q8lk6",
+    "place_metro": "Спортивная-2",
+    "place_city": "SPb"
+  },
+  {
+    "id": 133,
+    "place_name": "Пространство “Легко-Легко”",
+    "place_address": "Большая Пушкарская, 10",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/f70q1",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 134,
+    "place_name": "Особняк Серебряковой",
+    "place_address": "наб. Кутузова, дом 22",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/lxhat",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 135,
+    "place_name": "Юсуповский сад",
+    "place_address": "",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/0t7lpx",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 136,
+    "place_name": "Пространство SENO",
+    "place_address": "гороховая ул., 49",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/y22nl",
+    "place_metro": "Сенная",
+    "place_city": "SPb"
+  },
+  {
+    "id": 137,
+    "place_name": "Гостиная «Сообщество»",
+    "place_address": "Новая Голландия, наб. Адмиралтейского канала, 2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/mq5w3",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 138,
+    "place_name": "Летучий Голландец",
+    "place_address": "Мытнинская наб., 6",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/t1t1k",
+    "place_metro": "Спортивная",
+    "place_city": "SPb"
+  },
+  {
+    "id": 139,
+    "place_name": "Иной Театр (Вавилов Лофт)",
+    "place_address": "Кадетская линия, 5, корп. 2Д",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tet1l",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 140,
+    "place_name": "Библиотека на Чёрной речке",
+    "place_address": "наб. чёрной речки, 12",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/3pc57",
+    "place_metro": "Чёрная речка",
+    "place_city": "SPb"
+  },
+  {
+    "id": 141,
+    "place_name": "Библиотека «Ржевская»",
+    "place_address": "Индустриальный проспект, д. 35к1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/5mvacl",
+    "place_metro": "Ладожская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 142,
+    "place_name": "Бар \"Птичь Личность\"",
+    "place_address": "Рубинштейна, 28Д",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/ezb1h",
+    "place_metro": "Достоевская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 143,
+    "place_name": "Театр «Морфеус»",
+    "place_address": "наб. Мойки, 28",
+    "place_url": "https://go.2gis.com/tl02d",
+    "url_to_address": "",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 144,
+    "place_name": "Музей «Полторы комнаты» Иосифа Бродского",
+    "place_address": "ул. Короленко, 14",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/yx4wl",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 145,
+    "place_name": "Центр \"Среда\"",
+    "place_address": "Большая Пушкарская ул., 32А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1g84gy",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 146,
+    "place_name": "VOKZAL 1853",
+    "place_address": "наб. Обводного канала 118С",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1d527",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 147,
+    "place_name": "Креативное пространство «Мойка-8»",
+    "place_address": "наб. реки Мойки 8",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/x7c6o",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 148,
+    "place_name": "Книжная лавка писателей",
+    "place_address": "Невский пр., 66",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/ei843",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 149,
+    "place_name": "Сообщество ВСмысле",
+    "place_address": "ул. Гороховая, 47",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/0610a",
+    "place_metro": "Сенная площадь",
+    "place_city": "SPb"
+  },
+  {
+    "id": 150,
+    "place_name": "Мансарда Поднебесная",
+    "place_address": "Белинского, 9",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/upsck",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 151,
+    "place_name": "Малый театр кукол",
+    "place_address": "Лиговский пр., 267к2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/84sux",
+    "place_metro": "Обводный канал",
+    "place_city": "SPb"
+  },
+  {
+    "id": 152,
+    "place_name": "Арт-гостиная",
+    "place_address": "ул Воскова, д.6",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/y8kbd",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 252,
+    "place_name": "Пространство 10 этаж",
+    "place_address": "Наличная ул., 36, корпус 7б",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 153,
+    "place_name": "Библиотека \"Бронницкая\"",
+    "place_address": "\u200BКлинский пр., 17",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/q6jqs",
+    "place_metro": "Технологический Институт 2",
+    "place_city": "SPb"
+  },
+  {
+    "id": 154,
+    "place_name": "Open You Gallery",
+    "place_address": "Басков пер., 13-15",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/cbcf6",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 155,
+    "place_name": "Magic&Coffee",
+    "place_address": "ул. Большая Конюшенная, д.9",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/o3y7q",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 156,
+    "place_name": "Бар Debaser",
+    "place_address": "Владимирский проспект, 8",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/iqzkb",
+    "place_metro": "Владимирская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 157,
+    "place_name": "Mishka bar",
+    "place_address": "Конногвардейский бульвар, 4",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1yq66",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 158,
+    "place_name": "Летний сад",
+    "place_address": "",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/drf0kz",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 159,
+    "place_name": "Театр Нити",
+    "place_address": "Кадетская лин. ВО, 5 2д",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/9nzp7",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 160,
+    "place_name": "Дом книги",
+    "place_address": "Невский, 28",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/lt7dmc",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 161,
+    "place_name": "Библиотека им.А.И.Герцена",
+    "place_address": "ул. Новгородская, д.27",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/bi5ts",
+    "place_metro": "Площадь Александра Невского",
+    "place_city": "SPb"
+  },
+  {
+    "id": 162,
+    "place_name": "Клуб «Douglas»",
+    "place_address": "Финляндский пр., д.1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/4oevb",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 163,
+    "place_name": "Новый музей Аслана Чехоева",
+    "place_address": "\u200B6-я линия В.О., 29",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/gyir1",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 164,
+    "place_name": "Format Gallery",
+    "place_address": "2 линия В.О., 17",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1a0gr",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 165,
+    "place_name": "Пространство Monodome Line",
+    "place_address": "11 линия В.О., 56",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/2pnj3",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 166,
+    "place_name": "Ритмы",
+    "place_address": "Кожевенная линия, 34",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/08gorw",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 167,
+    "place_name": "Грибоедов-хилл",
+    "place_address": "Воронежская ул. 2П",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/6re2n",
+    "place_metro": "Лиговский Проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 168,
+    "place_name": "Park King",
+    "place_address": "Александровский Парк, 4к3",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/yqfhg",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 169,
+    "place_name": "Канатный цех с водонапорной башней завода",
+    "place_address": "25-я линия В.О., 6к1",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/9kk33",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 170,
+    "place_name": "Зелёная Сцена",
+    "place_address": "Рощинская ул., 38",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/bmi1q",
+    "place_metro": "Электросила",
+    "place_city": "SPb"
+  },
+  {
+    "id": 171,
+    "place_name": "Антикварная галерея \"Петербург\"",
+    "place_address": "Невский пр., 54",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/190fa",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 172,
+    "place_name": "Арт-кафе «Подвалъ Бродячей Собаки»",
+    "place_address": "Итальянская ул, д.4",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/238bc",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 173,
+    "place_name": "Витебский вокзал (2 этаж, Картинный зал)",
+    "place_address": "Загородный пр., 52",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/dxgcd",
+    "place_metro": "Пушкинская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 174,
+    "place_name": "Бар Linza",
+    "place_address": "Кадетская линия В.О. дом 5 корпус 2",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/pwbdqm",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 175,
+    "place_name": "Крыша 18",
+    "place_address": "Петроградская набережная, 18",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/wqin5",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 176,
+    "place_name": "COM.NATA Uno",
+    "place_address": "Лиговский пр., 50к12",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/x86t8",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 177,
+    "place_name": "Джаз клуб Игоря Бутмана",
+    "place_address": "наб. к. Грибоедова, дом 7",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/js93t",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 178,
+    "place_name": "Усы на пене",
+    "place_address": "Лиговский проспект, 50к16",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/mh09q",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 179,
+    "place_name": "Концертный зал Imperial Hall",
+    "place_address": "пр-кт. Стачек, д. 72",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tpvt4",
+    "place_metro": "Кировский завод",
+    "place_city": "SPb"
+  },
+  {
+    "id": 180,
+    "place_name": "Причал «Румянцевский спуск»",
+    "place_address": "Университетская, наб. 15",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/qtir6l",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 182,
+    "place_name": "Галерея «Свиное рыло»",
+    "place_address": "\u200BНабережная реки Фонтанки, 5",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/4kf08",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 183,
+    "place_name": "Мариинский театр-2 (Новая сцена)",
+    "place_address": "ул. Декабристов, д. 34",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/eqfms",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 184,
+    "place_name": "Завод Разин",
+    "place_address": "Курляндская улица, 48",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/6i0v3",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 185,
+    "place_name": "Tele2 Art Space&Co",
+    "place_address": "Елагин остров",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/tg9t0",
+    "place_metro": "Крестовский остров",
+    "place_city": "SPb"
+  },
+  {
+    "id": 186,
+    "place_name": "Выборгский Дворец культуры",
+    "place_address": "ул.Комиссара Смирнова, д.15, лит. А",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/rkmct",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 187,
+    "place_name": "Клуб А2",
+    "place_address": "пр. медиков, 3",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/op0wf",
+    "place_metro": "Петроградская.",
+    "place_city": "SPb"
+  },
+  {
+    "id": 188,
+    "place_name": "Театр Поколений",
+    "place_address": "Курляндская ул., дом 49",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/20nqb",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 189,
+    "place_name": "Театр «Суббота»",
+    "place_address": "ул. Звенигородская, д. 30",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/7pjhk",
+    "place_metro": "Звенигородская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 190,
+    "place_name": "Духовая академия Воронцова",
+    "place_address": "\u200BЛермонтовский пр., 1/44",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/frjti",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 191,
+    "place_name": "Школа Академической Фотографии",
+    "place_address": "Улица Красного Курсанта, 30",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/1o2gs",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 192,
+    "place_name": "Театр музыкальной комедии",
+    "place_address": "ул. Итальянская, дом 13",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/xt5ob",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 193,
+    "place_name": "Музей Анны Ахматовой",
+    "place_address": "Литейный пр-кт., д. 53",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/wt8653",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 194,
+    "place_name": "Кофейня «Просто»",
+    "place_address": "16-я линия В.О., д. 1.",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/u1axup",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 195,
+    "place_name": "Елагин остров",
+    "place_address": "",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/l4ii1",
+    "place_metro": "Крестовский остров",
+    "place_city": "SPb"
+  },
+  {
+    "id": 197,
+    "place_name": "АртЛаб Медоварус",
+    "place_address": "Мучной переулок, 5",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 196,
+    "place_name": "Музей героев Кино, Мультфильмов и Комиксов",
+    "place_address": "наб. Обводного канала 134-136, корп.10",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Нарвская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 198,
+    "place_name": "Кофейня Skuratov",
+    "place_address": "ул. Восстания, 35",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/i2qwz",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 199,
+    "place_name": "Резиденция Hideout",
+    "place_address": "Римского-Корсакова 22](https://2gis.ru/spb/search/Резиденция Hideout, Римского-Корсакова 22",
+    "place_url": "",
+    "url_to_address": "https://2gis.ru/spb/search/Резиденция%20Hideout",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 253,
+    "place_name": "Библиотека Тимирязева",
+    "place_address": "ул. Шкапина, 6",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 200,
+    "place_name": "Музей археологии",
+    "place_address": "Невская куртина Петропавловской крепости",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/v89np",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 201,
+    "place_name": "Галерея-бар ПРОРУБЬ",
+    "place_address": "Английский проспект, 26",
+    "place_url": "",
+    "url_to_address": "https://go.2gis.com/qon24",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 202,
+    "place_name": "The Hat",
+    "place_address": "Белинского, 9",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 203,
+    "place_name": "Молодёжный театр на Фонтанке",
+    "place_address": "наб. Реки Фонтанки, д. 114",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Технологический Институт",
+    "place_city": "SPb"
+  },
+  {
+    "id": 204,
+    "place_name": "Центр Михаила Шемякина",
+    "place_address": "Садовая, 11",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 54,
+    "place_name": "Anna Nova Gallery",
+    "place_address": "\u200Bул. Жуковского, 28",
+    "place_url": "https://go.2gis.com/npt72",
+    "url_to_address": "https://go.2gis.com/npt72",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 205,
+    "place_name": "Библиотечный центр «Старт»",
+    "place_address": "Елизаветинская ул. 8",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Озерки",
+    "place_city": "SPb"
+  },
+  {
+    "id": 206,
+    "place_name": "Молодёжный клуб «ФанДом»",
+    "place_address": "ул. Гатчинская д. 23-25",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 207,
+    "place_name": "Клуб «Money Honey»",
+    "place_address": "ул. Садовая, д. 28/30",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 118,
+    "place_name": "Музей советских игровых автоматов",
+    "place_address": "Конюшенная пл., 2сВ",
+    "place_url": "https://go.2gis.com/wcbnv",
+    "url_to_address": "https://go.2gis.com/wcbnv",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 208,
+    "place_name": "Интерьерный театр",
+    "place_address": "Невский пр., 104",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 210,
+    "place_name": "Театр им. Ленсовета",
+    "place_address": "Владимирский пр., д.12",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Владимирская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 211,
+    "place_name": "Музей-квартира Л. Бенуа",
+    "place_address": "3-я линия ВО, дом 20, кв. 8",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Василеостровская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 212,
+    "place_name": "Нарядная рюмочная",
+    "place_address": "Белинского, 8",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 213,
+    "place_name": "Театр «Мастерская»",
+    "place_address": "ул. Народная, дом 1",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Ломоносовская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 214,
+    "place_name": "Пушкинская-10",
+    "place_address": "Лиговский пр., 53",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 215,
+    "place_name": "Екатерининское собрание",
+    "place_address": "наб.канала Грибоедова, 88-90",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Садовая",
+    "place_city": "SPb"
+  },
+  {
+    "id": 216,
+    "place_name": "Фиджитал-галерея «Охра»",
+    "place_address": "наб. реки Мойки, 37",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 217,
+    "place_name": "Российская национальная библиотека",
+    "place_address": "Московский пр., д. 165, корп. 2",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Парк Победы",
+    "place_city": "SPb"
+  },
+  {
+    "id": 218,
+    "place_name": "Karlsson Haus на Фурштатской",
+    "place_address": "Фурштатская ул., 30",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Чернышевская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 219,
+    "place_name": "Отель Indigo St.Petersburg-Tchaikovского",
+    "place_address": "Ул. Чайковского 17",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Чернышевская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 220,
+    "place_name": "Российская Национальная Библиотека",
+    "place_address": "Набережная реки Фонтанки, 36",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 221,
+    "place_name": "popravka.bar",
+    "place_address": "Лиговский пр., 50Ц",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Площадь Восстания",
+    "place_city": "SPb"
+  },
+  {
+    "id": 222,
+    "place_name": "Библиотека им.М.В.Ломоносова",
+    "place_address": "ул. Нахимова, д.8к3",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 223,
+    "place_name": "Клуб Una Volta",
+    "place_address": "Арсенальная наб, 1",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 224,
+    "place_name": "За Нарисованным Очагом",
+    "place_address": "Арсенальная ул., д.2",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Площадь Ленина",
+    "place_city": "SPb"
+  },
+  {
+    "id": 225,
+    "place_name": "Римско-католический собор Успения Пресвятой Девы Марии",
+    "place_address": "1-я Красноармейская ул., 11",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Технологический Институт",
+    "place_city": "SPb"
+  },
+  {
+    "id": 226,
+    "place_name": "Клуб «Jagger»",
+    "place_address": "пл. Конституции, 2",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Московская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 227,
+    "place_name": "Театр Эстрады имени Аркадия Райкина",
+    "place_address": "ул. Большая Конюшенная, 27",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 228,
+    "place_name": "Библиотека книжной графики",
+    "place_address": "Измайловский проспект 16/30",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Технологический институт",
+    "place_city": "SPb"
+  },
+  {
+    "id": 229,
+    "place_name": "Голландская церковь",
+    "place_address": "Невский пр., д. 20",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 230,
+    "place_name": "Кинотеатр «Великан Парк»",
+    "place_address": "Александровский парк, 4/3",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 231,
+    "place_name": "Особняк О.В. Серебряковой",
+    "place_address": "наб. Кутузова, 22",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Чернышевская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 232,
+    "place_name": "Пространство «Цистерна х Т-Банк»",
+    "place_address": "ул. Курляндская, 48",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Балтийская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 233,
+    "place_name": "Poison Bar",
+    "place_address": "Рубинштейна, 13",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 234,
+    "place_name": "Театральная библиотека",
+    "place_address": "ул. Зодчего Росси, 2",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 235,
+    "place_name": "Особняк Мясникова",
+    "place_address": "ул. Восстания, 45",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Чернышевская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 236,
+    "place_name": "Resonance Records",
+    "place_address": "Кожевенная линия, 34",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Приморская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 237,
+    "place_name": "Театр Земли",
+    "place_address": "Матисов пер., 4 лит.3",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Адмиралтейская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 238,
+    "place_name": "Театр «ЛДМ»",
+    "place_address": "Петровский пр., 20, лит Д",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Спортивная",
+    "place_city": "SPb"
+  },
+  {
+    "id": 239,
+    "place_name": "Театр-фестиваль «Балтийский дом»",
+    "place_address": "Александровский парк, д.4",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Горьковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 240,
+    "place_name": "Пространство «Freedom»",
+    "place_address": "ул. Казанская, 7",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 241,
+    "place_name": "Библиотека \"Точки зрения\"",
+    "place_address": "ул. Стрельнинская, д. 11",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Чкаловская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 242,
+    "place_name": "Лофт «Стекло»",
+    "place_address": "ул.Фарфоровская 2, студия 404",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Ломоносовская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 243,
+    "place_name": "Музей Достоевского",
+    "place_address": "Кузнечный пер., 5/2",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Владимирская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 244,
+    "place_name": "Филармония джазовой музыки",
+    "place_address": "Загородный пр-кт., д. 27/21",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Владимирская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 245,
+    "place_name": "Библиотека \"Современник\"",
+    "place_address": "Заневский пр., 32",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Новочеркасская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 246,
+    "place_name": "Театр \"ТОК\"",
+    "place_address": "ул. Инженерная, 7",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  },
+  {
+    "id": 247,
+    "place_name": "Библиотека «Лиговская»",
+    "place_address": "Лиговский пр-кт., д. 99",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Лиговский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 248,
+    "place_name": "Ресторан «Квартира 8»",
+    "place_address": "ул. Марата, дом 1/71 (этаж 5)",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Маяковская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 249,
+    "place_name": "Театральный центр на Коломенской",
+    "place_address": "ул. Коломенская, д.43",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Лиговский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 250,
+    "place_name": "Музей-квартира Л. Н. Бенуа",
+    "place_address": "3-я линия В.О., 20",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Спортивная-2",
+    "place_city": "SPb"
+  },
+  {
+    "id": 251,
+    "place_name": "Арт-пространство «Белая черепаха»",
+    "place_address": "Каменноостровский пр., 27Г",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Петроградская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 255,
+    "place_name": "Охта-8 (Библиотека Маяковского)",
+    "place_address": "Большеохтинский проспект, дом 8",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Новочеркасская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 256,
+    "place_name": "АТС",
+    "place_address": "ул. Некрасова, 3-5",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Чернышевская",
+    "place_city": "SPb"
+  },
+  {
+    "id": 209,
+    "place_name": "Государственная академическая капелла",
+    "place_address": "наб. реки Мойки, 20",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Невский проспект",
+    "place_city": "SPb"
+  },
+  {
+    "id": 257,
+    "place_name": "Дворцовая Арт",
+    "place_address": "ул. Миллионная 5",
+    "place_url": "",
+    "url_to_address": "",
+    "place_metro": "Гостиный двор",
+    "place_city": "SPb"
+  }
+
+]
 
 export const categories = ['Концерт', 'Выставка', 'Танцы', 'Мастер-класс', 'Интервью', 'Кино', 'Перформанс', 'Лекция', 'Вечеринка', 'Театр', 'Фестиваль', 'Искусство', 'Экскурсия', 'Музыка', 'Стендап', 'Другое'];
