@@ -1041,7 +1041,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/g9nce4",
     "place_metro": "Маяковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun6-20.userapi.com/impf/o0MWa8TQooN85IBBfHA-z-RKT5po2nmTZq_jzw/LwE0nIgncVo.jpg?size=960x643&quality=96&sign=546c633f1d294f1621d0154041a7ca8f&type=album"
   },
   {
     "id": 2,
@@ -1050,7 +1051,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/v2vv4",
     "place_metro": "Обводный канал",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-48.userapi.com/impg/oVLFTQZuhDn-Li8Bflxq_AcMwzmo6hRIGbuC6w/shFGjt1xy1k.jpg?size=2560x1707&quality=95&sign=3d8efe4bbec1b182e2d5d35c3f041103&type=album"
   },
   {
     "id": 1,
@@ -1059,7 +1061,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/q8an8",
     "place_metro": "Приморская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-32.userapi.com/impg/aJqmBMWkCjI89B-R4WHhMBjGDesbi9hT_1-zIg/wA-BZnEyM48.jpg?size=2560x1707&quality=95&sign=331e432bef9da040bba5efd74361496d&type=album"
   },
   {
     "id": 3,
@@ -1068,7 +1071,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/bowyh",
     "place_metro": "Садовая",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-43.userapi.com/impg/0NA8c3AGtRxkCN8WoU_14Cwvh-EFxyVLFttoIg/UJd7Evn-Ccc.jpg?size=1280x853&quality=95&sign=649a58eccbc4fd30dc44b45211e75b04&type=album",
   },
   {
     "id": 4,
@@ -1077,7 +1081,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/4w5l1b",
     "place_metro": "Маяковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/3629247/2a000001755cc92f355f66fc2a20d47e4369/XXXL"
   },
   {
     "id": 5,
@@ -1086,7 +1091,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/buv22",
     "place_metro": "Адмиралтейская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/6314780/2a00000188f47a6b5d004df04a1174a5cac0/XXXL"
   },
   {
     "id": 6,
@@ -1095,7 +1101,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/p2kbb",
     "place_metro": "Маяковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/1775373/2a0000016ae2f971d60ef76eed0e2c29d7b9/XXXL"
   },
   {
     "id": 7,
@@ -1104,7 +1111,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/d122gi",
     "place_metro": "Петроградская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/7725442/2a000001840a5327d11e064a83b09a7eb596/XXXL"
   },
   {
     "id": 8,
@@ -1113,7 +1121,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/knzxt",
     "place_metro": "Лиговский Проспект",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-15.userapi.com/impg/q-_4_mYEeCwpHMXpwNgDzS1XtY8_K-RkZgz3Qg/Q7YiYHPIsSk.jpg?size=2560x1837&quality=95&sign=d6f2b21adfe850de3a865e4e8e6842e7&type=album"
   },
   {
     "id": 10,
@@ -1122,7 +1131,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/aiund7",
     "place_metro": "Адмиралтейская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/758957/2a00000186b8217751687e34231abcae0436/XXXL"
   },
   {
     "id": 11,
@@ -1131,7 +1141,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/lz38mk",
     "place_metro": "Чкаловская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-39.userapi.com/impf/c850120/v850120143/75ed4/fAMijd2XLvs.jpg?size=1920x1280&quality=96&sign=95a9fb238e7d19e1ca7f942b13e3b28a&type=album"
   },
   {
     "id": 12,
@@ -1140,7 +1151,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/1jo1g6",
     "place_metro": "Академическая",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun6-20.userapi.com/impf/c850332/v850332803/19f3f4/RMmhxYJHcCU.jpg?size=2500x1667&quality=96&sign=1a03aea3e516e92c3dc909b083db0ff0&type=album"
   },
   {
     "id": 13,
@@ -1149,7 +1161,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/p1o2w",
     "place_metro": "Площадь Ленина",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-30.userapi.com/impg/w3hx-tyUBUk62bBy0zmMIOfyot7pC2UPr3H_tw/EuRUWid-PRk.jpg?size=1800x1200&quality=96&sign=4d4de6a482cc24b412147bb511031715&type=album"
   },
   {
     "id": 14,
@@ -1158,7 +1171,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/xqh40t",
     "place_metro": "Достоевская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/965007/2a00000188107f7b2c168d722aa5eea585e5/XXXL"
   },
   {
     "id": 15,
@@ -1167,7 +1181,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/s913a",
     "place_metro": "Площадь Ленина",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-60.userapi.com/impg/c856132/v856132838/18587b/5JBXfTdQBiQ.jpg?size=2560x1707&quality=96&sign=5026c01170cf2d231fe82ea5f628f265&type=album"
   },
   {
     "id": 16,
@@ -1176,7 +1191,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/w0uct",
     "place_metro": "Площадь Восстания",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/2816622/2a00000171956d0e49f06eac568b3921cce7/XXXL"
   },
   {
     "id": 17,
@@ -1185,7 +1201,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/g1e9xv",
     "place_metro": "Адмиралтейская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/903559/2a00000188f5328fcdf143d096983b6c7cb6/XXXL"
   },
   {
     "id": 18,
@@ -1194,7 +1211,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/djvvtn",
     "place_metro": "Площадь Восстания",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/8072647/2a0000018478ab9632e8e5f891c8fba8c942/XXXL"
   },
   {
     "id": 20,
@@ -1203,7 +1221,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/1ynms",
     "place_metro": "Горьковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/754546/2a0000018f3f85d2730bf73b513a25412495/XXXL"
   },
   {
     "id": 21,
@@ -1212,7 +1231,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/43svk",
     "place_metro": "Площадь Ленина",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/5098810/2a00000182658d3a916b7f01a7419a4ce1c6/XXXL"
   },
   {
     "id": 22,
@@ -1221,7 +1241,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/1i0l2",
     "place_metro": "Площадь Ленина",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-78.userapi.com/impf/c851324/v851324669/1e4099/7Wx9NrubrE4.jpg?size=2560x1706&quality=96&sign=1a8c3c5e8ece8c6ddf6aeddcdc7ad85c&type=album"
   },
   {
     "id": 23,
@@ -1230,7 +1251,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/y5w39x",
     "place_metro": "Садовая",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-39.userapi.com/impg/zz9JOObWiGUxNw38LG9pAUexjTyl2ulzJOhYlA/QA_QKBPdJcs.jpg?size=2560x1661&quality=95&sign=776fd82ef0b22b47c7b3c5581eef52d3&type=album"
   },
   {
     "id": 24,
@@ -1239,7 +1261,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/tspnz",
     "place_metro": "Садовая",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/9737178/2a0000018a92a1348ec6ab6b6e3d391307c1/XXXL"
   },
   {
     "id": 25,
@@ -1248,7 +1271,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/h8lsk8",
     "place_metro": "Гостиный двор",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/9742646/2a0000018a077f97b96098bc0dbec4a7742a/XXXL"
   },
   {
     "id": 26,
@@ -1257,7 +1281,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/yfktd",
     "place_metro": "Маяковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/1027861/2a00000186302b21b8bd29e70683ded0451c/XXXL"
   },
   {
     "id": 27,
@@ -1266,7 +1291,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/3k7qh",
     "place_metro": "Площадь Восстания",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/13220782/2a00000190897bba93213950eda3196429ec/XXXL"
   },
   {
     "id": 28,
@@ -1275,7 +1301,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/qrs15",
     "place_metro": "Адмиралтейская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/11381866/2a0000018bb1984a6ed15eb395bd9c46a5c9/XXXL"
   },
   {
     "id": 29,
@@ -1284,7 +1311,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/oeuzfj",
     "place_metro": "Приморская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/9704097/2a0000018aa085442b69f9f87a028fab3516/XXXL"
   },
   {
     "id": 30,
@@ -1293,7 +1321,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/3tc35",
     "place_metro": "Спортивная",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/922263/2a0000018817f9f18ff4d5d62ce794b58281/XXXL"
   },
   {
     "id": 31,
@@ -1302,7 +1331,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/pwxo8",
     "place_metro": "Спортивная",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/903559/2a00000188f3aab20453c237bf31bfb79427/XXXL"
   },
   {
     "id": 32,
@@ -1311,7 +1341,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/i5krx",
     "place_metro": "Гостиный двор",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/961502/2a00000190c1784c2f82d8baf6ae8c97c679/XXXL"
   },
   {
     "id": 33,
@@ -1320,7 +1351,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/vwb9u",
     "place_metro": "Чкаловская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/9742646/2a00000188c3e90c09cffd0e46784d448582/XXXL"
   },
   {
     "id": 34,
@@ -1329,7 +1361,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/guu3g",
     "place_metro": "Петроградская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/5234599/2a000001814e5a268b8ba24b2997c976e2c2/XXXL"
   },
   {
     "id": 35,
@@ -1338,7 +1371,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/6zx0a",
     "place_metro": "Чёрная речка",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/9752112/2a0000018922e19c05ff330ad426e2d41b95/XXXL"
   },
   {
     "id": 37,
@@ -1347,7 +1381,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/cy9sj",
     "place_metro": "Приморская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/13206609/2a00000190ca8f7f3fdf6ce96bcec093cd16/XXXL"
   },
   {
     "id": 38,
@@ -1356,7 +1391,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/vp1a9gu",
     "place_metro": "Петроградская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/4530524/2a0000017a1a2870ab8a78d4d1a4725d462d/XXXL"
   },
   {
     "id": 39,
@@ -1365,7 +1401,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/j9m78",
     "place_metro": "Петроградская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/4737312/2a0000017ba714ba7ad5eaf6da4deafdbee8/XXXL"
   },
   {
     "id": 40,
@@ -1374,7 +1411,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/grmim",
     "place_metro": "Гостиный двор",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/9724410/2a00000188f532d30b13cac6a48ce6a50ecf/XXXL"
   },
   {
     "id": 9,
@@ -1383,7 +1421,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/8aka3",
     "place_metro": "Адмиралтейская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/9770129/2a000001890370f7c777c7c0a603e18620d8/XXXL"
   },
   {
     "id": 41,
@@ -1392,7 +1431,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/vqy9q",
     "place_metro": "Садовая",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/2389272/2a0000017347af13d2b0b50c905e305a9192/XXXL"
   },
   {
     "id": 42,
@@ -1401,7 +1441,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/6pnesq",
     "place_metro": "Спортивная-2",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/4054675/2a00000175f52d7a72eb656b1dfe6f2b863c/XXXL"
   },
   {
     "id": 43,
@@ -1410,7 +1451,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/wiltc",
     "place_metro": "Невский проспект",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/11018317/2a0000018d565784beac98195a052ca5d59f/XXXL"
   },
   {
     "id": 44,
@@ -1419,7 +1461,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/izmnkg",
     "place_metro": "Технологический Институт",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-40.userapi.com/impg/MC3gBF-VqUiYiIz9ha5biyOHq97u31oKci_Rvw/mpWujtzXNk4.jpg?size=1500x1000&quality=95&sign=163885461e0c7e588f6bf71847d8f5f6&type=album"
   },
   {
     "id": 46,
@@ -1428,7 +1471,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/31e7v",
     "place_metro": "Маяковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://sun9-9.userapi.com/impf/c841138/v841138825/473ab/4OQHhVCx9f4.jpg?size=900x600&quality=96&sign=eacba937c6cf4485263ac6b7881cb0e3&type=album"
   },
   {
     "id": 47,
@@ -1437,7 +1481,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/anmi0",
     "place_metro": "Маяковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/10963046/2a0000018c6cb103d14f9199fbb9378f489c/XXXL"
   },
   {
     "id": 48,
@@ -1446,7 +1491,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/xe9vy",
     "place_metro": "Спортивная-2",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/4581272/2a00000177c66786b282af79749bb239a489/XXXL"
   },
   {
     "id": 49,
@@ -1455,7 +1501,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/y5f5p",
     "place_metro": "Приморская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/13267750/2a0000019133a82e21ab4c7ffe6b076cff70/XXXL"
   },
   {
     "id": 50,
@@ -1464,7 +1511,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/9mb8s",
     "place_metro": "Гостиный двор",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": "https://avatars.mds.yandex.net/get-altay/5469293/2a0000018192727cb3b3fd17768c23dbc5b2/XXXL"
   },
   {
     "id": 51,
@@ -1473,7 +1521,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/jqmbn",
     "place_metro": "Московские ворота",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": ""
   },
   {
     "id": 254,
@@ -1482,7 +1531,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "",
     "place_metro": "Горьковская",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": ""
   },
   {
     "id": 52,
@@ -1491,7 +1541,8 @@ export const places = [
     "place_url": "",
     "url_to_address": "https://go.2gis.com/0ym3ih",
     "place_metro": "Площадь Восстания",
-    "place_city": "SPb"
+    "place_city": "SPb",
+    "image": ""
   },
   {
     "id": 53,

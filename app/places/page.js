@@ -39,6 +39,7 @@ export default function Places() {
               place_address={card.place_address}
               place_metro={card.place_metro}
               place_city={card.place_city}
+              image={card.image}
             />
           ))}
         </div>

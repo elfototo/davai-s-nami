@@ -15,7 +15,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 
-const PlaceCard = ({ place_name, place_address, place_metro, place_city, id }) => {
+const PlaceCard = ({ place_name, place_address, place_metro, place_city, id, image }) => {
   const [showFulltext, setShowFulltext] = useState(false);
   const [showFullTitletext, setShowFullTitletext] = useState(false);
 
@@ -42,7 +42,7 @@ const PlaceCard = ({ place_name, place_address, place_metro, place_city, id }) =
 
           <Image
             className='object-cover object-center w-full h-[200px] transform transition duration-300 group-hover:scale-105 relative'
-            src='/img/card.svg'
+            src={image ? image : '/img/card.svg'}
             width={500}
             height={500}
             alt="avatar" />
