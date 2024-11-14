@@ -78,7 +78,7 @@ export default function Events() {
         </aside>
         <section className={`lg:w-[80%]  w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <div className={`grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch`}>
-            {filteredEvents.map((card) => (
+            {filteredEvents.length > 0 ? (filteredEvents.map((card) => (
               <Card
                 type='mini'
                 category={card.category}
@@ -91,7 +91,9 @@ export default function Events() {
                 data={card}
                 image={card.image}
               />
-            ))}
+            ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
+            Нет доступных событий.
+          </p>}
           </div>
         </section>
       </div>

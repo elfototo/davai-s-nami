@@ -146,13 +146,6 @@ const Navbar = () => {
                 <div className="w-8 h-8 overflow-hidden rounded-full">
                 <MdAccountCircle className='w-8 h-8 text-[#333]'/>
 
-                  {/* <Image
-                    src="/img/avatar.png"
-                    alt="avatar"
-                    width={32}
-                    height={32}
-                    className="object-cover w-full h-full"
-                  /> */}
                 </div>
                 <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Войти</h3>
               </button>
