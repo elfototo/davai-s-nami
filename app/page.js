@@ -83,7 +83,7 @@ export default function Home() {
         </div>
         <div className='flex justify-center flex-wrap'>
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
-            {filterEventsTodayTomorrow.slice(0, 4).map((card) => (
+            {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
                 category={card.category}
@@ -95,7 +95,9 @@ export default function Home() {
                 id={card.id}
                 data={card}
                 image={card.image} />
-            ))}
+            ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
+              Нет доступных событий.
+            </p>}
           </div>
         </div>
       </section>
@@ -108,7 +110,7 @@ export default function Home() {
         </div>
         <div className='flex justify-center items-center flex-wrap'>
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
-            {filterEventsTodayTomorrow.slice(0, 4).map((card) => (
+            {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
                 category={card.category}
@@ -120,8 +122,9 @@ export default function Home() {
                 id={card.id}
                 data={card}
                 image={card.image} />
-            ))}
-
+            ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
+            Нет доступных событий.
+          </p>}
           </div>
         </div>
       </section>
@@ -133,7 +136,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
-          {filterEventsWeekend.slice(0, 4).map((card) => (
+          {filterEventsWeekend.length > 0 ? (filterEventsWeekend.slice(0, 4).map((card) => (
             <Card
               type='mini'
               category={card.category}
@@ -145,7 +148,9 @@ export default function Home() {
               id={card.id}
               data={card}
               image={card.image} />
-          ))}
+          ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
+          Нет доступных событий.
+        </p>}
 
         </div>
       </section>
