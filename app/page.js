@@ -59,7 +59,7 @@ export default function Home() {
       setIsLoading(false); // Скрываем лоадер
       setShowGame(true); // Показываем окно мероприятия
       console.log(randomEvent.title);
-    }, 10000);
+    }, 8000);
   }
 
   const filterEventsTodayTomorrow = events.filter((event) => {
@@ -192,47 +192,43 @@ export default function Home() {
           </p>}
 
         </div>
-        <div className="h-screen font-cursive text-center text-[#004466] bg-[#e4e5e6] flex items-center justify-center z-20 fixed inset-0  bg-opacity-50 loader-wrapper">
-          <Loader className="relative z-30" />
-        </div>
 
         {isLoading && (
-          <div className="z-20 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 loader-wrapper">
+          <div className='fade-in'>
             <Loader />
           </div>
         )}
 
         {showGame &&
-          <div className='z-20 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'
+          <div className='fade-in z-30 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transform transition-all duration-300'
           >
-            <div className='bg-white border border-gray-300 rounded shadow-md p-4 max-w-xl w-auto relative max-h-[90%]'>
+            <div className='bg-white border border-gray-300 rounded-xl shadow-md p-4 max-w-xl w-auto relative max-h-[80%] mx-2 md:mx-0'>
               {randomEv ?
-                <Image className='mx-auto object-contain object-center rounded-lg  '
+                <Image className='mx-auto object-cover object-center rounded-lg h-[40vh] w-full shadow-xl'
                   src={randomEv.image}
                   width={1000}
                   height={1000}
-                  style={{ height: '60vh', width: 'auto' }}
 
                   alt="avatar" />
                 : ''}
 
               <div className='flex justify-center items-center'>
-                {randomEv ? <h2 className='my-2 mx-auto'>{randomEv.title}</h2> : ''}
+                {randomEv ? <p className='my-2 mx-auto font-roboto font-medium text-[2rem]'>{randomEv.title}</p> : ''}
               </div>
 
               <Link href={`/events/${randomEv.id}`}>
                 <button
 
-                  className='font-roboto my-1 mx-auto w-full py-4 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'
+                  className='font-roboto font-medium my-1 mx-auto w-full py-4 text-[1rem] bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'
                 >
                   Смотреть
                 </button>
               </Link>
               <button
                 onClick={toggleShowGame}
-                className='absolute -top-8 -right-8'
+                className='absolute top-5 right-5 md:-top-10 md:-right-10'
               >
-                <IoMdClose className='text-[2rem] text-[#fff]' />
+                <IoMdClose className='text-[3rem] p-2 md:p-0 text-[#333] bg-white rounded-full border-[2px] border-[#333] md:border-none md:bg-transparent md:text-[#fff]' />
               </button>
             </div>
           </div>

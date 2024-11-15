@@ -120,17 +120,14 @@ body {
 }
 
 /* loader */
-/* body {
+.loader-wrapper {
   height: 100vh;
-  font-family: "Delius Swash Caps", cursive;
   text-align: center;
-  color: #004466;
-  background: #e4e5e6;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-} */
+}
 
 .wrapper-no7 {
   display: flex;
@@ -157,9 +154,13 @@ body {
   opacity: 1;
 }
 .wrapper-no7 .logoani {
+  color: #111;
+  border-radius: 20px;
   align-self: flex-end;
   margin-left: -25px;
-  font-size: 45px;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 100%;
 }
 .wrapper-no7 .logo {
   font-size: 55px;
@@ -291,5 +292,26 @@ body {
   }
   .wrapper-no7 .logo {
     font-size: 45px;
+  }
+}
+
+.body-backcircle, .body-frontcircle, .body-between, .head, .ears-l, .ears-r, .tail, .backlegs1, .backlegs2, .frontlegs1, .frontlegs2 {
+  fill: #111; 
+}
+.eyes-l, .eyes-r {
+  fill: #FFFFFF;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
   }
 }
