@@ -51,7 +51,7 @@ export default function EventPage({ params }) {
 
   return (
     <div className='relative max-w-custom-container mx-auto'>
-      <div className=' flex'>
+      <div className='flex'>
 
         <div className='flex flex-col justify-center w-full min-h-scree px-6 py-5 md:py-10 mx-auto lg:inset-x-0 '>
 
@@ -63,7 +63,7 @@ export default function EventPage({ params }) {
               >
                 <div className='relative'>
                   <Image className='object-cover object-center rounded-lg  shadow-xl'
-                    src={event.image}
+                    src={event.image === "" || !event.image ? '/img/cat.png' : event.image}
                     width={1000}
                     height={1000}
                     style={{ height: '60vh', width: 'auto' }}
@@ -80,11 +80,11 @@ export default function EventPage({ params }) {
               </div>
             }
 
-            <div className='overflow-hidden shadow-xl h-96'>
-              <Image className='object-cover object-center w-full lg:w-[32rem] rounded-lg h-96  cursor-pointer hover:scale-105 transform transition-all duration-300'
-                src={event.image}
-                width={1000}
-                height={1000}
+            <div className='overflow-hidden shadow-xl rounded-lg lg:w-full h-96 lg:h-full max-w-[40%]'>
+              <Image className='object-cover object-center w-full lg:w-full rounded-lg h-96 lg:h-full cursor-pointer hover:scale-105 transform transition-all duration-300'
+                src={event.image === "" || !event.image ? '/img/cat.png' : event.image}
+                width={500}
+                height={500}
                 alt="avatar"
                 onClick={togglePhoto} />
             </div>
@@ -98,7 +98,7 @@ export default function EventPage({ params }) {
               <div className='mx-1 mb-3 p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]'>
                 <div className='flex mb-3'>
                   <p className='text-[#777]'>Цена: </p>
-                  <p className='font-roboto text-[#333] text-gray-[#333]  lg:w-72 ml-8'>
+                  <p className='font-roboto text-[#333] text-gray-[#333]  lg:w-72 ml-[34px]'>
                     {event.price}</p>
                 </div>
                 <div className='flex items-baseline my-3 lg:w-72 '>
@@ -117,8 +117,15 @@ export default function EventPage({ params }) {
                 </div>
                 <div className='flex items-baseline my-3 '>
                   <p className='text-[#777]'>Место: </p>
-                  <p className='font-roboto text-[#333] hover:text-[#F52D85] ml-6 cursor-pointer'>
+                  {event.place_id ? 
+                  <Link href={`/places/${event.place_id}`}>
+                    <p className='font-roboto text-[#333] hover:text-[#F52D85] ml-[25px] cursor-pointer'>
+                      {event.address}</p>
+                  </Link>
+                    : <p className='font-roboto text-[#333] ml-[25px] r'>
                     {event.address}</p>
+                  }
+
                 </div>
               </div>
 
@@ -135,8 +142,8 @@ export default function EventPage({ params }) {
                   target='_blank'
                   rel='noopener noreferrer'
                   className='bg-[#F52D85] hover:opacity-80 border px-4 py-2 mt-3 text-white flex items-center rounded-xl cursor-pointer transform transition-colors duration-300 ml-3'>
-                    {event.price === 'Бесплатно' || event.price === 'во встрече' ? 'На сайт мероприятия' : 'Купить билеты'}
-                  
+                  {event.price === 'Бесплатно' || event.price === 'во встрече' ? 'На сайт мероприятия' : 'Купить билеты'}
+
                   <FaArrowRight size={18} className='ml-3 ' />
                 </Link>
               </div>

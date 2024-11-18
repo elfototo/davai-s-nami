@@ -205,7 +205,7 @@ export default function Home() {
             <div className='bg-white border border-gray-300 rounded-xl shadow-md p-4 max-w-xl w-auto relative max-h-[80%] mx-2 md:mx-0'>
               {randomEv ?
                 <Image className='mx-auto object-cover object-center rounded-lg h-[40vh] w-full shadow-xl'
-                  src={randomEv.image}
+                  src={randomEv.image === "" ? "/img/cat.png" : randomEv.image}
                   width={1000}
                   height={1000}
 
@@ -213,7 +213,7 @@ export default function Home() {
                 : ''}
 
               <div className='flex justify-center items-center'>
-                {randomEv ? <p className='my-2 mx-auto font-roboto font-medium text-[2rem]'>{randomEv.title}</p> : ''}
+                {randomEv ? <p className='my-2 mx-auto font-roboto font-medium text-[1.5rem]'>{randomEv.title}</p> : ''}
               </div>
 
               <Link href={`/events/${randomEv.id}`}>

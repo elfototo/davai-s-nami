@@ -42,7 +42,7 @@ const PlaceCard = ({ place_name, place_address, place_metro, place_city, id, ima
 
           <Image
             className='object-cover object-center w-full h-[200px] transform transition duration-300 group-hover:scale-105 relative'
-            src={image ? image : '/img/card.svg'}
+            src={image ? image : '/img/cat.png'}
             width={500}
             height={500}
             alt="avatar" />
@@ -113,7 +113,7 @@ const PlaceCard = ({ place_name, place_address, place_metro, place_city, id, ima
           </div>
 
         </div>
-        <Link href={`/events/${id}`} className='flex justify-center'  >
+        <Link href={`/places/${id}`} className='flex justify-center'  >
           <button className='font-roboto my-2 mx-2  w-full py-2 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'>Смотреть</button></Link>
       </div>
 

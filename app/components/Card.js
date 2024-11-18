@@ -41,7 +41,7 @@ const Card = ({ type, category, title, from_date, address, price, id, image }) =
         <div className='relative overflow-hidden border-b border-[#D9D9D9]'>
 
           <Image className={heightImage[type]}
-            src={image ? image : '/img/card.svg'}
+            src={image ? image : '/img/cat.png'}
             width={500}
             height={500}
             alt="avatar" />
