@@ -98,12 +98,12 @@ export default function EventPage({ params }) {
               <div className='mx-1 mb-3 p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]'>
                 <div className='flex mb-3'>
                   <p className='text-[#777]'>Цена: </p>
-                  <p className='font-roboto text-[#333] text-gray-[#333]  lg:w-72 ml-[34px]'>
+                  <p className='font-roboto text-[#333] text-gray-[#333]  lg:w-72 ml-[33px]'>
                     {event.price}</p>
                 </div>
                 <div className='flex items-baseline my-3 lg:w-72 '>
                   <p className='text-[#777]'>Дата: </p>
-                  <div className='flex flex-col ml-9'>
+                  <div className='flex flex-col ml-[38px]'>
                     <p className='font-roboto text-[#333] text-gray-[#333]'>
                       {dayjs(event.from_date).format('DD MMMM')}
                     </p>

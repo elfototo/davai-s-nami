@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CalendarModal from './Calendar';
+import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
@@ -14,8 +15,27 @@ dayjs.extend(utc);
 
 const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate, setSortPrice, isOpen, setIsOpen }) => {
     const [selectedButton, setSelectedButton] = useState('');
+    
+
+    const router = useRouter();
+    const category = router.query?.category || '';    
+
+    const categoryTags = {
+        'Выставки': ['Выставка', 'Искусство', 'Экскурсия'],
+        'Кино': ['Кино'],
+        'Лекции': ['Лекция', 'Мастер-класс', 'Интервью'],
+        'Вечеринки': ['Фестиваль', 'Вечеринка'],
+        'Музыка': ['Концерт', 'Музыка'],
+        'Представления': ['Танцы', 'Стендап', 'Театр', 'Перформанс', 'Концерт'],
+    };
 
     const tags = ['Концерт', 'Выставка', 'Танцы', 'Мастер-класс', 'Интервью', 'Кино', 'Перформанс', 'Лекция', 'Вечеринка', 'Театр', 'Фестиваль', 'Искусство', 'Экскурсия', 'Музыка', 'Стендап', 'Другое'];
+
+    useEffect(() => {
+        if (category && categoryTags[category]) {
+            setSelectedTags(categoryTags[category]);
+        }
+    }, [category, setSelectedTags]);
 
     const toggleFilter = () => {
         setIsOpen((prev) => !prev);
@@ -71,6 +91,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
         clearSelection();
         toggleFilter();
     };
+    console.log(router.query);
 
     return (
         <div className={`${isOpen ? 'bg-white' : 'bg-[#f4f4f9]'} relative rounded-lg lg:bg-white lg:border lg:border-[#D9D9D9] lg:shadow-lg`}>
@@ -140,7 +161,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                                     key={tag}
                                     onClick={() => toggleTag(tag)}
                                     className={`mx-1 my-1 py-1 px-4 text-left rounded-full ${selectedTags.includes(tag) ? 'bg-pink-400 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                                >   
+                                >
                                     {tag}
                                 </button>
                             ))}

@@ -1,6 +1,7 @@
 'use client';
 import '../globals.css';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const categories = [
     {
@@ -32,36 +33,38 @@ function Category({ value, circle, circleOut, circleHover, circleOutHover, cardB
 
     return (
         <div className={`group relative`}>
-            <div className={`flex flex-col justify-center items-center h-auto rounded-lg overflow-hidden cursor-pointer group-hover:shadow-xl group-hover:-translate-y-2 bg-white py-10 transform transition-all duration-300 group-active:translate-y-0`}>
-                <div className={`absolute top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 h-[150px] w-[150px] ${circle} ${cardBgHover} rounded-full group-hover:h-[600px] group-hover:w-[600px] transform transition-all duration-500`}></div>
-                <div className={`${circleOut} ${circleOutHover} border-[4px] rounded-full transform transition-all duration-300`}>
-                    <div className={` ${circle} ${circleHover} h-[150px] w-[150px] rounded-full overflow-hidden flex items-center justify-center border-[8px] border-[#fff] ${circleMediumHover} transform transition-all duration-300`}>
-                        {currentCategory ?
-                            <Image
-                                className='object-contain object-center mx-auto p-2'
-                                src={currentCategory.icon}
-                                height={100}
-                                width={100}
-                                alt='category'
-                            />
-                            :
-                            <Image
-                                className='object-contain object-center mx-auto'
-                                src='/img/card.svg'
-                                height={100}
-                                width={100}
-                                alt='category'
-                            />
-                        }
+            <Link href={`/events?category=${encodeURIComponent(value)}`}>
+                <div className={`flex flex-col justify-center items-center h-auto rounded-lg overflow-hidden cursor-pointer group-hover:shadow-xl group-hover:-translate-y-2 bg-white py-10 transform transition-all duration-300 group-active:translate-y-0`}>
 
+                    <div className={`absolute top-[115px] left-1/2 -translate-x-1/2 -translate-y-1/2 h-[150px] w-[150px] ${circle} ${cardBgHover} rounded-full group-hover:h-[600px] group-hover:w-[600px] transform transition-all duration-500`}></div>
+                    <div className={`${circleOut} ${circleOutHover} border-[4px] rounded-full transform transition-all duration-300`}>
+                        <div className={` ${circle} ${circleHover} h-[150px] w-[150px] rounded-full overflow-hidden flex items-center justify-center border-[8px] border-[#fff] ${circleMediumHover} transform transition-all duration-300`}>
+                            {currentCategory ?
+                                <Image
+                                    className='object-contain object-center mx-auto p-2'
+                                    src={currentCategory.icon}
+                                    height={100}
+                                    width={100}
+                                    alt='category'
+                                />
+                                :
+                                <Image
+                                    className='object-contain object-center mx-auto'
+                                    src='/img/card.svg'
+                                    height={100}
+                                    width={100}
+                                    alt='category'
+                                />
+                            }
+
+                        </div>
                     </div>
+
+                    <h2 className='text-[1.4rem] md:text-[1.6rem] mt-5 text-[#333]  transform transition-all duration-300'>
+                        {value}
+                    </h2>
                 </div>
-
-                <h2 className='text-[1.4rem] md:text-[1.6rem] mt-5 text-[#333]  transform transition-all duration-300'>
-                    {value}
-                </h2>
-            </div>
-
+            </Link>
         </div >
     )
 };

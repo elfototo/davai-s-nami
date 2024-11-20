@@ -38,7 +38,7 @@ export default function Home() {
   const getRandomEvent = () => {
     setIsLoading(true);
     const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
-    const end = today.add(60, 'day').startOf('day');
+    const end = today.add(7, 'day').startOf('day');
 
     const filterEvents = events.filter((event) => {
       const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
@@ -54,12 +54,27 @@ export default function Home() {
 
     const randomEvent = filterEvents[0];
 
-    setTimeout(() => {
-      setRandomEv(randomEvent);
-      setIsLoading(false); // Скрываем лоадер
-      setShowGame(true); // Показываем окно мероприятия
-      console.log(randomEvent.title);
-    }, 8000);
+    const img = new window.Image();
+    img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
+
+    img.onload = () => {
+
+      setTimeout(() => {
+        setRandomEv(randomEvent); // Устанавливаем мероприятие
+        setIsLoading(false); // Скрываем лоадер
+        setShowGame(true); // Показываем окно мероприятия
+        console.log(randomEvent.title);
+      }, 6000); // Сохраняем задержку, если она нужна
+    };
+
+    img.onerror = () => {
+      console.error("Ошибка загрузки изображения");
+      setTimeout(() => {
+        setRandomEv(randomEvent); // Устанавливаем мероприятие даже при ошибке
+        setIsLoading(false);
+        setShowGame(true);
+      }, 8000);
+    };
   }
 
   const filterEventsTodayTomorrow = events.filter((event) => {
