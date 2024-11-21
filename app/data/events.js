@@ -1,40 +1,95 @@
-export const categoryId = [
+import { BsFillMortarboardFill } from "react-icons/bs";
+import { PiMicrophoneStageFill } from "react-icons/pi";
+import { BsFillPaletteFill } from "react-icons/bs";
+import { MdFestival } from "react-icons/md";
+import { BiSolidCameraMovie } from "react-icons/bi";
+import { FaMask } from "react-icons/fa";
+import { PiMaskHappyFill } from "react-icons/pi";
+import { FaCompactDisc } from "react-icons/fa";
+import { IoStar } from "react-icons/io5";
+
+export const categoriesID = [
+
   {
     "id": 1,
-    "name": "Concerts"
-  },
-  {
-    "id": 3,
-    "name": "Cinema"
-  },
-  {
-    "id": 4,
-    "name": "Lectory"
-  },
-  {
-    "id": 5,
-    "name": "Culture"
-  },
-  {
-    "id": 6,
-    "name": "Festival"
+    "name": "Concerts",
+    "category": "Концерт",
+    "color": 'bg-[#111]',
+    "icon": <IoStar size={16} color='white' className='mr-1 mb-[0.2rem]' />
   },
   {
     "id": 2,
-    "name": "Other"
+    "name": "Other",
+    "rusName": "Другое",
+    "category": 'Другое',
+    "color": 'bg-[#111]',
+    "icon": <IoStar size={16} color='white' className='mr-1 mb-[0.2rem]' />
+
+  },
+  {
+    "id": 3,
+    "name": "Cinema",
+    "rusName": "Кино",
+    "category": 'Кино', 
+    "color": 'bg-[#0ea5e9]', 
+    "icon": <BiSolidCameraMovie size={16} color='white' className='mr-1 mb-[0.2rem]' />
+  },
+  {
+    "id": 4,
+    "name": "Lectory",
+    "rusName": "Лекция",
+    "category": 'Лекция',
+    "color": 'bg-[#14b8a6]',
+    "icon": <BsFillMortarboardFill size={16} color='white' className='mr-1 mb-[0.2rem]' />
+  },
+  {
+    "id": 5,
+    "name": "Culture",
+    "rusName": "Культура",
+    "category": "Культура",
+    "color": 'bg-[#f59e0b]',
+    "icon": <BsFillPaletteFill size={16} color='white' className='mr-1 mb-[0.1rem]' />
+  },
+  {
+    "id": 6,
+    "name": "Festival",
+    "rusName": "Фестиваль",
+    "category": 'Фестиваль',
+    "color": 'bg-[#eab308]',
+    "icon": <MdFestival size={16} color='white' className='mr-1 mb-[0.1rem]' />
   },
   {
     "id": 7,
-    "name": "Thearte"
+    "name": "Thearte",
+    "rusName": "Театр",
+    "category": 'Театр',
+    "color": 'bg-[#84cc16]',
+    "icon": <FaMask size={16} color='white' className='mr-1 mb-[0.1rem]' />
   },
   {
     "id": 8,
-    "name": "Party"
+    "name": "Party",
+    "rusName": "Вечеринка",
+    "category": 'Вечеринка',
+    "color": 'bg-[#10b981]',
+    "icon": <FaCompactDisc size={16} color='white' className='mr-1 mb-[0.2rem]' />
   },
   {
     "id": 9,
-    "name": "Perfomance"
-  }
+    "name": "Perfomance",
+    "rusName": "Перформанс",
+    "category": 'Перформанс',
+    "color": 'bg-[#06b6d4]',
+    "icon": <PiMaskHappyFill size={16} color='white' className='mr-1 mb-[0.2rem]' />
+  },
+  {
+    "id": 10,
+    "name": "stendUp",
+    "rusName": "Стендап",
+    "category": 'Стендап',
+    "color": 'bg-[#ec4899]',
+    "icon": <PiMicrophoneStageFill size={16} color='white' className='mr-1 mb-[0.2rem]' />
+  },
 ];
 
 export const data = [

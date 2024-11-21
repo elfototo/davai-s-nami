@@ -141,6 +141,7 @@ export default function Home() {
               <Card
                 type='mini'
                 category={card.category}
+                main_category_id={card.main_category_id}
                 price={card.price}
                 title={card.title}
                 from_date={card.from_date}
@@ -168,6 +169,7 @@ export default function Home() {
               <Card
                 type='mini'
                 category={card.category}
+                main_category_id={card.main_category_id}
                 price={card.price}
                 title={card.title}
                 from_date={card.from_date}
@@ -194,6 +196,7 @@ export default function Home() {
             <Card
               type='mini'
               category={card.category}
+              main_category_id={card.main_category_id}
               price={card.price}
               title={card.title}
               from_date={card.from_date}

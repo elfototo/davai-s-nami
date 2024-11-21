@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import CalendarModal from './Calendar';
-// import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation';
+import { categoriesID } from '../data/events';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -15,23 +15,19 @@ dayjs.extend(utc);
 
 const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate, setSortPrice, isOpen, setIsOpen }) => {
     const [selectedButton, setSelectedButton] = useState('');
-    
+
 
     const searchParams = useSearchParams();
-    const category = searchParams.get('category') || ''; // Получаем параметр 'category'
-
-    console.log('category:', category);  
+    const category = searchParams.get('category') || ''; 
 
     const categoryTags = {
-        'Выставки': ['Выставка', 'Искусство', 'Экскурсия'],
+        'Культура': ['Культура', 'Театр', 'Перформанс'],
         'Кино': ['Кино'],
-        'Лекции': ['Лекция', 'Мастер-класс', 'Интервью'],
+        'Лекции': ['Лекция'],
         'Вечеринки': ['Фестиваль', 'Вечеринка'],
-        'Музыка': ['Концерт', 'Музыка'],
-        'Представления': ['Танцы', 'Стендап', 'Театр', 'Перформанс', 'Концерт'],
+        'Музыка': ['Концерт', 'Фестиваль'],
+        'Представления': ['Концерт', 'Театр', 'Перформанс', 'Стендап'],
     };
-
-    const tags = ['Концерт', 'Выставка', 'Танцы', 'Мастер-класс', 'Интервью', 'Кино', 'Перформанс', 'Лекция', 'Вечеринка', 'Театр', 'Фестиваль', 'Искусство', 'Экскурсия', 'Музыка', 'Стендап', 'Другое'];
 
     useEffect(() => {
         if (category && categoryTags[category]) {
@@ -157,13 +153,13 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                     <div>
                         <h3 className="text-lg mb-2">Категории</h3>
                         <div className='flex flex-wrap'>
-                            {tags.map((tag) => (
+                            {categoriesID.map((tag) => (
                                 <button
-                                    key={tag}
-                                    onClick={() => toggleTag(tag)}
-                                    className={`mx-1 my-1 py-1 px-4 text-left rounded-full ${selectedTags.includes(tag) ? 'bg-pink-400 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
+                                    key={tag.id}
+                                    onClick={() => toggleTag(tag.category)}
+                                    className={`mx-1 my-1 py-1 px-4 text-left rounded-full ${selectedTags.includes(tag.category) ? 'bg-pink-400 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
                                 >
-                                    {tag}
+                                    {tag.category}
                                 </button>
                             ))}
                         </div>

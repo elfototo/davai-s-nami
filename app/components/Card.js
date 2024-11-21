@@ -15,7 +15,7 @@ dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const Card = ({ type, category, title, from_date, address, price, id, image }) => {
+const Card = ({ type, category, main_category_id, title, from_date, address, price, id, image }) => {
   const [showFulltext, setShowFulltext] = useState(false);
   const [showFullTitletext, setShowFullTitletext] = useState(false);
 
@@ -52,7 +52,7 @@ const Card = ({ type, category, title, from_date, address, price, id, image }) =
           </div>
 
           {/* Category template */}
-          <Tag category={category ? category : 'Без категории'} />
+          <Tag main_category_id={main_category_id ? main_category_id : 'Без категории'} />
 
         </div>
 

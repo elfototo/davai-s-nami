@@ -3,7 +3,7 @@
 import HeroSearch from '../components/HeroSearsh';
 import Filtres from '../components/Filtres';
 import Card from '../components/Card';
-import { data } from '../data/events';
+import { categoriesID, data } from '../data/events';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
@@ -30,14 +30,24 @@ export default function Events() {
 
   useEffect(() => {
     if (router.isReady) { // Проверяем, что роутер готов
-      const { category } = router.query; // Извлекаем параметр из URL
+      const { category } = router.query || {}; // Извлекаем параметр из URL
       setCategory(category || ''); // Устанавливаем категорию в состояние
     }
+    return () => {
+      setCategory(''); // Сбрасываем category при размонтировании или обновлении
+    };
   }, [router.isReady, router.query]);
+
+  const getCategoryNameById = (id) => {
+    const categoryObj = categoriesID.find((cat) => cat.id === id);
+    return categoryObj ? categoryObj.category : null;
+  };
 
   const filteredEvents = events.filter((event) => {
 
-    const matchesCategory = !category || event.category === category;
+    const eventCategoryName = getCategoryNameById(event.main_category_id);
+
+    const matchesCategory = !category || eventCategoryName === category;
 
     // Проверка по датам
     const eventDate = dayjs(event.from_date).utcOffset(+3).startOf('day');
@@ -52,7 +62,7 @@ export default function Events() {
         (event.category?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '') ||
         (event.address?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '');
 
-    return sortSearch && isInDateRange && matchesCategory && (selectedTags.length === 0 || selectedTags.includes(event.category));
+    return sortSearch && isInDateRange && matchesCategory && (selectedTags.length === 0 || selectedTags.includes(eventCategoryName));
   });
 
   // Сортировка событий по цене
@@ -97,6 +107,7 @@ export default function Events() {
               <Card
                 type='mini'
                 category={card.category}
+                main_category_id={card.main_category_id}
                 price={card.price}
                 title={card.title}
                 from_date={card.from_date}

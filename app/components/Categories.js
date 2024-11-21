@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const categories = [
     {
-        category: 'Выставки', color: 'bg-[#d946ef]', icon: '/img/exibition.png'
+        category: 'Культура', color: 'bg-[#d946ef]', icon: '/img/exibition.png'
     },
     {
         category: 'Кино', color: 'bg-[#0ea5e9]', icon: '/img/movie.png'
@@ -105,7 +105,7 @@ function Categories() {
                 circleOutHover='group-hover:border-white'
                 cardBgHover='group-hover:bg-rose-100' />
             <Category
-                value="Выставки"
+                value="Культура"
                 circle='bg-green-100'
                 circleHover='group-hover:bg-green-50'
                 circleMediumHover='group-hover:border-green-200'
