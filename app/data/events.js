@@ -1,3 +1,42 @@
+export const categoryId = [
+  {
+    "id": 1,
+    "name": "Concerts"
+  },
+  {
+    "id": 3,
+    "name": "Cinema"
+  },
+  {
+    "id": 4,
+    "name": "Lectory"
+  },
+  {
+    "id": 5,
+    "name": "Culture"
+  },
+  {
+    "id": 6,
+    "name": "Festival"
+  },
+  {
+    "id": 2,
+    "name": "Other"
+  },
+  {
+    "id": 7,
+    "name": "Thearte"
+  },
+  {
+    "id": 8,
+    "name": "Party"
+  },
+  {
+    "id": 9,
+    "name": "Perfomance"
+  }
+];
+
 export const data = [
   {
     "event_id": "TIMEPAD-2877213",

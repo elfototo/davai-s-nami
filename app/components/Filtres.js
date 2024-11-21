@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import CalendarModal from './Calendar';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
-
+import { usePathname, useSearchParams } from 'next/navigation'
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -17,8 +17,10 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
     const [selectedButton, setSelectedButton] = useState('');
     
 
-    const router = useRouter();
-    const category = router.query?.category || '';    
+    const searchParams = useSearchParams();
+    const category = searchParams.get('category') || ''; // Получаем параметр 'category'
+
+    console.log('category:', category);  
 
     const categoryTags = {
         'Выставки': ['Выставка', 'Искусство', 'Экскурсия'],
@@ -91,7 +93,6 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
         clearSelection();
         toggleFilter();
     };
-    console.log(router.query);
 
     return (
         <div className={`${isOpen ? 'bg-white' : 'bg-[#f4f4f9]'} relative rounded-lg lg:bg-white lg:border lg:border-[#D9D9D9] lg:shadow-lg`}>
