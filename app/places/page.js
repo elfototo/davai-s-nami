@@ -30,7 +30,7 @@ export default function Places() {
         setSearch={setSearch}
       />
       <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center '>
-        <div className='w-full grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch'>
+        <div className='w-full grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
           {filteredPlace.map((card) => (
             <PlaceCard
               id={card.id}

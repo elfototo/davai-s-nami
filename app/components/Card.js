@@ -19,8 +19,8 @@ const Card = ({ type, category, main_category_id, title, from_date, address, pri
   const [showFulltext, setShowFulltext] = useState(false);
   const [showFullTitletext, setShowFullTitletext] = useState(false);
 
-  const maxTitleText = 30;
-  const maxAdressText = 20;
+  const maxTitleText = 50;
+  const maxAdressText = 25;
   const toggleFullText = () => {
     setShowFulltext(!showFulltext)
   };
