@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import CalendarModal from './Calendar';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { categoriesID } from '../data/events';
 
 dayjs.extend(isoWeek);
@@ -18,7 +19,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
 
 
     const searchParams = useSearchParams();
-    const category = searchParams.get('category') || ''; 
+    const category = searchParams.get('category') || '';
 
     const categoryTags = {
         'Культура': ['Культура', 'Театр', 'Перформанс'],
@@ -101,12 +102,12 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                         </svg>
                     </button>
 
-                    <button onClick={selectPrice} className={`hover:bg-gray-100 flex mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
+                    {/* <button onClick={selectPrice} className={`hover:bg-gray-100 flex mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 mr-1">
                             <path fillRule="evenodd" d="M6.97 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06L8.25 4.81V16.5a.75.75 0 0 1-1.5 0V4.81L3.53 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5Zm9.53 4.28a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V7.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
                         </svg>
                         Цена
-                    </button>
+                    </button> */}
                     <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  hover:bg-gray-100'} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         Сегодня
                     </button>
@@ -127,9 +128,11 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                     <div className="mb-5">
                         <div className='flex justify-between items-baseline  mb-3'>
                             <h3 className="text-lg">Когда</h3>
-                            <button className='underline text-blue-600' onClick={cancelFilter}>
-                                Отмена
-                            </button>
+                            <Link href='/events'>
+                                <button className='underline text-blue-600' onClick={cancelFilter}>
+                                    Отмена
+                                </button>
+                            </Link>
                         </div>
 
                         <div className="flex gap-2 mt-3">

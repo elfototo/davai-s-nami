@@ -6,6 +6,7 @@ import Card from '../components/Card';
 import { categoriesID, data } from '../data/events';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
@@ -29,13 +30,10 @@ export default function Events() {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.isReady) { // Проверяем, что роутер готов
-      const { category } = router.query || {}; // Извлекаем параметр из URL
-      setCategory(category || ''); // Устанавливаем категорию в состояние
+    if (router.isReady) {
+      const { category } = router.query || {}; 
+      setCategory(category || '');
     }
-    return () => {
-      setCategory(''); // Сбрасываем category при размонтировании или обновлении
-    };
   }, [router.isReady, router.query]);
 
   const getCategoryNameById = (id) => {
@@ -65,7 +63,6 @@ export default function Events() {
     return sortSearch && isInDateRange && matchesCategory && (selectedTags.length === 0 || selectedTags.includes(eventCategoryName));
   });
 
-  // Сортировка событий по цене
   const sortedEvents = sortPrice
     ? filteredEvents.sort((a, b) => {
       if (sortPrice === 'asc') {
@@ -73,7 +70,7 @@ export default function Events() {
       } else if (sortPrice === 'desc') {
         return b.price - a.price;
       }
-      return 0; // Если не выбрана сортировка
+      return 0;
     })
     : filteredEvents;
 
@@ -102,7 +99,7 @@ export default function Events() {
           </div>
         </aside>
         <section className={`lg:w-[80%]  w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
-          <div className={`grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch`}>
+          <div className={`grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto`}>
             {sortedEvents.length > 0 ? (sortedEvents.map((card) => (
               <Card
                 type='mini'
