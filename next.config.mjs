@@ -8,6 +8,14 @@ const nextConfig = {
       },
     ],
   },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/:path*', // Все запросы, начинающиеся с /api/
+  //       destination: 'http://159.223.239.75:8005/api/:path*', // Перенаправить на API-сервер
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

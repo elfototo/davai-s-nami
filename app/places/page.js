@@ -1,6 +1,6 @@
 'use client';
 
-import HeroSearch from '../components/HeroSearsh';
+import HeroSearch from '../components/HeroSearch';
 import { useState } from 'react';
 import { places } from '../data/events';
 import PlaceCard from '../components/PlaceCard';
