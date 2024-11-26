@@ -1,6 +1,5 @@
 'use client'
 
-import { data } from '../../data/events';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -15,8 +14,7 @@ import { IoShareSocialSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { BsCheckAll } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
-
-
+import { useEvents } from '../../../context/EventsContext';
 
 
 dayjs.locale('ru');
@@ -26,6 +24,7 @@ dayjs.extend(timezone);
 
 export default function EventPage({ params }) {
 
+  const { events, setEvents } = useEvents();
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -42,8 +41,18 @@ export default function EventPage({ params }) {
     });
   }
 
-  const { id } = params;
-  const event = data.find(event => event.id === parseInt(id));
+  const { event_id } = params;
+  if (!event_id) {
+    return <div>Загружаем...</div>;  // Пока ждём загрузку, показываем индикатор
+  }
+  const event = events.find(event => (event.event_id) === (event_id));
+  console.log('event_id:', event_id);
+
+  if (event) {
+    console.log('event.event_id:', event.event_id);
+  } else {
+    console.log('Event not found or event_id is invalid');
+  }
 
   if (!event) {
     return <div>Событие не найдено</div>;

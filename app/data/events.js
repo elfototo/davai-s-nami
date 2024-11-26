@@ -94,7 +94,7 @@ export const categoriesID = [
   },
 ];
 
-export const data = [
+export const data1 = [
   {
     "event_id": "TIMEPAD-2877213",
     "queue": 20562,

@@ -5,7 +5,6 @@ import Categories from './components/Categories';
 import Link from 'next/link';
 import 'animate.css';
 import { useEffect, useState } from 'react';
-import { data } from './data/events';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
@@ -15,7 +14,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
 import Loader from './components/Loader';
-
+import { useEvents } from '../context/EventsContext';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -25,7 +24,7 @@ dayjs.extend(isBetween);
 
 export default function Home() {
 
-  const [events, setEvents] = useState(data);
+  const { events } = useEvents();
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -147,7 +146,7 @@ export default function Home() {
                 from_date={card.from_date}
                 address={card.address}
                 key={card.event_id}
-                id={card.id}
+                event_id={card.event_id}
                 data={card}
                 image={card.image} />
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
@@ -175,7 +174,7 @@ export default function Home() {
                 from_date={card.from_date}
                 address={card.address}
                 key={card.event_id}
-                id={card.id}
+                event_id={card.event_id}
                 data={card}
                 image={card.image} />
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
@@ -202,7 +201,7 @@ export default function Home() {
               from_date={card.from_date}
               address={card.address}
               key={card.event_id}
-              id={card.id}
+              event_id={card.event_id}
               data={card}
               image={card.image} />
           ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
