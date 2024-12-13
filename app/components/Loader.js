@@ -159,7 +159,7 @@ const Loader = () => {
     }, []);
 
     return (
-        <div className='h-screen font-cursive text-center  bg-[#fff] z-10 fixed inset-0 loader-wrapper transform transition-all duration-300'>
+        <div className='h-screen font-cursive text-center  bg-[#fff] z-20 fixed inset-0 loader-wrapper transform transition-all duration-300'>
             <div className=''>
                 <div className="wrapper-no7">
                     <div className="logo">LOGO</div>

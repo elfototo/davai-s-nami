@@ -9,7 +9,6 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import Link from 'next/link';
 import { BsFillGeoAltFill } from "react-icons/bs";
 import { AiFillClockCircle } from "react-icons/ai";
-import { useEvents } from '../../context/EventsContext';
 
 
 dayjs.extend(isoWeek);
@@ -17,10 +16,9 @@ dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const Card = ({ type, main_category_id, title, from_date, address, price, event_id, image }) => {
+const Card = ({ type, main_category_id, title, from_date, address, price, id, image }) => {
   const [showFulltext, setShowFulltext] = useState(false);
   const [showFullTitletext, setShowFullTitletext] = useState(false);
-  const { events, setEvents } = useEvents();
 
   const maxTitleText = 50;
   const maxAdressText = 25;
@@ -116,8 +114,11 @@ const Card = ({ type, main_category_id, title, from_date, address, price, event_
           </div>
         </div>
         <div>
-          <Link href={`/events/${event_id}`} className='flex ' >
-            <button className='font-roboto my-2 mx-2 w-full py-2 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'>Смотреть</button></Link>
+          <Link href={`/events/${id}`}>
+            <div className='flex'>
+              <button className='font-roboto my-2 mx-2 w-full py-2 text-[1rem] font-medium bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'>Смотреть</button>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

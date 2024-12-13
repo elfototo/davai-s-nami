@@ -10,9 +10,23 @@ module.exports = {
 	],
 	theme: {
 		extend: {
+			animation: {
+				blink: "blink 1.5s infinite",
+				whisker: "whisker 1s infinite alternate",
+			},
+			keyframes: {
+				blink: {
+					"0%, 100%": { transform: "scaleY(1)" },
+					"50%": { transform: "scaleY(0.1)" },
+				},
+				whisker: {
+					"0%": { transform: "translateX(-2px)" },
+					"100%": { transform: "translateX(2px)" },
+				},
+			},
 			boxShadow: {
 				'custom': '0px 0px 20px rgba(0, 0, 0, 0.1)',
-			  },
+			},
 			backgroundImage: {
 				'accent-gradient': 'linear-gradient(90deg, rgba(78,19,179,1) 9%, rgba(245,45,133,1) 100%)'
 			},

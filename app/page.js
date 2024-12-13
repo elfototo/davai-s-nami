@@ -1,10 +1,11 @@
-'use client'
+'use client';
+
 import './globals.css';
 import Card from './components/Card';
 import Categories from './components/Categories';
 import Link from 'next/link';
 import 'animate.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
@@ -69,11 +70,44 @@ export default function Home() {
     img.onerror = () => {
       console.error("Ошибка загрузки изображения");
       setTimeout(() => {
-        setRandomEv(randomEvent); // Устанавливаем мероприятие даже при ошибке
+        setRandomEv(randomEvent); 
         setIsLoading(false);
         setShowGame(true);
       }, 8000);
     };
+
+    // useEffect(() => {
+    //   const img = new window.Image();
+    //   img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
+
+    //   const handleImageLoad = () => {
+    //     setTimeout(() => {
+    //       setRandomEv(randomEvent); // Устанавливаем мероприятие
+    //       setIsLoading(false); // Скрываем лоадер
+    //       setShowGame(true); // Показываем окно мероприятия
+    //       console.log(randomEvent.title);
+    //     }, 6000); // Задержка, если она нужна
+    //   };
+
+    //   const handleImageError = () => {
+    //     console.error("Ошибка загрузки изображения");
+    //     setTimeout(() => {
+    //       setRandomEv(randomEvent);
+    //       setIsLoading(false);
+    //       setShowGame(true);
+    //     }, 8000); // Дополнительная задержка при ошибке
+    //   };
+
+    //   img.onload = handleImageLoad;
+    //   img.onerror = handleImageError;
+
+    //   return () => {
+    //     // Очистка обработчиков, чтобы избежать утечек памяти
+    //     img.onload = null;
+    //     img.onerror = null;
+    //   };
+    // }, [randomEvent]); // Зависимость от randomEvent, если он изменяется
+
   }
 
   const filterEventsTodayTomorrow = events.filter((event) => {
@@ -99,8 +133,8 @@ export default function Home() {
 
   return (
     <div>
-      <section className='max-w-custom-container mx-auto'>
-      </section>
+      {/* <section className='max-w-custom-container mx-auto'>
+      </section> */}
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
         <div className="flex justify-center md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden px-4 md:pl-10 md:pr-0">
           <div className='flex items-center md:items-start justify-center flex-col md:max-w-[50%]'>
@@ -135,7 +169,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
             {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
@@ -146,7 +180,7 @@ export default function Home() {
                 from_date={card.from_date}
                 address={card.address}
                 key={card.event_id}
-                event_id={card.event_id}
+                id={card.id}
                 data={card}
                 image={card.image} />
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
@@ -163,7 +197,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
             {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
@@ -174,7 +208,7 @@ export default function Home() {
                 from_date={card.from_date}
                 address={card.address}
                 key={card.event_id}
-                event_id={card.event_id}
+                id={card.id}
                 data={card}
                 image={card.image} />
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
@@ -190,7 +224,7 @@ export default function Home() {
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
-        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
+        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
           {filterEventsWeekend.length > 0 ? (filterEventsWeekend.slice(0, 4).map((card) => (
             <Card
               type='mini'
@@ -201,7 +235,7 @@ export default function Home() {
               from_date={card.from_date}
               address={card.address}
               key={card.event_id}
-              event_id={card.event_id}
+              id={card.id}
               data={card}
               image={card.image} />
           ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
@@ -234,19 +268,19 @@ export default function Home() {
               </div>
 
               <Link href={`/events/${randomEv.id}`}>
-                <button
+                <div
 
                   className='font-roboto font-medium my-1 mx-auto w-full py-4 text-[1rem] bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'
                 >
                   Смотреть
-                </button>
+                </div>
               </Link>
-              <button
+              <div
                 onClick={toggleShowGame}
                 className='absolute top-5 right-5 md:-top-10 md:-right-10'
               >
                 <IoMdClose className='text-[3rem] p-2 md:p-0 text-[#333] bg-white rounded-full border-[2px] border-[#333] md:border-none md:bg-transparent md:text-[#fff]' />
-              </button>
+              </div>
             </div>
           </div>
         }

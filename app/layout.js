@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
             <Navbar />
           </header>
           <main>{children}</main>
-          <footer className='bg-[#333] mt-10'>
+          <footer className='bg-[#333] mt-10 z-0'>
             <Footer />
           </footer>
         </EventsProvider>

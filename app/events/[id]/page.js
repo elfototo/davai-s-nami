@@ -41,18 +41,12 @@ export default function EventPage({ params }) {
     });
   }
 
-  const { event_id } = params;
-  if (!event_id) {
+  const { id } = params;
+  console.log(events);
+  if (!id) {
     return <div>Загружаем...</div>;  // Пока ждём загрузку, показываем индикатор
   }
-  const event = events.find(event => (event.event_id) === (event_id));
-  console.log('event_id:', event_id);
-
-  if (event) {
-    console.log('event.event_id:', event.event_id);
-  } else {
-    console.log('Event not found or event_id is invalid');
-  }
+  const event = events.find(event => event.id === Number(id));
 
   if (!event) {
     return <div>Событие не найдено</div>;

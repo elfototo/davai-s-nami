@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { unstable_cache } from 'next/cache';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -36,8 +37,8 @@ export const EventsProvider = ({ children }) => {
                     },
                     body: JSON.stringify({
                         date_from: '2024-11-24',
-                        date_to: '2024-11-30',
-                        fields: ['event_id', 'title', 'image', 'price', 'address', 'from_date', 'full_text', 'main_category_id'],
+                        date_to: '2024-12-31',
+                        fields: ['event_id', 'id', 'title', 'image', 'price', 'address', 'from_date', 'full_text', 'main_category_id'],
                         limit: 50,
                         page: 0,
                     }),
@@ -83,7 +84,7 @@ export const EventsProvider = ({ children }) => {
                         console.log('Ошибка при запросе статуса: ', error);
                         setStatus('Ошибка при выполнении задачи');
                     }
-                }, 10000);
+                }, 1000);
             } catch (error) {
                 console.log('Ошибка при создании задачи', error);
                 setStatus('Ошибька при создании задачи');

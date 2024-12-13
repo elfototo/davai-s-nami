@@ -56,7 +56,7 @@ const Footer = () => {
             <div>
                 <div className='my-8'>
 
-                    <div className="flex justify-center items-center">
+                    <div className='flex justify-center items-center'>
 
                         {/* <div className='mx-2'>
 
@@ -83,9 +83,6 @@ const Footer = () => {
                 </div>
             </div>
             <p className='text-gray-400'>*Изображение на баннере сайта Designed by Freepik</p>
-
-
-
         </div>
     )
 }

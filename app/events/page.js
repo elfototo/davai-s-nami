@@ -11,6 +11,8 @@ import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEvents } from '../../context/EventsContext';
+// import CatLoader from '../components/EventLoader';
+
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -27,10 +29,10 @@ export default function Events() {
   // const [events, setEvents] = useState(null);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [bgColor, setBgColor] = useState('')
+  const [bgColor, setBgColor] = useState('');
 
   useEffect(() => {
     if (!events || events.length === 0) return;
@@ -64,7 +66,10 @@ export default function Events() {
     setSortedEvents(sorted);
   }, [events, category, search, sortPrice]); // add dependencies
 
-  if (!sortedEvents.length) return <div>Loading...</div>;
+  if (!sortedEvents.length) return <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+    {/* <CatLoader /> */}
+    Загрузка...
+  </div>;
 
   return (
     <div>
@@ -101,7 +106,7 @@ export default function Events() {
                     from_date={card.from_date}
                     address={card.address}
                     key={card.event_id}
-                    event_id={card.event_id}
+                    id={card.id}
                     data={card}
                     image={card.image}
                   />
@@ -113,6 +118,7 @@ export default function Events() {
               )
             }
           </div>
+
           {hasMore && (
             <div className="text-center my-4">
               <button
