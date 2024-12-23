@@ -9,17 +9,23 @@ import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useEvents } from '../../context/EventsContext';
-// import CatLoader from '../components/EventLoader';
+// import { useEvents } from '../../context/EventsContext';
+import { data1 } from '../data/events';
+
 
 
 dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+
 
 export default function Events() {
-  const { events, setEvents } = useEvents();
+  // const { events, setEvents } = useEvents();
+  const [events, setEvents] = useState(data1);
   const [sortedEvents, setSortedEvents] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -46,7 +52,7 @@ export default function Events() {
       const eventCategoryName = getCategoryNameById(event.main_category_id);
       const matchesCategory = !category || eventCategoryName === category;
 
-      const eventDate = dayjs(event.from_date).utcOffset(+3).startOf('day');
+      const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
       const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
         (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
 

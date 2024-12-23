@@ -36,7 +36,7 @@ const PlaceCard = ({ place_name, place_address, place_metro, place_city, id, ima
 
   return (
     <div className='group'>
-      <div className="flex flex-col justify-between h-full w-full h-auto max-w-sm overflow-hidden bg-white rounded-lg border border-[#D9D9D9] group-hover:border-pink-400">
+      <div className="flex flex-col justify-between h-full w-full max-w-sm overflow-hidden bg-white rounded-lg border border-[#D9D9D9] group-hover:border-pink-400">
         <div>
           {/* Header card */}
           <div className='relative overflow-hidden border-b border-[#D9D9D9]'>

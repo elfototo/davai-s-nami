@@ -8,11 +8,15 @@ import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { useSearchParams } from 'next/navigation';
+import timezone from 'dayjs/plugin/timezone';
+
 import { categoriesID } from '../data/events';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
 dayjs.extend(utc);
+dayjs.extend(timezone);
+
 
 const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate, setSortPrice, isOpen, setIsOpen }) => {
     const [selectedButton, setSelectedButton] = useState('');
@@ -51,21 +55,21 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
     };
 
     const selectToday = () => {
-        const todayDate = dayjs().utc(+3).startOf('day');
+        const todayDate = dayjs().utc().tz('Europe/Moscow').startOf('day');
         setStartDate(todayDate);
         setEndDate(todayDate);
         setSelectedButton('today');
     };
 
     const selectTomorrow = () => {
-        const tomorrowDate = dayjs().add(1, 'day').utc(+3).startOf('day');
+        const tomorrowDate = dayjs().add(1, 'day').utc().tz('Europe/Moscow').startOf('day');
         setStartDate(tomorrowDate);
         setEndDate(tomorrowDate);
         setSelectedButton('tomorrow');
     };
 
     const selectWeekends = () => {
-        const startOfWeekend = dayjs().isoWeekday(6).utc(+3).startOf('day');
+        const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
         const endOfWeekend = startOfWeekend.add(1, 'day');
         setStartDate(startOfWeekend);
         setEndDate(endOfWeekend);

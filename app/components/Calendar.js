@@ -6,19 +6,23 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
-dayjs.locale('ru');
+import timezone from 'dayjs/plugin/timezone';
 
+
+dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(isBetween);
+dayjs.extend(timezone);
+
 
 const daysInWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
 
-    const [currentDate, setCurrentDate] = useState(dayjs().utc(+3).startOf('day'));
+    const [currentDate, setCurrentDate] = useState(dayjs().utc().tz('Europe/Moscow').startOf('day'));
     const [showCalendar, setShowCalendar] = useState(false);
 
-    const today = dayjs().utc(+3).startOf('day');
+    const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
 
     const toggleCalendar = () => {
         setShowCalendar(!showCalendar);
@@ -68,13 +72,13 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
 
         // Days of the month
         for (let day = 1; day <= lastDayOfMonth.date(); day++) {
-            const date = dayjs(currentDate).utc(+3).date(day); // Set the day in the current month
-            const isToday = date.isSame(dayjs().utc(+3).startOf('day'), 'day');
-            const isStartSelected = startDate && date.isSame(dayjs(startDate).utc(+3).startOf('day'), 'day');
-            const isEndSelected = endDate && date.isSame(dayjs(endDate).utc(+3).startOf('day'), 'day');
+            const date = dayjs(currentDate).utc().tz('Europe/Moscow').date(day); // Set the day in the current month
+            const isToday = date.isSame(dayjs().utc().tz('Europe/Moscow').startOf('day'), 'day');
+            const isStartSelected = startDate && date.isSame(dayjs(startDate).utc().tz('Europe/Moscow').startOf('day'), 'day');
+            const isEndSelected = endDate && date.isSame(dayjs(endDate).utc().tz('Europe/Moscow').startOf('day'), 'day');
 
-            const startDay = startDate ? dayjs(startDate).utc(+3).startOf('day') : null;
-            const endDay = endDate ? dayjs(endDate).utc(+3).startOf('day') : null;
+            const startDay = startDate ? dayjs(startDate).utc().tz('Europe/Moscow').startOf('day') : null;
+            const endDay = endDate ? dayjs(endDate).utc().tz('Europe/Moscow').startOf('day') : null;
 
             const isInRange = startDay && endDay &&
                 (date.isBetween(startDay, endDay, null, '[]') ||
@@ -85,7 +89,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
             const isLastInRange = isEndSelected || date.isSame(endDay, 'day');;
 
             // Text color based on date
-            const textColor = date.isBefore(dayjs().utc(+3).startOf('day')) ? 'text-gray-400' : 'text-black';
+            const textColor = date.isBefore(dayjs().utc().tz('Europe/Moscow').startOf('day')) ? 'text-gray-400' : 'text-black';
             const isTodayClass = isToday ? 'border border-pink-400 rounded-full' : '';
             const isSelectedClass = isStartSelected || isEndSelected ? 'bg-pink-400 text-white' : '';
             const isInRangeClass = isInRange ? `bg-pink-200 ${isFirstInRange ? 'rounded-tl-[50%] rounded-bl-[50%]' : ''} ${isLastInRange ? 'rounded-tr-[50%] rounded-br-[50%]' : ''}`
@@ -111,7 +115,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
     const changeMonth = (direction) => {
         setCurrentDate((prevDate) => {
             // Use dayjs to manipulate the month
-            return dayjs(prevDate).utc(+3).add(direction, 'month').toDate(); // Convert back to Date if needed
+            return dayjs(prevDate).utc().tz('Europe/Moscow').add(direction, 'month').toDate(); // Convert back to Date if needed
         });
     };
 
@@ -128,9 +132,9 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                 >
                     <div className='text-[1rem] whitespace-nowrap'>
                         {startDate && endDate
-                            ? `${dayjs(startDate).utc(+3).format('DD/MM/YYYY')}`
+                            ? `${dayjs(startDate).utc().tz('Europe/Moscow').format('DD/MM/YYYY')}`
                             : startDate
-                                ? `${dayjs(startDate).utc(+3).format('DD/MM/YYYY')}`
+                                ? `${dayjs(startDate).utc().tz('Europe/Moscow').format('DD/MM/YYYY')}`
                                 : 'Начальная дата'}
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-[#777]">
@@ -142,9 +146,9 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                 >
                     <div className='text-[1rem] whitespace-nowrap'>
                         {startDate && endDate
-                            ? `${dayjs(endDate).utc(+3).format('DD/MM/YYYY')}`
+                            ? `${dayjs(endDate).utc().tz('Europe/Moscow').format('DD/MM/YYYY')}`
                             : startDate
-                                ? `${dayjs(startDate).utc(+3).format('DD/MM/YYYY')}`
+                                ? `${dayjs(startDate).utc().tz('Europe/Moscow').format('DD/MM/YYYY')}`
                                 : 'Конечная дата'}
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-[#777]">
@@ -165,7 +169,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                                 </svg>
                             </button>
                             <h2 className="text-lg font-semibold">
-                                {dayjs(currentDate).format('MMMM YYYY')}
+                                {dayjs(currentDate).utc().tz('Europe/Moscow').format('MMMM YYYY')}
                             </h2>
                             <button
                                 onClick={() => changeMonth(1)}

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import 'dayjs/locale/ru';
+
 import React, { useState } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
@@ -12,9 +14,11 @@ import { IoShareSocialSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { BsCheckAll } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
-import { useEvents } from '../../../context/EventsContext';
+// import { useEvents } from '../../../context/EventsContext';
+import { data1 } from '../../data/events';
 
 
+dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -22,15 +26,17 @@ export default function EventPageClient({ id }) {
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [events, setEvents] = useState(data1);
 
-  const { events } = useEvents(); // Assuming you have access to `events` in the context
+
+  // const { events } = useEvents(); // Assuming you have access to `events` in the context
 
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => setCopied(true));
-  };
+  // const handleCopy = () => {
+  //   navigator.clipboard.writeText(window.location.href).then(() => setCopied(true));
+  // };
 
   const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
   const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
@@ -86,7 +92,7 @@ export default function EventPageClient({ id }) {
               </div>
               <div className="flex items-baseline my-3">
                 <p className="text-[#777]">Дата: </p>
-                <p className="font-roboto text-[#333] ml-[38px]">{dayjs(event.from_date).format('DD MMMM')}</p>
+                <p className="font-roboto text-[#333] ml-[38px]">{dayjs(event.from_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
               </div>
               <div className="flex items-baseline my-3">
                 <p className="text-[#777]">Начало:</p>
@@ -107,7 +113,9 @@ export default function EventPageClient({ id }) {
             </div>
 
             <div className="flex">
-              <button onClick={handleCopy} className={copied ? styleCopied : styleNoCopied}>
+              <button 
+              // onClick={handleCopy} 
+              className={copied ? styleCopied : styleNoCopied}>
                 {copied ? <BsCheckAll size={18} className="mr-2" /> : <IoShareSocialSharp size={18} className="mr-2" />}
                 <p>Поделиться</p>
               </button>

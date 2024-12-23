@@ -26,6 +26,9 @@ export const EventsProvider = ({ children }) => {
     const [events, setEvents] = useState([]);
     const [status, setStatus] = useState(null);
 
+    let today = dayjs().format('YYYY-MM-DD');  // Текущая дата
+    let nextMonth = dayjs().add(1, 'month').format('YYYY-MM-DD');  // Дата через месяц
+
     useEffect(() => {
         async function fetchPosts() {
             try {
@@ -36,8 +39,8 @@ export const EventsProvider = ({ children }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        date_from: '2024-11-24',
-                        date_to: '2024-12-31',
+                        date_from: today,
+                        date_to: nextMonth,
                         fields: ['event_id', 'id', 'title', 'image', 'price', 'address', 'from_date', 'full_text', 'main_category_id'],
                         limit: 50,
                         page: 0,
