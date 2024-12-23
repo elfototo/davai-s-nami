@@ -14,9 +14,9 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
-// import Loader from './components/Loader';
-// import { useEvents } from '../context/EventsContext';
-import { data1 } from './data/events';
+import Loader from './components/Loader';
+import { useEvents } from '../context/EventsContext';
+// import { data1 } from './data/events';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -26,8 +26,8 @@ dayjs.extend(isBetween);
 
 export default function Home() {
 
-  // const { events } = useEvents();
-  const [events, setEvents] = useState(data1);
+  const { events } = useEvents();
+  // const [events, setEvents] = useState(data1);
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,47 +36,47 @@ export default function Home() {
     setShowGame(!showGame);
   }
 
-  // const getRandomEvent = () => {
-  //   setIsLoading(true);
-  //   const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
-  //   const end = today.add(7, 'day').startOf('day');
+  const getRandomEvent = () => {
+    setIsLoading(true);
+    const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
+    const end = today.add(7, 'day').startOf('day');
 
-  //   const filterEvents = events.filter((event) => {
-  //     const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-  //     return eventDate.isAfter(today) && eventDate.isBefore(end);
-  //   });
+    const filterEvents = events.filter((event) => {
+      const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
+      return eventDate.isAfter(today) && eventDate.isBefore(end);
+    });
 
-  //   if (filterEvents.length === 0) return null;
+    if (filterEvents.length === 0) return null;
 
-  //   for (let i = filterEvents.length - 1; i > 0; i--) {
-  //     const j = Math.floor(Math.random() * (i + 1));
-  //     [filterEvents[i], filterEvents[j]] = [filterEvents[j], filterEvents[i]];
-  //   }
+    for (let i = filterEvents.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [filterEvents[i], filterEvents[j]] = [filterEvents[j], filterEvents[i]];
+    }
 
-  //   const randomEvent = filterEvents[0];
+    const randomEvent = filterEvents[0];
 
-  //   const img = new window.Image();
-  //   img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
+    const img = new window.Image();
+    img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
 
-  //   img.onload = () => {
+    img.onload = () => {
 
-  //     setTimeout(() => {
-  //       setRandomEv(randomEvent); // Устанавливаем мероприятие
-  //       setIsLoading(false); // Скрываем лоадер
-  //       setShowGame(true); // Показываем окно мероприятия
-  //       console.log(randomEvent.title);
-  //     }, 6000); // Сохраняем задержку, если она нужна
-  //   };
+      setTimeout(() => {
+        setRandomEv(randomEvent); // Устанавливаем мероприятие
+        setIsLoading(false); // Скрываем лоадер
+        setShowGame(true); // Показываем окно мероприятия
+        console.log(randomEvent.title);
+      }, 6000); // Сохраняем задержку, если она нужна
+    };
 
-  //   img.onerror = () => {
-  //     console.error("Ошибка загрузки изображения");
-  //     setTimeout(() => {
-  //       setRandomEv(randomEvent);
-  //       setIsLoading(false);
-  //       setShowGame(true);
-  //     }, 8000);
-  //   };
-  // }
+    img.onerror = () => {
+      console.error("Ошибка загрузки изображения");
+      setTimeout(() => {
+        setRandomEv(randomEvent);
+        setIsLoading(false);
+        setShowGame(true);
+      }, 8000);
+    };
+  }
 
   const filterEventsTodayTomorrow = events.filter((event) => {
     const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
@@ -215,7 +215,7 @@ export default function Home() {
         {isLoading && (
           <div className='fade-in'>
             загрузка...
-            {/* <Loader /> */}
+            <Loader />
           </div>
         )}
 

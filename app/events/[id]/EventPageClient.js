@@ -14,8 +14,8 @@ import { IoShareSocialSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { BsCheckAll } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
-// import { useEvents } from '../../../context/EventsContext';
-import { data1 } from '../../data/events';
+import { useEvents } from '../../../context/EventsContext';
+// import { data1 } from '../../data/events';
 
 
 dayjs.locale('ru');
@@ -26,17 +26,17 @@ export default function EventPageClient({ id }) {
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [events, setEvents] = useState(data1);
+  // const [events, setEvents] = useState(data1);
 
 
-  // const { events } = useEvents(); // Assuming you have access to `events` in the context
+  const { events } = useEvents();
 
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
 
-  // const handleCopy = () => {
-  //   navigator.clipboard.writeText(window.location.href).then(() => setCopied(true));
-  // };
+  const handleCopy = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => setCopied(true));
+  };
 
   const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
   const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
@@ -114,7 +114,7 @@ export default function EventPageClient({ id }) {
 
             <div className="flex">
               <button 
-              // onClick={handleCopy} 
+              onClick={handleCopy} 
               className={copied ? styleCopied : styleNoCopied}>
                 {copied ? <BsCheckAll size={18} className="mr-2" /> : <IoShareSocialSharp size={18} className="mr-2" />}
                 <p>Поделиться</p>

@@ -12,8 +12,8 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-// import { useEvents } from '../../context/EventsContext';
-import { data1 } from '../data/events';
+import { useEvents } from '../../context/EventsContext';
+// import { data1 } from '../data/events';
 
 
 
@@ -24,8 +24,8 @@ dayjs.extend(timezone);
 
 
 export default function Events() {
-  // const { events, setEvents } = useEvents();
-  const [events, setEvents] = useState(data1);
+  const { events, setEvents } = useEvents();
+  // const [events, setEvents] = useState(data1);
   const [sortedEvents, setSortedEvents] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
