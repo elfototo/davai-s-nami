@@ -4,18 +4,24 @@ import { places, data } from '../../data/events';
 import { useState } from 'react';
 import Image from 'next/image';
 import Card from '../../components/Card';
+import { useEvents } from '../../../context/EventsContext';
+
 
 
 export default function eventPlace({ params }) {
 
-    const [events, setEvents] = useState(data);
-
-    
+    // const [events, setEvents] = useState(data);
+    const { events } = useEvents();
 
     const { id } = params;
-    const place = places.find(event => event.id === parseInt(id));
+    console.log(id);
+    const place = places.find(event => event.id === Number(id));
 
-    const filteredPlace = events.filter((event) => event.place_id === place.id)
+    console.log(place);
+    console.log(place.id);
+
+
+    const filteredPlace = events.filter((event) => event.place_id === place.id);
 
     if (!place) {
         return <div>Место не найдено</div>;
@@ -29,8 +35,9 @@ export default function eventPlace({ params }) {
 
                     <div className='lg:flex lg:items-center bg-[#fff] rounded-xl p-10'>
 
-                        <div className='overflow-hidden shadow-xl h-96'>
-                            <Image className='object-cover object-center w-full lg:w-[32rem] rounded-lg h-96  cursor-pointer hover:scale-105 transform transition-all duration-300'
+                        <div className='overflow-hidden rounded-xl shadow-xl h-96'>
+                            <Image className='object-cover object-center w-full lg:w-[32rem] h-96 cursor-pointer 
+                             hover:scale-105 transform transition-all duration-300'
                                 src={place.image || '/img/cat.png'}
                                 width={1000}
                                 height={1000}
@@ -65,26 +72,26 @@ export default function eventPlace({ params }) {
                         </div>
 
                     </div>
-                    {filteredPlace.length > 0 ? 
-                    <h1 className='font-roboto font-bold'>Мероприятия в этом месте</h1>
-                    :
-                    <h1 className='font-roboto font-bold'>Мероприятий в блийшее время нет</h1>
+                    {filteredPlace.length > 0 ?
+                        <h1 className='font-roboto font-bold'>Мероприятия в этом месте</h1>
+                        :
+                        <h1 className='font-roboto font-bold'>Мероприятий в блийшее время нет</h1>
                     }
-                    
-                    
+
+
                     <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-center justify-center'>
                         {filteredPlace.map((card) => (
                             <Card
-                            type='mini'
-                            category={card.category}
-                            price={card.price}
-                            title={card.title}
-                            from_date={card.from_date}
-                            address={card.address}
-                            key={card.event_id}
-                            id={card.id}
-                            data={card}
-                            image={card.image} />
+                                type='mini'
+                                category={card.category}
+                                price={card.price}
+                                title={card.title}
+                                from_date={card.from_date}
+                                address={card.address}
+                                key={card.event_id}
+                                id={card.id}
+                                data={card}
+                                image={card.image} />
                         ))}
                     </div>
                 </div>

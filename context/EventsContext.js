@@ -26,6 +26,7 @@ export const EventsProvider = ({ children }) => {
     const [events, setEvents] = useState([]);
     const [status, setStatus] = useState(null);
 
+    let noToday = dayjs().subtract(6, 'month').format('YYYY-MM-DD');
     let today = dayjs().format('YYYY-MM-DD');  // Текущая дата
     let nextMonth = dayjs().add(1, 'month').format('YYYY-MM-DD');  // Дата через месяц
 
@@ -39,9 +40,9 @@ export const EventsProvider = ({ children }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        date_from: today,
+                        date_from: noToday,
                         date_to: nextMonth,
-                        fields: ['event_id', 'id', 'title', 'image', 'price', 'address', 'from_date', 'full_text', 'main_category_id'],
+                        fields: ['event_id', 'id', 'title', 'image','url', 'price', 'address', 'from_date', 'full_text', 'place_id', 'main_category_id'],
                         limit: 50,
                         page: 0,
                     }),

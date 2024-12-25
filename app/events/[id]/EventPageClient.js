@@ -14,6 +14,7 @@ import { IoShareSocialSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { BsCheckAll } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
+import { BsCopy } from "react-icons/bs";
 import { useEvents } from '../../../context/EventsContext';
 // import { data1 } from '../../data/events';
 
@@ -27,8 +28,6 @@ export default function EventPageClient({ id }) {
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
   // const [events, setEvents] = useState(data1);
-
-
   const { events } = useEvents();
 
 
@@ -38,10 +37,14 @@ export default function EventPageClient({ id }) {
     navigator.clipboard.writeText(window.location.href).then(() => setCopied(true));
   };
 
+  console.log('id из пропсов', id.id);
+
   const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
   const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
 
-  const event = events.find((event) => event.id === Number(id)); // Find the event by ID
+  const event = events.find((event) => event.id === Number(id.id)); // Find the event by ID
+  console.log('событие', event);
+
 
   if (!event) {
     return <div>Событие не найдено</div>;
@@ -72,7 +75,7 @@ export default function EventPageClient({ id }) {
             </div>
           )}
 
-          <div className="overflow-hidden shadow-xl rounded-lg lg:w-full h-96 lg:h-full max-w-[40%]">
+          <div className="overflow-hidden shadow-xl rounded-lg lg:w-full h-96 lg:h-full lg:max-w-[40%]">
             <Image
               src={event.image || '/img/cat.png'}
               width={500}
@@ -84,7 +87,7 @@ export default function EventPageClient({ id }) {
           </div>
 
           <div className="mt-8 lg:px-10 lg:mt-0">
-            <h1 className="text-2xl font-bold text-[#333] lg:text-3xl font-roboto mb-5 mx-1">{event.title}</h1>
+            <h1 className="text-2xl font-bold text-[#333] lg:text-3xl font-roboto mb-5 lg:mt-0 mx-1">{event.title}</h1>
             <div className="p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]">
               <div className="flex mb-3">
                 <p className="text-[#777]">Цена: </p>
@@ -116,8 +119,8 @@ export default function EventPageClient({ id }) {
               <button 
               onClick={handleCopy} 
               className={copied ? styleCopied : styleNoCopied}>
-                {copied ? <BsCheckAll size={18} className="mr-2" /> : <IoShareSocialSharp size={18} className="mr-2" />}
-                <p>Поделиться</p>
+                {copied ? <BsCheckAll size={18} className="md:mr-2 mr-0" />  : <BsCopy size={18} className="md:mr-2 mr-0" />}
+                {copied ? <p className='md:block hidden'>Ссылка скопирована</p> : <p className='md:block hidden'>Скопировать ссылку</p> }
               </button>
               <Link
                 href={event.url}

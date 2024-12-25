@@ -10,7 +10,8 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useEvents } from '../../context/EventsContext';
 // import { data1 } from '../data/events';
@@ -21,6 +22,8 @@ dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 
 export default function Events() {
@@ -70,12 +73,21 @@ export default function Events() {
       : filteredEvents;
 
     setSortedEvents(sorted);
-  }, [events, category, search, sortPrice]); // add dependencies
+  }, [events, category, search, sortPrice, startDate, endDate, selectedTags]); // add dependencies
 
-  if (!sortedEvents.length) return <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
-    {/* <CatLoader /> */}
-    Загрузка...
-  </div>;
+  if (!events) {
+    return (
+      <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+        {/* <CatLoader /> */}
+        Загрузка...
+      </div>
+    );
+  }
+
+  // if (!sortedEvents.length) return <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+  //   {/* <CatLoader /> */}
+  //   Загрузка...
+  // </div>;
 
   return (
     <div>
@@ -91,10 +103,9 @@ export default function Events() {
               setEndDate={setEndDate}
               selectedTags={selectedTags}
               setSelectedTags={setSelectedTags}
-              sortPrice={sortPrice}
-              setSortPrice={setSortPrice}
               isOpen={isOpen}
               setIsOpen={setIsOpen}
+              category={category}
             />
           </div>
         </aside>

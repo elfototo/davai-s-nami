@@ -174,8 +174,6 @@
 //   );
 // };
 
-// app/events/[id]/page.js
-
 import React from 'react';
 import EventPageClient from './EventPageClient';
 

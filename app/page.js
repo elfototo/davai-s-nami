@@ -109,7 +109,7 @@ export default function Home() {
             <h4 className='font-roboto font-bold text-secondary text-6xl mb-5  whitespace-nowrap'>Играй с нами!</h4>
             <p className='font-roboto text-center md:text-start font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное <br /> мероприятие на свой уикенд в Санкт - Петербурге</p>
             <button
-              // onClick={getRandomEvent}
+              onClick={getRandomEvent}
               className={`font-roboto  w-3/4 py-4 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
               transform transition-transform duration-300 hover:scale-105
               `}>Мне повезет</button>
@@ -237,11 +237,12 @@ export default function Home() {
               </div>
 
               <Link href={`/events/${randomEv.id}`}>
-                <div
+                
+                <button
                   className='font-roboto font-medium my-1 mx-auto w-full py-4 text-[1rem] bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'
                 >
                   Смотреть
-                </div>
+                </button>
 
               </Link>
               <div
