@@ -27,7 +27,7 @@ dayjs.extend(isSameOrBefore);
 
 
 export default function Events() {
-  const { events, setEvents } = useEvents();
+  const { events, loadMoreEvents, isLoading, hasMore } = useEvents();
   // const [events, setEvents] = useState(data1);
   const [sortedEvents, setSortedEvents] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -39,8 +39,8 @@ export default function Events() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [currentPage, setCurrentPage] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [hasMore, setHasMore] = useState(true);
   const [bgColor, setBgColor] = useState('');
 
   useEffect(() => {
@@ -139,14 +139,15 @@ export default function Events() {
           {hasMore && (
             <div className="text-center my-4">
               <button
-                // onClick={handleLoadMore}
-                // disabled={isLoading}
+                onClick={loadMoreEvents}
+                disabled={isLoading}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
               >
                 {isLoading ? 'Загрузка...' : 'Загрузить ещё'}
               </button>
             </div>
           )}
+
 
         </section>
       </div>
