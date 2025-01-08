@@ -28,8 +28,10 @@ export default function EventPageClient({ id }) {
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
   // const [events, setEvents] = useState(data1);
-  const { events } = useEvents();
+  const { events, allEventsCache } = useEvents();
 
+  console.log('events', events);
+  console.log('allEventsCache', allEventsCache);
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
 
