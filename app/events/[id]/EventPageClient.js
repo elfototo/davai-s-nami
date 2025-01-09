@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/ru';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -16,8 +16,6 @@ import { BsCheckAll } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
 import { BsCopy } from "react-icons/bs";
 import { useEvents } from '../../../context/EventsContext';
-// import { data1 } from '../../data/events';
-
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -27,8 +25,8 @@ export default function EventPageClient({ id }) {
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
-  // const [events, setEvents] = useState(data1);
   const { events, allEventsCache } = useEvents();
+  const [event, setEvent] = useState()
 
   console.log('events', events);
   console.log('allEventsCache', allEventsCache);
@@ -44,9 +42,80 @@ export default function EventPageClient({ id }) {
   const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
   const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
 
-  const event = events.find((event) => event.id === Number(id.id)); // Find the event by ID
-  console.log('событие', event);
+  const fetchIdEvent = async (id) => {
+    try {
+      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ids: [id],
+          fields: [
+            'event_id',
+            'id',
+            'title',
+            'image',
+            'url',
+            'price',
+            'address',
+            'from_date',
+            'full_text',
+            'place_id',
+            'main_category_id',
+          ],
+        }),
+      });
 
+      if (!res.ok) {
+        throw new Error(`Ошибка поиска id ${res.statusText}`)
+      }
+
+      const result = await res.json();
+      console.log('Task created for id: ', result);
+
+      const taskId = result.task_id;
+      const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+      setTimeout(async () => {
+        try {
+          const statusResponse = await fetch(statusUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer zevgEv-vimned-ditva8',
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!statusResponse.ok) {
+            throw new Error(`Ошибка: ${statusResponse.statusText}`);
+          }
+
+          const statusResult = await statusResponse.json();
+          console.log('Status result id', statusResult);
+
+          // setEvent(statusResult.events);
+          console.log('statusResult.events', statusResult.result.events);
+
+          const event = statusResult.result.events[0];
+          console.log('statusResult.events.id', event);
+
+          setEvent(event);
+          // ...
+        } catch (error) {
+          console.log('Ошибка при запросе статуса: ', error);
+          setStatus('Ошибка при выполнении задачи');
+        }
+      }, 1000);
+    } catch (error) {
+      console.log('Ошибка при создании задачи', error)
+    }
+  };
+
+  useEffect(() => {
+    fetchIdEvent(id.id);
+  }, []);
 
   if (!event) {
     return <div>Событие не найдено</div>;
@@ -93,11 +162,11 @@ export default function EventPageClient({ id }) {
             <div className="p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]">
               <div className="flex mb-3">
                 <p className="text-[#777]">Цена: </p>
-                <p className="font-roboto text-[#333] ml-[33px]">{event.price}</p>
+                <p className="font-roboto text-[#333] ml-[34px]">{event.price}</p>
               </div>
               <div className="flex items-baseline my-3">
                 <p className="text-[#777]">Дата: </p>
-                <p className="font-roboto text-[#333] ml-[38px]">{dayjs(event.from_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
+                <p className="font-roboto text-[#333] ml-[36px]">{dayjs(event.from_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
               </div>
               <div className="flex items-baseline my-3">
                 <p className="text-[#777]">Начало:</p>
@@ -109,7 +178,7 @@ export default function EventPageClient({ id }) {
                 <p className="text-[#777]">Место: </p>
                 {event.place_id ? (
                   <Link href={`/places/${event.place_id}`}>
-                    <p className="font-roboto text-[#333] hover:text-[#F52D85] ml-[25px] cursor-pointer">{event.address}</p>
+                    <p className="font-roboto text-[#333] hover:text-[#F52D85] ml-[26px] cursor-pointer">{event.address}</p>
                   </Link>
                 ) : (
                   <p className="font-roboto text-[#333] ml-[25px]">{event.address}</p>
@@ -118,11 +187,11 @@ export default function EventPageClient({ id }) {
             </div>
 
             <div className="flex">
-              <button 
-              onClick={handleCopy} 
-              className={copied ? styleCopied : styleNoCopied}>
-                {copied ? <BsCheckAll size={18} className="md:mr-2 mr-0" />  : <BsCopy size={18} className="md:mr-2 mr-0" />}
-                {copied ? <p className='md:block hidden'>Ссылка скопирована</p> : <p className='md:block hidden'>Скопировать ссылку</p> }
+              <button
+                onClick={handleCopy}
+                className={copied ? styleCopied : styleNoCopied}>
+                {copied ? <BsCheckAll size={18} className="md:mr-2 mr-0" /> : <BsCopy size={18} className="md:mr-2 mr-0" />}
+                {copied ? <p className='md:block hidden'>Ссылка скопирована</p> : <p className='md:block hidden'>Скопировать ссылку</p>}
               </button>
               <Link
                 href={event.url}
