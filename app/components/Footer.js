@@ -33,19 +33,19 @@ const Footer = () => {
 
                 <div className="mb-8 lg:mb-0">
                     <p className=" font-bold font-roboto text-white">Куда сходить:</p>
-                    <ul className="text-gray-300">
-                        <li className="hover:underline font-roboto cursor-pointer hover:text-white my-2">Горячие новинки месяца</li>
-                        <li className="hover:underline cursor-pointer hover:text-white my-2">Куда сходить сегодня и завтра</li>
-                        <li className="hover:underline cursor-pointer hover:text-white my-2">Куда сходить в выходные</li>
+                    <ul className="text-gray-300 flex flex-col">
+                        <Link href={`/events?category=${encodeURIComponent("Сегодня")}`} className="hover:underline font-roboto cursor-pointer hover:text-white my-2">Сегодня</Link>
+                        <Link href={`/events?category=${encodeURIComponent("Завтра")}`} className="hover:underline cursor-pointer hover:text-white my-2">Завтра</Link>
+                        <Link href={`/events?category=${encodeURIComponent("Выходные")}`} className="hover:underline cursor-pointer hover:text-white my-2">Выходные</Link>
                     </ul>
                 </div>
 
 
                 <div className="">
                     <p className=" font-bold font-roboto text-white">Категории:</p>
-                    <ul className='grid grid-cols-3  lg:grid-cols-4 gap-x-10'>
+                    <ul className='grid grid-cols-2   gap-x-10'>
                         {dataCategories.map((category) => (
-                            <li key={category} className='hover:text-white hover:underline cursor-pointer my-2 text-gray-300'>{category}</li>
+                            <Link href={`/events?category=${encodeURIComponent(category)}`} key={category} className='hover:text-white hover:underline cursor-pointer my-2 text-gray-300'>{category}</Link>
                         ))}
                     </ul>
                 </div>

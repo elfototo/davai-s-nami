@@ -9,7 +9,6 @@ import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { useSearchParams } from 'next/navigation';
 import timezone from 'dayjs/plugin/timezone';
-
 import { categoriesID } from '../data/events';
 
 dayjs.extend(isoWeek);
@@ -37,6 +36,12 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
     useEffect(() => {
         if (category && categoryTags[category]) {
             setSelectedTags(categoryTags[category]);
+        } else if (category === 'Сегодня') {
+            selectToday();
+        } else if (category === 'Завтра') {
+            selectTomorrow();
+        } else if (category === 'Выходные') {
+            selectWeekends();
         }
     }, [category, setSelectedTags]);
 

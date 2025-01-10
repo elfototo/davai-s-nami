@@ -25,6 +25,7 @@ export const EventsProvider = ({ children }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoadingPage, setIsLoadingPage] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [hasMoreByTags, setHasMoreByTags] = useState(true)
 
     let today = dayjs().format('YYYY-MM-DD');
     let nextMonth = dayjs().add(1, 'month').format('YYYY-MM-DD');
@@ -70,57 +71,58 @@ export const EventsProvider = ({ children }) => {
             const taskId = result.task_id;
             const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
 
-            setTimeout(async () => {
-                try {
-                    const statusResponse = await fetch(statusUrl, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': 'Bearer zevgEv-vimned-ditva8',
-                            'Content-Type': 'application/json',
-                        },
-                    });
 
-                    if (!statusResponse.ok) {
-                        throw new Error(`Ошибка: ${statusResponse.statusText}`);
-                    }
+            try {
+                const statusResponse = await fetch(statusUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-                    const statusResult = await statusResponse.json();
-                    console.log('Status result', statusResult);
-
-                    let newEvents = [];
-                    if (Array.isArray(statusResult)) {
-                        newEvents = statusResult;
-                    } else if (statusResult.events && Array.isArray(statusResult.events)) {
-                        newEvents = statusResult.events;
-                    } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-                        newEvents = statusResult.result.events;
-                    } else {
-                        console.error('Неизвестная структура данных:', statusResult);
-                        setStatus('Не удалось обработать данные');
-                        return;
-                    }
-
-                    // Если меньше, чем лимит, значит данных больше нет
-                    if (newEvents.length < limit) {
-                        setHasMore(false);
-                    }
-
-                    setEvents((prevEvents) => {
-                        const seenIds = new Set(prevEvents.map(event => event.event_id));
-                        const uniqueEvents = newEvents.filter(event => !seenIds.has(event.event_id));
-                        return [...prevEvents, ...uniqueEvents];
-                    });
-
-                    setAllEventsCache((prevCache) => {
-                        const seenIds = new Set(prevCache.map(event => event.event_id));
-                        const uniqueEvents = newEvents.filter(event => !seenIds.has(event.event_id));
-                        return [...prevCache, ...uniqueEvents];
-                    });
-                } catch (error) {
-                    console.log('Ошибка при запросе статуса: ', error);
-                    setStatus('Ошибка при выполнении задачи');
+                if (!statusResponse.ok) {
+                    throw new Error(`Ошибка: ${statusResponse.statusText}`);
                 }
-            }, 1000);
+
+                const statusResult = await statusResponse.json();
+                console.log('Status result', statusResult);
+
+                let newEvents = [];
+
+                if (Array.isArray(statusResult)) {
+                    newEvents = statusResult;
+                } else if (statusResult.events && Array.isArray(statusResult.events)) {
+                    newEvents = statusResult.events;
+                } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+                    newEvents = statusResult.result.events;
+                } else {
+                    console.error('Неизвестная структура данных:', statusResult);
+                    setStatus('Не удалось обработать данные');
+                    return;
+                }
+
+                // Если меньше, чем лимит, значит данных больше нет
+                if (newEvents.length < limit) {
+                    setHasMore(false);
+                }
+
+                setEvents((prevEvents) => {
+                    const seenIds = new Set(prevEvents.map(event => event.id));
+                    const uniqueEvents = newEvents.filter(event => !seenIds.has(event.id));
+                    return [...prevEvents, ...uniqueEvents];
+                });
+
+                setAllEventsCache((prevCache) => {
+                    const seenIds = new Set(prevCache.map(event => event.event_id));
+                    const uniqueEvents = newEvents.filter(event => !seenIds.has(event.event_id));
+                    return [...prevCache, ...uniqueEvents];
+                });
+            } catch (error) {
+                console.log('Ошибка при запросе статуса: ', error);
+                setStatus('Ошибка при выполнении задачи');
+            }
+
         } catch (error) {
             console.log('Ошибка при создании задачи', error);
             setStatus('Ошибка при создании задачи');
@@ -134,7 +136,6 @@ export const EventsProvider = ({ children }) => {
         fetchPosts(currentPage);
     }, []);
 
-    // Функция для загрузки следующей страницы
     const loadMoreEvents = () => {
         if (isLoadingPage || !hasMore) return;
         const nextPage = currentPage + 1;
@@ -142,34 +143,91 @@ export const EventsProvider = ({ children }) => {
         fetchPosts(nextPage);
     };
 
-    // const getKey = (pageIndex, previousPageData, limit, today, nextMonth) => {
-    //     if (previousPageData && !previousPageData.result?.events?.length) return null; // Остановить пагинацию
-
-    //     return [
-    //         'http://159.223.239.75:8005/api/get_valid_events/',
-    //         {
-    //             date_from: today,
-    //             date_to: nextMonth,
-    //             fields: [
-    //                 'event_id',
-    //                 'id',
-    //                 'title',
-    //                 'image',
-    //                 'url',
-    //                 'price',
-    //                 'address',
-    //                 'from_date',
-    //                 'full_text',
-    //                 'place_id',
-    //                 'main_category_id',
-    //             ],
-    //             limit: limit,
-    //             page: pageIndex,
-    //         },
-    //     ];
-    // };
 
 
+    // Запрос по категории с лимитом
+
+    const fetchTagEvents = async (main_category_id, limit) => {
+        try {
+            const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fields: [
+                        'event_id',
+                        'id',
+                        'title',
+                        'image',
+                        'url',
+                        'price',
+                        'address',
+                        'from_date',
+                        'full_text',
+                        'place_id',
+                        'main_category_id',
+                    ],
+                    limit: limit,
+                    main_category_id: main_category_id,
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error(`Ошибка: ${res.statusText}`);
+            }
+
+            const result = await res.json();
+            console.log('Task created: ', result);
+
+            const taskId = result.task_id;
+            const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+            // Переходим к статусу
+            const statusResponse = await fetch(statusUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!statusResponse.ok) {
+                throw new Error(`Ошибка: ${statusResponse.statusText}`);
+            }
+
+            const statusResult = await statusResponse.json();
+            console.log('statusResult category task', statusResult);
+
+            let newEvents = [];
+            if (Array.isArray(statusResult)) {
+                newEvents = statusResult;
+            } else if (statusResult.events && Array.isArray(statusResult.events)) {
+                newEvents = statusResult.events;
+            } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+                newEvents = statusResult.result.events;
+            } else {
+                console.error('Неизвестная структура данных:', statusResult);
+                setStatus('Не удалось обработать данные');
+                return;
+            }
+
+            setEvents((prevEvents) => {
+                const seenIds = new Set(prevEvents.map(event => event.id));
+                const uniqueEvents = newEvents.filter(event => !seenIds.has(event.id));
+                return [...prevEvents, ...uniqueEvents];  
+            });
+
+            if (newEvents.length < limit) {
+                setHasMoreByTags(false);
+            };
+
+
+        } catch (error) {
+            console.log('Ошибка выполнения задачи', error);
+        }
+    };
 
     return (
         <EventsContext.Provider

@@ -5,7 +5,7 @@ import Card from './components/Card';
 import Categories from './components/Categories';
 import Link from 'next/link';
 import 'animate.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
@@ -27,10 +27,10 @@ dayjs.extend(isBetween);
 export default function Home() {
 
   const { events } = useEvents();
-  // const [events, setEvents] = useState(data1);
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [weekendEvents, setWeekendEvents] = useState([]);
 
   const toggleShowGame = () => {
     setShowGame(!showGame);
@@ -98,6 +98,98 @@ export default function Home() {
 
     return isStartOfWeekend || isEndOfWeekend;
   });
+
+  const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
+  const endOfWeekend = startOfWeekend.add(1, 'day');
+
+  const fetchEventsWeekend = async () => {
+    try {
+      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          date_from: startOfWeekend.format('YYYY-MM-DD'),
+          date_to: endOfWeekend.format('YYYY-MM-DD'),
+          fields: [
+            'event_id',
+            'id',
+            'title',
+            'image',
+            'url',
+            'price',
+            'address',
+            'from_date',
+            'full_text',
+            'place_id',
+            'main_category_id',
+          ],
+          limit: 4,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка: ${res.statusText}`);
+      }
+
+
+      const result = await res.json();
+      console.log('Task created: ', result);
+
+      const taskId = result.task_id;
+      const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+      setTimeout(async () => {
+        try {
+          const statusResponse = await fetch(statusUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer zevgEv-vimned-ditva8',
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!statusResponse.ok) {
+            throw new Error(`Ошибка: ${statusResponse.statusText}`);
+          }
+
+          const statusResult = await statusResponse.json();
+          console.log('Status result: ', statusResult);
+
+          let eventsWeekend = [];
+
+          if (Array.isArray(statusResult)) {
+            eventsWeekend = statusResult;
+          } else if (statusResult.events && Array.iaArray(statusResult.events)) {
+            eventsWeekend = statusResult.events;
+          } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+            eventsWeekend = statusResult.result.events;
+          } else {
+            console.error('Неизвестная структура данных:', statusResult);
+            setStatus('Не удалось обработать данные');
+            return;
+          }
+
+          setWeekendEvents(eventsWeekend)
+        } catch (error) {
+          console.log('Ошибка при запросе', error);
+        }
+      })
+    } catch (error) {
+      console.log('Ошибка при выполнении задачи', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEventsWeekend();
+  }, []);
+
+  // console.log('weekendEvents', weekendEvents);
+  // console.log('weekendEvents', weekendEvents.length);
+
+  // console.log('filterEventsWeekend', filterEventsWeekend);
 
   return (
     <>
@@ -193,7 +285,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-          {filterEventsWeekend.length > 0 ? (filterEventsWeekend.slice(0, 4).map((card) => (
+          {weekendEvents.length > 0 ? (weekendEvents.map((card) => (
             <Card
               type='mini'
               category={card.category}
@@ -237,7 +329,7 @@ export default function Home() {
               </div>
 
               <Link href={`/events/${randomEv.id}`}>
-                
+
                 <button
                   className='font-roboto font-medium my-1 mx-auto w-full py-4 text-[1rem] bg-pink-500 text-[#fff] rounded-lg transform transition-transform duration-300 hover:bg-pink-400'
                 >
@@ -247,9 +339,9 @@ export default function Home() {
               </Link>
               <div
                 onClick={toggleShowGame}
-                className='absolute top-5 right-5 md:-top-10 md:-right-10'
+                className='absolute top-5 right-5 md:-top-8 md:-right-8'
               >
-                <IoMdClose className='text-[3rem] p-2 md:p-0 text-[#333] bg-white rounded-full border-[2px] border-[#333] md:border-none md:bg-transparent md:text-[#fff]' />
+                <IoMdClose className='text-[2rem] p-2 md:p-0 text-[#333] bg-white rounded-full border-[2px] border-[#333] md:border-none md:bg-transparent md:text-[#fff] cursor-pointer' />
               </div>
             </div>
           </div>
