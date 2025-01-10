@@ -58,13 +58,6 @@ const Footer = () => {
 
                     <div className='flex justify-center items-center'>
 
-                        {/* <div className='mx-2'>
-
-                            <Link href='/' className='hover:bg-pink-600 transform transition-colors duration-200 border border-white hover:border-transparent rounded-full flex items-center justify-center cursor-pointer w-[40px] h-[40px]'>
-                                <RiInstagramFill size={20} color='white' className='' />
-                            </Link>
-
-                        </div> */}
                         <div className='mx-2'>
 
                             <Link href='https://t.me/DavaiSNami' className='hover:bg-sky-600 transform transition-colors duration-200 border border-white hover:border-transparent rounded-full flex items-center justify-center cursor-pointer w-[40px] h-[40px]'>

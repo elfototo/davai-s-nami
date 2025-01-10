@@ -296,16 +296,16 @@ export default function About() {
             <p className="text-gray-700 mb-6">
               Художественные выставки, театральные постановки и культурные события, которые позволяют погрузиться в атмосферу искусства.
             </p>
-            <Link href="/events" className="text-pink-500 font-semibold">Узнать больше →</Link>
+            <Link href={`/events?category=${encodeURIComponent("Культура")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
           </div>
 
-          {/* Спортивные мероприятия */}
+          {/* Образовательные мероприятия */}
           <div className="bg-teal-50 rounded-lg shadow-lg p-8">
             <h3 className="text-2xl font-semibold text-gray-800 mb-4">Образовательные мероприятия</h3>
             <p className="text-gray-700 mb-6">
               Лекции, мастер-классы, тренинги и семинары. Мы собираем для вас все образовательные мероприятия города.
             </p>
-            <Link href="/events" className="text-pink-500 font-semibold">Узнать больше →</Link>
+            <Link href={`/events?category=${encodeURIComponent("Лекции")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
           </div>
 
           {/* Музыкальные мероприятия */}
@@ -314,7 +314,7 @@ export default function About() {
             <p className="text-gray-700 mb-6">
               Концерты, фестивали, уличные выступления и музыкальные вечеринки. Вся музыка города в одном месте.
             </p>
-            <Link href="/events" className="text-pink-500 font-semibold">Узнать больше →</Link>
+            <Link href={`/events?category=${encodeURIComponent("Музыка")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
           </div>
         </div>
 
