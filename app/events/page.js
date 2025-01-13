@@ -23,7 +23,7 @@ dayjs.extend(isSameOrBefore);
 
 
 export default function Events() {
-  const { events, isLoading, allEventsCache, loadMoreEvents, hasMore, loadMoreEventsByTag } = useEvents();
+  const { events, isLoading, loadMoreEvents, hasMore, loadMoreEventsByTag } = useEvents();
   const [sortedEvents, setSortedEvents] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -45,9 +45,9 @@ export default function Events() {
     };
 
   useEffect(() => {
-    if (!allEventsCache || allEventsCache.length === 0) return;
+    if (!events || events.length === 0) return;
 
-    const filteredEvents = allEventsCache.filter((event) => {
+    const filteredEvents = events.filter((event) => {
       const eventCategoryName = getCategoryNameById(event.main_category_id);
       const matchesCategory = !category || eventCategoryName === category;
 
@@ -73,19 +73,9 @@ export default function Events() {
     if (sorted.length < 20 && hasMore) {
       
       loadMoreEvents();
-      // if (selectedTags.length > 0) {
-      //   const arrTags = selectedTags.map((tag) => getCategoryIdByName(tag));
-      //   const limit = 20 - sorted.length;
-      //   loadMoreEvents();
-      // }
     }
 
-  }, [events, allEventsCache, category, search, sortPrice, startDate, endDate, selectedTags, hasMore]);
-
-
-  console.log('sortedEvents', sortedEvents);
-
-  console.log('selectedTags', selectedTags);
+  }, [events, category, search, sortPrice, startDate, endDate, selectedTags, hasMore]);
 
   if (!events) {
     return (
