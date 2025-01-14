@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import useSWR, { useSWRConfig, mutate, SWRConfig } from 'swr';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -103,21 +102,20 @@ export const EventsProvider = ({ children }) => {
                     return;
                 }
 
+                console.log('newEvents', newEvents);
+
                 setEvents((prevEvents) => {
                     const seenIds = new Set(prevEvents.map(event => event.id));
                     const uniqueEvents = newEvents.filter(event => !seenIds.has(event.id));
                     return [...prevEvents, ...uniqueEvents];
                 });
+                
                 // Если меньше, чем лимит, значит данных больше нет
                 if (newEvents.length < limit) {
                     setHasMore(false);
                 }
 
-                mutate(`/api/events?page=${currentPage}`, newEvents, false);
-
-                console.log('newEvents', newEvents);
-
-                return newEvents;
+                // return newEvents;
 
             } catch (error) {
                 console.log('Ошибка при запросе статуса: ', error);
@@ -132,55 +130,19 @@ export const EventsProvider = ({ children }) => {
         }
     };
 
-
-    const { data: eventsCache, error } = useSWR(
-        `/api/events?page=${currentPage}`,
-        fetchPosts,
-        {
-            revalidateOnFocus: false,
-            dedupingInterval: 60000,
-            focusThrottleInterval: 5000,
-            revalidateOnReconnect: false,
-            refreshInterval: 7200000,
-            keepPreviousData: true,
-        }
-    );
-
-    // const cachedData = cache ? cache.get(`/api/events?page=${currentPage}`) : null;
-    // console.log('cachedData', cachedData);
-
-
     useEffect(() => {
-        if (eventsCache) {
-            setEvents((prevEvents) => {
-                const seenIds = new Set(prevEvents.map(event => event.id));
-                const uniqueEvents = eventsCache.filter(event => !seenIds.has(event.id));
-                if (uniqueEvents.length === 0) {
-                    return prevEvents;
-                }
-    
-                return [...prevEvents, ...uniqueEvents];
-            });
-            mutate(`/api/events?page=${currentPage}`, eventsCache, false);
-        }
-    }, [eventsCache, currentPage]);
+        fetchPosts();
+    }, [currentPage]);
 
-    useEffect(() => {
-        if (eventsCache) {
-            console.log('Data from SWR:', eventsCache);
-        } else if (error) {
-            console.error('Error loading data:', error);
-        }
-    }, [eventsCache, error]);
+    console.log('Загруженные события: ', events);
 
     const loadMoreEvents = () => {
         if (isLoadingPage || !hasMore) return;
         const nextPage = currentPage + 1;
-        console.log('nextPage', nextPage);
         setCurrentPage(nextPage);
-        mutate(`/api/events?page=${nextPage}`);
     };
 
+    console.log('номер пагинации ', currentPage);
 
     // Запрос по категории с лимитом
 
@@ -267,20 +229,17 @@ export const EventsProvider = ({ children }) => {
     };
 
     return (
-        <SWRConfig value={{ fetchPosts }}>
-            <EventsContext.Provider
-                value={{
-                    events,
-                    status,
-                    setEvents,
-                    loadMoreEvents,
-                    hasMore,
-                    isLoadingPage,
-                }}
-            >
-                {children}
-            </EventsContext.Provider>
-        </SWRConfig>
-
+        <EventsContext.Provider
+            value={{
+                events,
+                status,
+                setEvents,
+                loadMoreEvents,
+                hasMore,
+                isLoadingPage,
+            }}
+        >
+            {children}
+        </EventsContext.Provider>
     );
 };

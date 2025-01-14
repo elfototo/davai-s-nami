@@ -15,8 +15,9 @@ import isBetween from 'dayjs/plugin/isBetween';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
 import Loader from './components/Loader';
-import { useEvents } from '../context/EventsContext';
-// import { data1 } from './data/events';
+import { useSWRConfig } from 'swr';
+// import { useEvents } from '../context/EventsContext';
+
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -26,7 +27,9 @@ dayjs.extend(isBetween);
 
 export default function Home() {
 
-  const { events } = useEvents();
+  // const { events } = useEvents();
+  const { cache, refreshInterval } = useSWRConfig();
+  // const [events, setEvents] = useState(cache);
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,63 +44,66 @@ export default function Home() {
     const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
     const end = today.add(7, 'day').startOf('day');
 
-    const filterEvents = events.filter((event) => {
+    console.log('cache', cache);
+
+    if (cache.length > 0) {
+      const filterEvents = cache.filter((event) => {
+        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
+        return eventDate.isAfter(today) && eventDate.isBefore(end);
+      });
+
+      if (filterEvents.length === 0) return null;
+
+      for (let i = filterEvents.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filterEvents[i], filterEvents[j]] = [filterEvents[j], filterEvents[i]];
+      }
+
+      const randomEvent = filterEvents[0];
+
+      const img = new window.Image();
+      img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
+
+      img.onload = () => {
+
+        setTimeout(() => {
+          setRandomEv(randomEvent); // Устанавливаем мероприятие
+          setIsLoading(false); // Скрываем лоадер
+          setShowGame(true); // Показываем окно мероприятия
+          console.log(randomEvent.title);
+        }, 6000); // Сохраняем задержку, если она нужна
+      };
+
+      img.onerror = () => {
+        console.error("Ошибка загрузки изображения");
+        setTimeout(() => {
+          setRandomEv(randomEvent);
+          setIsLoading(false);
+          setShowGame(true);
+        }, 8000);
+      };
+    }
+    const filterEventsTodayTomorrow = cache.filter((event) => {
       const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-      return eventDate.isAfter(today) && eventDate.isBefore(end);
+      const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
+      const tomorrow = today.add(1, 'day').startOf('day');
+
+      const isToday = eventDate.isSame(today, 'day');
+      const isTomorrow = eventDate.isSame(tomorrow, 'day');
+
+      return isToday || isTomorrow;
     });
 
-    if (filterEvents.length === 0) return null;
+    const filterEventsWeekend = cache.filter((event) => {
+      const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
+      const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
+      const endOfWeekend = startOfWeekend.add(1, 'day');
+      const isStartOfWeekend = eventDate.isSame(startOfWeekend, 'day');
+      const isEndOfWeekend = eventDate.isSame(endOfWeekend, 'day');
 
-    for (let i = filterEvents.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [filterEvents[i], filterEvents[j]] = [filterEvents[j], filterEvents[i]];
-    }
-
-    const randomEvent = filterEvents[0];
-
-    const img = new window.Image();
-    img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
-
-    img.onload = () => {
-
-      setTimeout(() => {
-        setRandomEv(randomEvent); // Устанавливаем мероприятие
-        setIsLoading(false); // Скрываем лоадер
-        setShowGame(true); // Показываем окно мероприятия
-        console.log(randomEvent.title);
-      }, 6000); // Сохраняем задержку, если она нужна
-    };
-
-    img.onerror = () => {
-      console.error("Ошибка загрузки изображения");
-      setTimeout(() => {
-        setRandomEv(randomEvent);
-        setIsLoading(false);
-        setShowGame(true);
-      }, 8000);
-    };
+      return isStartOfWeekend || isEndOfWeekend;
+    });
   }
-
-  const filterEventsTodayTomorrow = events.filter((event) => {
-    const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-    const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
-    const tomorrow = today.add(1, 'day').startOf('day');
-
-    const isToday = eventDate.isSame(today, 'day');
-    const isTomorrow = eventDate.isSame(tomorrow, 'day');
-
-    return isToday || isTomorrow;
-  });
-
-  const filterEventsWeekend = events.filter((event) => {
-    const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-    const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
-    const endOfWeekend = startOfWeekend.add(1, 'day');
-    const isStartOfWeekend = eventDate.isSame(startOfWeekend, 'day');
-    const isEndOfWeekend = eventDate.isSame(endOfWeekend, 'day');
-
-    return isStartOfWeekend || isEndOfWeekend;
-  });
 
   const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
   const endOfWeekend = startOfWeekend.add(1, 'day');
@@ -229,7 +235,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+          {/* <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
             {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
@@ -246,7 +252,7 @@ export default function Home() {
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
               Нет доступных событий.
             </p>}
-          </div>
+          </div> */}
         </div>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
@@ -257,7 +263,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+          {/* <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
             {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
@@ -274,7 +280,7 @@ export default function Home() {
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
               Нет доступных событий.
             </p>}
-          </div>
+          </div> */}
         </div>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>

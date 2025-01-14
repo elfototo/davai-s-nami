@@ -12,7 +12,11 @@ import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useEvents } from '../../context/EventsContext';
+// import { useEvents } from '../../context/EventsContext';
+import { useSWRConfig } from 'swr';
+import useSWR from 'swr';
+
+
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -23,7 +27,10 @@ dayjs.extend(isSameOrBefore);
 
 
 export default function Events() {
-  const { events, isLoading, loadMoreEvents, hasMore, loadMoreEventsByTag } = useEvents();
+  const [pageIndex, setPageIndex] = useState(0);
+
+  const { data, hasMore, loadMoreEvents, isLoading } = useSWR(`/api/data?page=${pageIndex}`);
+
   const [sortedEvents, setSortedEvents] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -33,21 +40,25 @@ export default function Events() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
-  
-    const getCategoryNameById = (id) => {
-      const categoryObj = categoriesID.find((cat) => cat.id === id);
-      return categoryObj ? categoryObj.category : null;
-    };
 
-    const getCategoryIdByName = (name) => {
-      const categoryObj = categoriesID.find((cat) => cat.category === name);
-      return categoryObj ? categoryObj.id : null;
-    };
+  console.log('data', data)
+
+  const getCategoryNameById = (id) => {
+    const categoryObj = categoriesID.find((cat) => cat.id === id);
+    return categoryObj ? categoryObj.category : null;
+  };
+
+  const getCategoryIdByName = (name) => {
+    const categoryObj = categoriesID.find((cat) => cat.category === name);
+    return categoryObj ? categoryObj.id : null;
+  };
+
+
 
   useEffect(() => {
-    if (!events || events.length === 0) return;
+    if (!data || data.length === 0) return;
 
-    const filteredEvents = events.filter((event) => {
+    const filteredEvents = data.filter((event) => {
       const eventCategoryName = getCategoryNameById(event.main_category_id);
       const matchesCategory = !category || eventCategoryName === category;
 
@@ -71,13 +82,13 @@ export default function Events() {
     setSortedEvents(sorted);
 
     if (sorted.length < 20 && hasMore) {
-      
+
       loadMoreEvents();
     }
 
-  }, [events, category, search, sortPrice, startDate, endDate, selectedTags, hasMore]);
+  }, [data, category, search, sortPrice, startDate, endDate, selectedTags, hasMore]);
 
-  if (!events) {
+  if (!data) {
     return (
       <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
         Загрузка...
@@ -143,8 +154,6 @@ export default function Events() {
               </button>
             </div>
           )}
-
-
         </section>
       </div>
     </div>
