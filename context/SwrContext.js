@@ -21,7 +21,7 @@ export const SWRProvider = ({ children }) => {
     const [pageIndex, setPageIndex] = useState(0);
     const [isLoadingPage, setIsLoadingPage] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const limit = 20;
+    const limit = 8;
 
     let today = dayjs().format('YYYY-MM-DD');
     let nextSixMonth = dayjs().add(6, 'month').format('YYYY-MM-DD');
@@ -53,6 +53,7 @@ export const SWRProvider = ({ children }) => {
                         'main_category_id',
                     ],
                     page: pageIndex,
+                    limit: limit,
                 }),
             });
 
@@ -120,39 +121,36 @@ export const SWRProvider = ({ children }) => {
         // mutate,
         // size,
         // setSize
-    } = useSWRInfinite(`/api/data?page=${pageIndex}`,
+    } = useSWR(`/api/data?page=${pageIndex}`,
         fetcher);
 
-    // if (isLoading) console.log('ЗАГРУЗКА');
+    if (isLoading) console.log('ЗАГРУЗКА');
     if (error) console.log('ОШИБКА', error.info);
     console.log('Загруженные данные: ', data);
 
-    // const issue = data ? [].concat(...data) : [];
-    // const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
-    // const isEmty = data?.[0]?.length === 0;
-    // const isReachingEnd = isEmty || (data && data[data.length - 1]?.length < limit);
-    // const isRefreshing = isValidating && data && data.length === size;
-
+    const loadMoreEvents = () => {
+        // if (isLoading || !hasMore) return;
+        // const nextPage = pageIndex + 1;
+        // setPageIndex(nextPage);
+        console.log('дополнить loadMoreEvents после пагинации');
+    };
 
     function localStorageProvider() {
-        const map = new Map(JSON.parse(localStorage.getItem('app-cache') || '[]'));
+        // При инициализации мы восстанавливаем данные из `localStorage` в Map.
+        const map = new Map(JSON.parse(localStorage.getItem('app-cache') || '[]'))
 
+        // Перед выгрузкой приложения мы записываем все данные обратно в `localStorage`.
         window.addEventListener('beforeunload', () => {
             const appCache = JSON.stringify(Array.from(map.entries()))
-            localStorage.setItem('app-cache', appCache);
-        });
-        console.log('map', map);
-        return map;
-    };
+            localStorage.setItem('app-cache', appCache)
+        })
 
-    const loadMoreEvents = () => {
-        if (isLoadingPage || !hasMore) return;
-        const nextPage = pageIndex + 1;
-        setPageIndex(nextPage);
-    };
+        // Мы по-прежнему используем map для записи и чтения для производительности.
+        return map;
+    }
 
     return (
-        <SWRConfig value={{ provider: localStorageProvider, fetcher, loadMoreEvents, hasMore }}>
+        <SWRConfig value={{ provider: typeof window !== 'undefined' ? localStorageProvider : () => new Map() }}>
             {children}
         </SWRConfig>
     );
