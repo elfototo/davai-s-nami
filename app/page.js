@@ -16,6 +16,8 @@ import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
 import Loader from './components/Loader';
 import { useSWRConfig } from 'swr';
+import useSWR, { SWRConfig } from 'swr';
+
 // import { useEvents } from '../context/EventsContext';
 
 
@@ -27,13 +29,14 @@ dayjs.extend(isBetween);
 
 export default function Home() {
 
-  // const { events } = useEvents();
-  const { cache, refreshInterval } = useSWRConfig();
-  // const [events, setEvents] = useState(cache);
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [weekendEvents, setWeekendEvents] = useState([]);
+  const [eventsTodayTomorrow, setEventsTodayTomorrow] = useState([]);
+  const { cache } = useSWRConfig();
+  console.log('cache', cache, cache.size);
+
 
   const toggleShowGame = () => {
     setShowGame(!showGame);
@@ -44,10 +47,9 @@ export default function Home() {
     const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
     const end = today.add(7, 'day').startOf('day');
 
-    console.log('cache', cache);
 
-    if (cache.length > 0) {
-      const filterEvents = cache.filter((event) => {
+    if (events.length > 0) {
+      const filterEvents = events.filter((event) => {
         const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
         return eventDate.isAfter(today) && eventDate.isBefore(end);
       });
@@ -83,18 +85,8 @@ export default function Home() {
         }, 8000);
       };
     }
-    const filterEventsTodayTomorrow = cache.filter((event) => {
-      const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-      const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
-      const tomorrow = today.add(1, 'day').startOf('day');
 
-      const isToday = eventDate.isSame(today, 'day');
-      const isTomorrow = eventDate.isSame(tomorrow, 'day');
-
-      return isToday || isTomorrow;
-    });
-
-    const filterEventsWeekend = cache.filter((event) => {
+    const filterEventsWeekend = events.filter((event) => {
       const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
       const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
       const endOfWeekend = startOfWeekend.add(1, 'day');
@@ -105,20 +97,35 @@ export default function Home() {
     });
   }
 
-  const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
-  const endOfWeekend = startOfWeekend.add(1, 'day');
+  const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
+  const today = todayforcount.format('YYYY-MM-DD');
+  const tomorrow = todayforcount.add(1, 'day').startOf('day').format('YYYY-MM-DD');
 
-  const fetchEventsWeekend = async () => {
+  const startOfWeekendforCount = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
+  const startOfWeekend = startOfWeekendforCount.format(('YYYY-MM-DD'));
+  const endOfWeekend = startOfWeekendforCount.add(1, 'day').format('YYYY-MM-DD');
+
+  const dateRange1 = { date_from: today, date_to: tomorrow };
+  const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend };
+  const urlforFetcher = 'http://159.223.239.75:8005/api/get_valid_events/';
+
+  console.log('today', today, 'tomorrow', tomorrow);
+
+  const fetcher = async (dateRange) => {
     try {
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+      console.log('fetcher args', dateRange.date_from);
+      console.log('fetcher args', dateRange.date_to);
+
+
+      const res = await fetch(urlforFetcher, {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer zevgEv-vimned-ditva8',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          date_from: startOfWeekend.format('YYYY-MM-DD'),
-          date_to: endOfWeekend.format('YYYY-MM-DD'),
+          date_from: dateRange.date_from,
+          date_to: dateRange.date_to,
           fields: [
             'event_id',
             'id',
@@ -164,21 +171,28 @@ export default function Home() {
           const statusResult = await statusResponse.json();
           console.log('Status result: ', statusResult);
 
-          let eventsWeekend = [];
+          let eventsfromFetcher = [];
 
           if (Array.isArray(statusResult)) {
-            eventsWeekend = statusResult;
+            eventsfromFetcher = statusResult;
           } else if (statusResult.events && Array.iaArray(statusResult.events)) {
-            eventsWeekend = statusResult.events;
+            eventsfromFetcher = statusResult.events;
           } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-            eventsWeekend = statusResult.result.events;
+            eventsfromFetcher = statusResult.result.events;
           } else {
             console.error('Неизвестная структура данных:', statusResult);
             setStatus('Не удалось обработать данные');
             return;
           }
 
-          setWeekendEvents(eventsWeekend)
+          console.log('eventsfromFetcher', eventsfromFetcher)
+          if (dateRange.date_from === dateRange1.date_from && dateRange.date_to === dateRange1.date_to) {
+            setEventsTodayTomorrow(eventsfromFetcher);
+          } else if (dateRange.date_from === dateRange2.date_from && dateRange.date_to === dateRange2.date_to) {
+            setWeekendEvents(eventsfromFetcher)
+          };
+
+          return eventsfromFetcher;
         } catch (error) {
           console.log('Ошибка при запросе', error);
         }
@@ -188,19 +202,104 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    fetchEventsWeekend();
-  }, []);
+  const { data: data1, error: error1 } = useSWR({url: `/api/data1=${dateRange1.date_from}`, args: dateRange1}, fetcher);
 
-  // console.log('weekendEvents', weekendEvents);
-  // console.log('weekendEvents', weekendEvents.length);
+  const { data: data2, error: error2 } = useSWR({url: `/api/data2=${dateRange2.date_from}`, args: dateRange2}, fetcher);
+  console.log('dateRange1', dateRange1);
+  console.log('dateRange2', dateRange2);
 
-  // console.log('filterEventsWeekend', filterEventsWeekend);
+  console.log('data', data1);
+  console.log('error', error1);
+  console.log('data2', data2);
+  console.log('error2', error2);
+
+  // const fetchEventsWeekend = async () => {
+  //   try {
+  //     const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         date_from: startOfWeekend.format('YYYY-MM-DD'),
+  //         date_to: endOfWeekend.format('YYYY-MM-DD'),
+  //         fields: [
+  //           'event_id',
+  //           'id',
+  //           'title',
+  //           'image',
+  //           'url',
+  //           'price',
+  //           'address',
+  //           'from_date',
+  //           'full_text',
+  //           'place_id',
+  //           'main_category_id',
+  //         ],
+  //         limit: 4,
+  //       }),
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error(`Ошибка: ${res.statusText}`);
+  //     }
+
+
+  //     const result = await res.json();
+  //     console.log('Task created: ', result);
+
+  //     const taskId = result.task_id;
+  //     const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+  //     setTimeout(async () => {
+  //       try {
+  //         const statusResponse = await fetch(statusUrl, {
+  //           method: 'GET',
+  //           headers: {
+  //             'Authorization': 'Bearer zevgEv-vimned-ditva8',
+  //             'Content-Type': 'application/json',
+  //           },
+  //         });
+
+  //         if (!statusResponse.ok) {
+  //           throw new Error(`Ошибка: ${statusResponse.statusText}`);
+  //         }
+
+  //         const statusResult = await statusResponse.json();
+  //         console.log('Status result: ', statusResult);
+
+  //         let eventsWeekend = [];
+
+  //         if (Array.isArray(statusResult)) {
+  //           eventsWeekend = statusResult;
+  //         } else if (statusResult.events && Array.iaArray(statusResult.events)) {
+  //           eventsWeekend = statusResult.events;
+  //         } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+  //           eventsWeekend = statusResult.result.events;
+  //         } else {
+  //           console.error('Неизвестная структура данных:', statusResult);
+  //           setStatus('Не удалось обработать данные');
+  //           return;
+  //         }
+
+  //         setWeekendEvents(eventsWeekend)
+  //       } catch (error) {
+  //         console.log('Ошибка при запросе', error);
+  //       }
+  //     })
+  //   } catch (error) {
+  //     console.log('Ошибка при выполнении задачи', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchEventsWeekend();
+  //   fetchEventsTodayTomorrow();
+  // }, []);
 
   return (
     <>
-      {/* <section className='max-w-custom-container mx-auto'>
-      </section> */}
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
         <div className="flex justify-center md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden px-4 md:pl-10 md:pr-0">
           <div className='flex items-center md:items-start justify-center flex-col md:max-w-[50%]'>
@@ -235,8 +334,8 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center flex-wrap'>
-          {/* <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-            {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+            {eventsTodayTomorrow.length > 0 ? (eventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
                 category={card.category}
@@ -252,7 +351,7 @@ export default function Home() {
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
               Нет доступных событий.
             </p>}
-          </div> */}
+          </div>
         </div>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>
@@ -263,8 +362,8 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          {/* <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-            {filterEventsTodayTomorrow.length > 0 ? (filterEventsTodayTomorrow.slice(0, 4).map((card) => (
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+            {eventsTodayTomorrow.length > 0 ? (eventsTodayTomorrow.slice(0, 4).map((card) => (
               <Card
                 type='mini'
                 category={card.category}
@@ -280,7 +379,7 @@ export default function Home() {
             ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
               Нет доступных событий.
             </p>}
-          </div> */}
+          </div>
         </div>
       </section>
       <section className='max-w-custom-container mx-auto px-4'>

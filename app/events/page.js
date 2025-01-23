@@ -12,7 +12,6 @@ import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-// import { useEvents } from '../../context/EventsContext';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 
@@ -129,94 +128,94 @@ function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, e
   };
 
   const { cache } = useSWRConfig();
-  console.log('cache', cache, cache.length);
+  console.log('cache', cache, cache.size);
+  console.log('cache get', cache.get(`/api/data?page=0`).data);
 
-  function findEventInCache(map, id) {
-    map.reduce((acc, item) => acc || item?.value?.data?.find(obg => obg.id === id), null);
-  }
+  const dataCache = [];
 
-  const getAllObjectsFromCache = (map) => {
-    const acc = [];
-    map.forEach(item => {
-      acc.push(item.value.data);
-    });
-    return acc;
-  };
-
-const [events, setEvents] = useState();
-setEvents(getAllObjectsFromCache(cache));
-console.log('events', events);
-
-useEffect(() => {
-  if (!data || data.length === 0) return;
-
-  const filteredEvents = data.filter((event) => {
-    const eventCategoryName = getCategoryNameById(event.main_category_id);
-    const matchesCategory = !category || eventCategoryName === category;
-
-    const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
-    const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
-      (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
-
-    const matchesSearch = search
-      ? (event.title?.toLowerCase() || '').includes(search.toLowerCase())
-      : true;
-
-    const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
-
-    return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-  });
-
-  const sorted = sortPrice
-    ? filteredEvents.sort((a, b) => (sortPrice === 'asc' ? a.price - b.price : b.price - a.price))
-    : filteredEvents;
-
-  setSortedEvents(sorted);
-
-  // if (sorted.length < 20) {
-
-  //   loadMoreEvents();
+  // for (let i = 0; i < cache.size; i++) {
+  //   const data = cache.get(`/api/data?page=${i}`).data;
+  //   console.log('data from cache', data);
+  //   if (data.length > 0) {
+  //     dataCache.push(...data);
+  //   }
+  //   console.log('dataCache', dataCache);
   // }
 
-}, [data, category, search, sortPrice, startDate, endDate, selectedTags]);
+  // const [events, setEvents] = useState(dataCache);
 
-if (!data) {
+  // console.log('events', events);
+
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+
+    const filteredEvents = data.filter((event) => {
+      const eventCategoryName = getCategoryNameById(event.main_category_id);
+      const matchesCategory = !category || eventCategoryName === category;
+
+      const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
+      const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
+        (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
+
+      const matchesSearch = search
+        ? (event.title?.toLowerCase() || '').includes(search.toLowerCase())
+        : true;
+
+      const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
+
+      return matchesCategory && isInDateRange && matchesSearch && matchesTags;
+    });
+
+    const sorted = sortPrice
+      ? filteredEvents.sort((a, b) => (sortPrice === 'asc' ? a.price - b.price : b.price - a.price))
+      : filteredEvents;
+
+    setSortedEvents(sorted);
+
+    // if (sorted.length < 20) {
+
+    //   loadMoreEvents();
+    // }
+
+  }, [data, category, search, sortPrice, startDate, endDate, selectedTags]);
+
+  if (!data) {
+    return (
+      <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+        Загрузка...
+      </div>
+    );
+  }
+
   return (
-    <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
-      Загрузка...
-    </div>
-  );
-}
-
-return (
-  <>
-    <div className="grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
-      {
-        sortedEvents.length > 0 ? (
-          sortedEvents.map((card) => (
-            <Card
-              type="mini"
-              category={card.category}
-              main_category_id={card.main_category_id}
-              price={card.price}
-              title={card.title}
-              from_date={card.from_date}
-              address={card.address}
-              key={card.event_id}
-              id={card.id}
-              data={card}
-              image={card.image}
-            />
-          ))
-        ) : (
-          <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
-            Нет доступных событий.
-          </div>
-        )
-      }
-    </div>
-  </>
-)
+    <>
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
+        {
+          sortedEvents.length > 0 ? (
+            sortedEvents.map((card) => (
+              <Card
+                type="mini"
+                category={card.category}
+                main_category_id={card.main_category_id}
+                price={card.price}
+                title={card.title}
+                from_date={card.from_date}
+                address={card.address}
+                key={card.event_id}
+                id={card.id}
+                data={card}
+                image={card.image}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
+              Нет доступных событий.
+            </div>
+          )
+        }
+      </div>
+    </>
+  )
 }
 
 
@@ -233,11 +232,11 @@ export default function Events() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
+    <>
       <HeroSearch search={search} setSearch={setSearch} />
       <div className="mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center">
         <aside className="lg:w-[20%] w-full mb-3 mr-3 relative">
-          <div className="block inset-0 lg:sticky lg:top-4 z-10">
+          <section className="block inset-0 lg:sticky lg:top-4 z-10">
             <Filtres
               setBgColor={setBgColor}
               startDate={startDate}
@@ -250,7 +249,7 @@ export default function Events() {
               setIsOpen={setIsOpen}
               category={category}
             />
-          </div>
+          </section>
         </aside>
         <section className={`lg:w-[80%] w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <Page
@@ -293,6 +292,6 @@ export default function Events() {
         </section>
 
       </div>
-    </div>
+    </>
   );
 };
