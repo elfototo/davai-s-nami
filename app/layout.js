@@ -3,7 +3,7 @@
 import './globals.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import { SWRProvider } from '../context/SwrContext';
+import { EventsProvider } from '../context/SwrContext';
 import '../utils/dayjsSetup';
 
 export default function RootLayout({ children }) {
@@ -11,8 +11,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ru">
       <body>
-
-        <SWRProvider>
+        <EventsProvider>
           <header className='bg-secondary'>
             <Navbar />
           </header>
@@ -20,7 +19,7 @@ export default function RootLayout({ children }) {
           <footer className='bg-[#333] mt-10 z-0'>
             <Footer />
           </footer>
-        </SWRProvider>
+        </EventsProvider>
 
       </body>
     </html>

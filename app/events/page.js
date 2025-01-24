@@ -14,8 +14,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
-
-
+import { useEvents } from '../../context/SwrContext';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -24,96 +23,8 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, setIsOpen, category, sortPrice }) {
+function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, events, category, sortPrice, loadMoreEvents, data, limit }) {
 
-  const limit = 8;
-  let today = dayjs().format('YYYY-MM-DD');
-  let nextSixMonth = dayjs().add(6, 'month').format('YYYY-MM-DD');
-
-  const fetcher = async () => {
-    // setIsLoadingPage(true);
-
-    try {
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          date_from: today,
-          date_to: nextSixMonth,
-          fields: [
-            'event_id',
-            'id',
-            'title',
-            'image',
-            'url',
-            'price',
-            'address',
-            'from_date',
-            'full_text',
-            'place_id',
-            'main_category_id',
-          ],
-          page: index,
-          limit: limit,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error('Ошибка получения task_id: ', res.statusText);
-      };
-
-      const result = await res.json();
-
-      const taskId = result.task_id;
-      const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-      try {
-        const statusResponse = await fetch(statusUrl, {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer zevgEv-vimned-ditva8',
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!statusResponse.ok) {
-          throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
-        }
-
-        const statusResult = await statusResponse.json();
-        console.log('statusResult', statusResult);
-
-        let newEvents = [];
-
-        if (Array.isArray(statusResult)) {
-          newEvents = statusResult;
-        } else if (statusResult.events && Array.isArray(statusResult.events)) {
-          newEvents = statusResult.events;
-        } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-          newEvents = statusResult.result.events;
-        } else {
-          console.log('Неизвестная структура данных');
-        }
-
-        console.log('newEvents', newEvents);
-
-        return newEvents;
-
-      } catch (error) {
-        console.log(`Ошибка запроса: `, error);
-      }
-
-    } catch (error) {
-      console.log('Ошибка создания задачи', error);
-    }
-  };
-
-  const { data, error, isLoading } = useSWR(`/api/data?page=${index}`, fetcher);
-
-  console.log('data', data);
 
   const [sortedEvents, setSortedEvents] = useState([]);
 
@@ -127,59 +38,64 @@ function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, e
     return categoryObj ? categoryObj.id : null;
   };
 
-  const { cache } = useSWRConfig();
-  console.log('cache', cache, cache.size);
-  console.log('cache get', cache.get(`/api/data?page=0`).data);
-
-  const dataCache = [];
-
-  // for (let i = 0; i < cache.size; i++) {
-  //   const data = cache.get(`/api/data?page=${i}`).data;
-  //   console.log('data from cache', data);
-  //   if (data.length > 0) {
-  //     dataCache.push(...data);
-  //   }
-  //   console.log('dataCache', dataCache);
-  // }
-
-  // const [events, setEvents] = useState(dataCache);
-
-  // console.log('events', events);
-
   useEffect(() => {
-    if (!data || data.length === 0) return;
+    let eventsToSort = [];
+    const eventIds = new Set();
 
-    const filteredEvents = data.filter((event) => {
-      const eventCategoryName = getCategoryNameById(event.main_category_id);
-      const matchesCategory = !category || eventCategoryName === category;
+    if (events.length > 0) {
+      console.log('берем данные из кэша');
+      eventsToSort = [...events];
+      eventsToSort.forEach(event => eventIds.add(event.id));
 
-      const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
-      const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
-        (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
+    } else if (data && data.length > 0) {
+      console.log('Берем данные с сервера');
 
-      const matchesSearch = search
-        ? (event.title?.toLowerCase() || '').includes(search.toLowerCase())
-        : true;
+      data.forEach(event => {
+        if (!eventIds.has(event.id)) {
+          eventsToSort.push(event);
+          eventIds.add(event.id);
+        }
+      });
+    }
 
-      const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
+    if (eventsToSort.length > 0) {
 
-      return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-    });
+      const filteredEvents = eventsToSort.filter((event) => {
+        const eventCategoryName = getCategoryNameById(event.main_category_id);
+        const matchesCategory = !category || eventCategoryName === category;
 
-    const sorted = sortPrice
-      ? filteredEvents.sort((a, b) => (sortPrice === 'asc' ? a.price - b.price : b.price - a.price))
-      : filteredEvents;
+        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
+        const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
+          (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
 
-    setSortedEvents(sorted);
+        const matchesSearch = search
+          ? (event.title?.toLowerCase() || '').includes(search.toLowerCase())
+          : true;
 
-    // if (sorted.length < 20) {
+        const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
 
-    //   loadMoreEvents();
-    // }
+        return matchesCategory && isInDateRange && matchesSearch && matchesTags;
+      });
 
-  }, [data, category, search, sortPrice, startDate, endDate, selectedTags]);
+      const sorted = sortPrice
+        ? filteredEvents.sort((a, b) => (sortPrice === 'asc' ? a.price - b.price : b.price - a.price))
+        : filteredEvents;
 
-  if (!data) {
+      console.log('sorted', sorted);
+
+      if (sorted.length === 0 || sorted.length % limit !== 0) {
+        loadMoreEvents();
+      }
+
+      setSortedEvents(sorted);
+    };
+
+  }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
+
+  console.log('sortedEvents после useEffect', sortedEvents);
+
+
+  if (!events && !data) {
     return (
       <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
         Загрузка...
@@ -221,7 +137,7 @@ function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, e
 
 export default function Events() {
 
-  const [pageIndex, setPageIndex] = useState(0);
+  const { index, setIndex, fetcher, data, events, loadMoreEvents, setHasMore, hasMore, limit } = useEvents();
   const [search, setSearch] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -253,7 +169,12 @@ export default function Events() {
         </aside>
         <section className={`lg:w-[80%] w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <Page
-            index={pageIndex}
+            index={index}
+            data={data}
+            events={events}
+            limit={limit}
+            loadMoreEvents={loadMoreEvents}
+            fetcher={fetcher}
             search={search}
             setSearch={setSearch}
             setBgColor={setBgColor}
@@ -267,9 +188,13 @@ export default function Events() {
             setIsOpen={setIsOpen}
             sortPrice={sortPrice}
             category={category} />
-          <div style={{ display: 'none' }}>
+          {/* <div style={{ display: 'none' }}>
             <Page
-              index={pageIndex + 1}
+              index={index + 1}
+              data={data}
+              loadMoreEvents={loadMoreEvents}
+              events={events}
+              fetcher={fetcher}
               search={search}
               setSearch={setSearch}
               setBgColor={setBgColor}
@@ -283,10 +208,13 @@ export default function Events() {
               setIsOpen={setIsOpen}
               sortPrice={sortPrice}
               category={category}
-            /></div>
+            />
+          </div> */}
+
           <div className='mx-auto flex justify-center gap-6 mt-10'>
-            <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => setPageIndex(pageIndex - 1)}>Назад</button>
-            <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => setPageIndex(pageIndex + 1)}>Вперёд</button>
+            {/* <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => setIndex(index - 1)}>Назад</button> */}
+            {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button>}
+
           </div>
 
         </section>

@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import 'dayjs/locale/ru';
 dayjs.locale('ru');
 import isoWeek from 'dayjs/plugin/isoWeek';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import dayjs from 'dayjs';
-import useSWR, { SWRConfig } from 'swr';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import useSWRInfinite from "swr/infinite";
+import { useSWRConfig } from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -15,13 +16,19 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
 
+const EventsContext = createContext();
 
-export const SWRProvider = ({ children }) => {
+export const useEvents = () => {
+    return useContext(EventsContext);
+};
 
-    const [pageIndex, setPageIndex] = useState(0);
+export const EventsProvider = ({ children }) => {
+
+    const [index, setIndex] = useState(0);
+    // const [events, setEvents] = useState([]);
     const [isLoadingPage, setIsLoadingPage] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const limit = 8;
+    const limit = 4;
 
     let today = dayjs().format('YYYY-MM-DD');
     let nextSixMonth = dayjs().add(6, 'month').format('YYYY-MM-DD');
@@ -52,7 +59,7 @@ export const SWRProvider = ({ children }) => {
                         'place_id',
                         'main_category_id',
                     ],
-                    page: pageIndex,
+                    page: index,
                     limit: limit,
                 }),
             });
@@ -108,8 +115,6 @@ export const SWRProvider = ({ children }) => {
 
         } catch (error) {
             console.log('Ошибка создания задачи', error);
-        } finally {
-            setIsLoadingPage(false);
         }
     };
 
@@ -117,11 +122,7 @@ export const SWRProvider = ({ children }) => {
         data,
         error,
         isLoading,
-        // isValidating,
-        // mutate,
-        // size,
-        // setSize
-    } = useSWR(`/api/data?page=${pageIndex}`,
+    } = useSWR(`/api/data?page=${index}`,
         fetcher);
 
     if (isLoading) console.log('ЗАГРУЗКА');
@@ -129,11 +130,25 @@ export const SWRProvider = ({ children }) => {
     console.log('Загруженные данные: ', data);
 
     const loadMoreEvents = () => {
-        // if (isLoading || !hasMore) return;
-        // const nextPage = pageIndex + 1;
-        // setPageIndex(nextPage);
+        if (isLoading || !hasMore) return;
+        const nextPage = index + 1;
+        setIndex(nextPage);
         console.log('дополнить loadMoreEvents после пагинации');
     };
+
+    const { cache } = useSWRConfig();
+    console.log('cache', cache, cache.size);
+    // const [events, setEvents] = useState();
+
+    let events = [];
+    for (let i = 0; i < cache.size; i++) {
+        const cachedData = cache.get(`/api/data?page=${i}`)?.data;
+        if (Array.isArray(cachedData)) {
+            events.push(...cachedData);
+        }
+    }
+
+    console.log('events', events);
 
     function localStorageProvider() {
         // При инициализации мы восстанавливаем данные из `localStorage` в Map.
@@ -150,8 +165,23 @@ export const SWRProvider = ({ children }) => {
     }
 
     return (
-        <SWRConfig value={{ provider: typeof window !== 'undefined' ? localStorageProvider : () => new Map() }}>
-            {children}
+        // <SWRConfig value={{ provider: typeof window !== 'undefined' ? localStorageProvider : () => new Map() }}>
+        <SWRConfig value={{ provider: () => new Map() }}>
+            <EventsContext.Provider
+                value={{
+                    index,
+                    setIndex,
+                    fetcher,
+                    data,
+                    events,
+                    loadMoreEvents,
+                    setHasMore,
+                    hasMore,
+                    limit
+                }}
+            >
+                {children}
+            </EventsContext.Provider>
         </SWRConfig>
     );
 };

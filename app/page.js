@@ -17,6 +17,8 @@ import { IoMdClose } from "react-icons/io";
 import Loader from './components/Loader';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
+import { useEvents } from '../context/SwrContext';
+
 
 // import { useEvents } from '../context/EventsContext';
 
@@ -29,95 +31,33 @@ dayjs.extend(isBetween);
 
 export default function Home() {
 
+  const { index, setIndex, dataCache } = useEvents();
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGame, setIsLoadingGame] = useState(false);
   const [weekendEvents, setWeekendEvents] = useState([]);
   const [eventsTodayTomorrow, setEventsTodayTomorrow] = useState([]);
-  const { cache } = useSWRConfig();
-  console.log('cache', cache, cache.size);
-
-
-  const toggleShowGame = () => {
-    setShowGame(!showGame);
-  }
-
-  const getRandomEvent = () => {
-    setIsLoading(true);
-    const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
-    const end = today.add(7, 'day').startOf('day');
-
-
-    if (events.length > 0) {
-      const filterEvents = events.filter((event) => {
-        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-        return eventDate.isAfter(today) && eventDate.isBefore(end);
-      });
-
-      if (filterEvents.length === 0) return null;
-
-      for (let i = filterEvents.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [filterEvents[i], filterEvents[j]] = [filterEvents[j], filterEvents[i]];
-      }
-
-      const randomEvent = filterEvents[0];
-
-      const img = new window.Image();
-      img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
-
-      img.onload = () => {
-
-        setTimeout(() => {
-          setRandomEv(randomEvent); // Устанавливаем мероприятие
-          setIsLoading(false); // Скрываем лоадер
-          setShowGame(true); // Показываем окно мероприятия
-          console.log(randomEvent.title);
-        }, 6000); // Сохраняем задержку, если она нужна
-      };
-
-      img.onerror = () => {
-        console.error("Ошибка загрузки изображения");
-        setTimeout(() => {
-          setRandomEv(randomEvent);
-          setIsLoading(false);
-          setShowGame(true);
-        }, 8000);
-      };
-    }
-
-    const filterEventsWeekend = events.filter((event) => {
-      const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-      const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
-      const endOfWeekend = startOfWeekend.add(1, 'day');
-      const isStartOfWeekend = eventDate.isSame(startOfWeekend, 'day');
-      const isEndOfWeekend = eventDate.isSame(endOfWeekend, 'day');
-
-      return isStartOfWeekend || isEndOfWeekend;
-    });
-  }
-
+  const [eventsForGame, setEventsForGame] = useState([]);
   const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
   const today = todayforcount.format('YYYY-MM-DD');
   const tomorrow = todayforcount.add(1, 'day').startOf('day').format('YYYY-MM-DD');
+  const month = todayforcount.add(1, 'month').startOf('day').format('YYYY-MM-DD');
 
   const startOfWeekendforCount = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
   const startOfWeekend = startOfWeekendforCount.format(('YYYY-MM-DD'));
   const endOfWeekend = startOfWeekendforCount.add(1, 'day').format('YYYY-MM-DD');
 
-  const dateRange1 = { date_from: today, date_to: tomorrow };
-  const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend };
-  const urlforFetcher = 'http://159.223.239.75:8005/api/get_valid_events/';
+  const dateRange1 = { date_from: today, date_to: tomorrow, limit: 4 };
+  const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend, limit: 4 };
+  const dateRangeForGame = { date_from: today, date_to: month, limit: 50 };
 
-  console.log('today', today, 'tomorrow', tomorrow);
 
   const fetcher = async (dateRange) => {
     try {
       console.log('fetcher args', dateRange.date_from);
       console.log('fetcher args', dateRange.date_to);
 
-
-      const res = await fetch(urlforFetcher, {
+      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer zevgEv-vimned-ditva8',
@@ -139,7 +79,7 @@ export default function Home() {
             'place_id',
             'main_category_id',
           ],
-          limit: 4,
+          limit: dateRange.limit,
         }),
       });
 
@@ -186,13 +126,21 @@ export default function Home() {
           }
 
           console.log('eventsfromFetcher', eventsfromFetcher)
+
           if (dateRange.date_from === dateRange1.date_from && dateRange.date_to === dateRange1.date_to) {
+
             setEventsTodayTomorrow(eventsfromFetcher);
+
           } else if (dateRange.date_from === dateRange2.date_from && dateRange.date_to === dateRange2.date_to) {
-            setWeekendEvents(eventsfromFetcher)
+
+            setWeekendEvents(eventsfromFetcher);
+
+          } else if (dateRange.date_from === dateRangeForGame.date_from && dateRange.date_to === dateRangeForGame.date_to) {
+            setEventsForGame(eventsfromFetcher);
           };
 
           return eventsfromFetcher;
+
         } catch (error) {
           console.log('Ошибка при запросе', error);
         }
@@ -202,101 +150,77 @@ export default function Home() {
     }
   };
 
-  const { data: data1, error: error1 } = useSWR({url: `/api/data1=${dateRange1.date_from}`, args: dateRange1}, fetcher);
+  
 
-  const { data: data2, error: error2 } = useSWR({url: `/api/data2=${dateRange2.date_from}`, args: dateRange2}, fetcher);
-  console.log('dateRange1', dateRange1);
-  console.log('dateRange2', dateRange2);
-
-  console.log('data', data1);
-  console.log('error', error1);
-  console.log('data2', data2);
-  console.log('error2', error2);
-
-  // const fetchEventsWeekend = async () => {
-  //   try {
-  //     const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         date_from: startOfWeekend.format('YYYY-MM-DD'),
-  //         date_to: endOfWeekend.format('YYYY-MM-DD'),
-  //         fields: [
-  //           'event_id',
-  //           'id',
-  //           'title',
-  //           'image',
-  //           'url',
-  //           'price',
-  //           'address',
-  //           'from_date',
-  //           'full_text',
-  //           'place_id',
-  //           'main_category_id',
-  //         ],
-  //         limit: 4,
-  //       }),
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error(`Ошибка: ${res.statusText}`);
-  //     }
-
-
-  //     const result = await res.json();
-  //     console.log('Task created: ', result);
-
-  //     const taskId = result.task_id;
-  //     const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-  //     setTimeout(async () => {
-  //       try {
-  //         const statusResponse = await fetch(statusUrl, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Authorization': 'Bearer zevgEv-vimned-ditva8',
-  //             'Content-Type': 'application/json',
-  //           },
-  //         });
-
-  //         if (!statusResponse.ok) {
-  //           throw new Error(`Ошибка: ${statusResponse.statusText}`);
-  //         }
-
-  //         const statusResult = await statusResponse.json();
-  //         console.log('Status result: ', statusResult);
-
-  //         let eventsWeekend = [];
-
-  //         if (Array.isArray(statusResult)) {
-  //           eventsWeekend = statusResult;
-  //         } else if (statusResult.events && Array.iaArray(statusResult.events)) {
-  //           eventsWeekend = statusResult.events;
-  //         } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-  //           eventsWeekend = statusResult.result.events;
-  //         } else {
-  //           console.error('Неизвестная структура данных:', statusResult);
-  //           setStatus('Не удалось обработать данные');
-  //           return;
-  //         }
-
-  //         setWeekendEvents(eventsWeekend)
-  //       } catch (error) {
-  //         console.log('Ошибка при запросе', error);
-  //       }
-  //     })
-  //   } catch (error) {
-  //     console.log('Ошибка при выполнении задачи', error);
+  // for (let i = 0; i < cache.size; i++) {
+  //   const data = cache.get(`/api/data?page=${i}`)?.data;
+  //   console.log('data from cache', data);
+  //   if (data.length > 0) {
+  //     dataCache.push(...data);
   //   }
-  // };
+  //   console.log('dataCache', dataCache);
+  // }
 
-  // useEffect(() => {
-  //   fetchEventsWeekend();
-  //   fetchEventsTodayTomorrow();
-  // }, []);
+  // const [events, setEvents] = useState(dataCache);
+
+  // console.log('events', events);
+
+
+  const toggleShowGame = () => {
+    setShowGame(!showGame);
+  }
+
+  const getRandomEvent = () => {
+    setIsLoadingGame(true);
+    const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
+    const end = today.add(7, 'day').startOf('day');
+
+
+    if (eventsForGame.length > 0) {
+      const filterEvents = eventsForGame.filter((event) => {
+        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
+        return eventDate.isAfter(today) && eventDate.isBefore(end);
+      });
+
+      if (filterEvents.length === 0) return null;
+
+      for (let i = filterEvents.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filterEvents[i], filterEvents[j]] = [filterEvents[j], filterEvents[i]];
+      }
+
+      const randomEvent = filterEvents[0];
+
+      const img = new window.Image();
+      img.src = randomEvent.image === "" ? "/img/cat.png" : randomEvent.image;
+
+      img.onload = () => {
+
+        setTimeout(() => {
+          setRandomEv(randomEvent); // Устанавливаем мероприятие
+          setIsLoadingGame(false); // Скрываем лоадер
+          setShowGame(true); // Показываем окно мероприятия
+          console.log(randomEvent.title);
+        }, 6000); // Сохраняем задержку, если она нужна
+      };
+
+      img.onerror = () => {
+        console.error("Ошибка загрузки изображения");
+        setTimeout(() => {
+          setRandomEv(randomEvent);
+          setIsLoadingGame(false);
+          setShowGame(true);
+        }, 8000);
+      };
+    }
+  }
+
+
+  useEffect(() => {
+    fetcher(dateRange1);
+    fetcher(dateRange2);
+    // fetcher(dateRangeForGame);
+  }, []);
 
   return (
     <>
@@ -409,7 +333,7 @@ export default function Home() {
 
         </div>
 
-        {isLoading && (
+        {isLoadingGame && (
           <div className='fade-in'>
             загрузка...
             <Loader />
