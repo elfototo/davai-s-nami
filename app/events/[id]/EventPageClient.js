@@ -6,7 +6,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/ru';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -15,7 +15,7 @@ import { IoMdClose } from "react-icons/io";
 import { BsCheckAll } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
 import { BsCopy } from "react-icons/bs";
-import { useEvents } from '../../../context/EventsContext';
+import { useEvents } from '../../../context/SwrContext';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -25,11 +25,10 @@ export default function EventPageClient({ id }) {
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { events, allEventsCache } = useEvents();
-  const [event, setEvent] = useState()
+  const { events } = useEvents();
+  const [event, setEvent] = useState(null);
 
   console.log('events', events);
-  console.log('allEventsCache', allEventsCache);
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
 
@@ -42,80 +41,92 @@ export default function EventPageClient({ id }) {
   const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
   const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
 
-  const fetchIdEvent = async (id) => {
-    try {
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ids: [id],
-          fields: [
-            'event_id',
-            'id',
-            'title',
-            'image',
-            'url',
-            'price',
-            'address',
-            'from_date',
-            'full_text',
-            'place_id',
-            'main_category_id',
-          ],
-        }),
-      });
+  useEffect(() => {
+    const idEvent = events.find((event) => event.id ===  parseInt(id.id));
 
-      if (!res.ok) {
-        throw new Error(`Ошибка поиска id ${res.statusText}`)
-      }
+    console.log('idEvent', idEvent);
 
-      const result = await res.json();
-      console.log('Task created for id: ', result);
+    if (idEvent && (!event || event.id !== idEvent)) {
+      setEvent(idEvent);
+      console.log('берем событие из кэша');
 
-      const taskId = result.task_id;
-      const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+    } else if (!idEvent) {
 
-      setTimeout(async () => {
+      console.log('берем событие с сервера');
+      const fetchIdEvent = async (id) => {
         try {
-          const statusResponse = await fetch(statusUrl, {
-            method: 'GET',
+          const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+            method: 'POST',
             headers: {
               'Authorization': 'Bearer zevgEv-vimned-ditva8',
               'Content-Type': 'application/json',
             },
+            body: JSON.stringify({
+              ids: [id],
+              fields: [
+                'event_id',
+                'id',
+                'title',
+                'image',
+                'url',
+                'price',
+                'address',
+                'from_date',
+                'full_text',
+                'place_id',
+                'main_category_id',
+              ],
+            }),
           });
 
-          if (!statusResponse.ok) {
-            throw new Error(`Ошибка: ${statusResponse.statusText}`);
+          if (!res.ok) {
+            throw new Error(`Ошибка поиска id ${res.statusText}`)
           }
 
-          const statusResult = await statusResponse.json();
-          console.log('Status result id', statusResult);
+          const result = await res.json();
+          console.log('Task created for id: ', result);
 
-          // setEvent(statusResult.events);
-          console.log('statusResult.events', statusResult.result.events);
+          const taskId = result.task_id;
+          const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
 
-          const event = statusResult.result.events[0];
-          console.log('statusResult.events.id', event);
+          setTimeout(async () => {
+            try {
+              const statusResponse = await fetch(statusUrl, {
+                method: 'GET',
+                headers: {
+                  'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                  'Content-Type': 'application/json',
+                },
+              });
 
-          setEvent(event);
-          // ...
+              if (!statusResponse.ok) {
+                throw new Error(`Ошибка: ${statusResponse.statusText}`);
+              }
+
+              const statusResult = await statusResponse.json();
+              console.log('Status result id', statusResult);
+
+              // setEvent(statusResult.events);
+              console.log('statusResult.events', statusResult.result.events);
+
+              const event = statusResult.result.events[0];
+              console.log('statusResult.events.id', event);
+
+              setEvent(event);
+              // ...
+            } catch (error) {
+              console.log('Ошибка при запросе статуса: ', error);
+              setStatus('Ошибка при выполнении задачи');
+            }
+          }, 1000);
         } catch (error) {
-          console.log('Ошибка при запросе статуса: ', error);
-          setStatus('Ошибка при выполнении задачи');
+          console.log('Ошибка при создании задачи', error)
         }
-      }, 1000);
-    } catch (error) {
-      console.log('Ошибка при создании задачи', error)
+      };
+      fetchIdEvent(id.id);
     }
-  };
+  }, [id.id]);
 
-  useEffect(() => {
-    fetchIdEvent(id.id);
-  }, []);
 
   if (!event) {
     return <div>Событие не найдено</div>;

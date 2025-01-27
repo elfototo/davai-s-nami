@@ -25,10 +25,9 @@ export const useEvents = () => {
 export const EventsProvider = ({ children }) => {
 
     const [index, setIndex] = useState(0);
-    // const [events, setEvents] = useState([]);
     const [isLoadingPage, setIsLoadingPage] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const limit = 4;
+    const limit = 8;
 
     let today = dayjs().format('YYYY-MM-DD');
     let nextSixMonth = dayjs().add(6, 'month').format('YYYY-MM-DD');
@@ -141,32 +140,33 @@ export const EventsProvider = ({ children }) => {
     // const [events, setEvents] = useState();
 
     let events = [];
-    for (let i = 0; i < cache.size; i++) {
-        const cachedData = cache.get(`/api/data?page=${i}`)?.data;
-        if (Array.isArray(cachedData)) {
-            events.push(...cachedData);
+    if (cache.size > 0) {
+        for (let i = 0; i < cache.size; i++) {
+            const cachedData = cache.get(`/api/data?page=${i}`)?.data;
+            if (Array.isArray(cachedData)) {
+                events.push(...cachedData);
+            }
         }
     }
 
     console.log('events', events);
 
     function localStorageProvider() {
-        // При инициализации мы восстанавливаем данные из `localStorage` в Map.
+        // When initializing, we restore the data from `localStorage` into a map.
         const map = new Map(JSON.parse(localStorage.getItem('app-cache') || '[]'))
-
-        // Перед выгрузкой приложения мы записываем все данные обратно в `localStorage`.
+       
+        // Before unloading the app, we write back all the data into `localStorage`.
         window.addEventListener('beforeunload', () => {
-            const appCache = JSON.stringify(Array.from(map.entries()))
-            localStorage.setItem('app-cache', appCache)
+          const appCache = JSON.stringify(Array.from(map.entries()))
+          localStorage.setItem('app-cache', appCache)
         })
-
-        // Мы по-прежнему используем map для записи и чтения для производительности.
+       
+        // We still use the map for write & read for performance.
         return map;
-    }
+      }
 
     return (
-        // <SWRConfig value={{ provider: typeof window !== 'undefined' ? localStorageProvider : () => new Map() }}>
-        <SWRConfig value={{ provider: () => new Map() }}>
+        <SWRConfig value={{ provider: typeof window !== 'undefined' ? localStorageProvider : () => new Map() }}>
             <EventsContext.Provider
                 value={{
                     index,

@@ -23,9 +23,7 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, events, category, sortPrice, loadMoreEvents, data, limit }) {
-
-
+function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, events, category, sortPrice, loadMoreEvents, data, limit }) {
   const [sortedEvents, setSortedEvents] = useState([]);
 
   const getCategoryNameById = (id) => {
@@ -86,16 +84,12 @@ function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, e
       if (sorted.length === 0 || sorted.length % limit !== 0) {
         loadMoreEvents();
       }
-
       setSortedEvents(sorted);
     };
 
   }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
 
-  console.log('sortedEvents после useEffect', sortedEvents);
-
-
-  if (!events && !data) {
+  if (isLoading) {
     return (
       <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
         Загрузка...
@@ -137,7 +131,7 @@ function Page({ index, search, setSearch, setBgColor, startDate, setStartDate, e
 
 export default function Events() {
 
-  const { index, setIndex, fetcher, data, events, loadMoreEvents, setHasMore, hasMore, limit } = useEvents();
+  const { index, isLoading, fetcher, data, events, loadMoreEvents, setHasMore, hasMore, limit } = useEvents();
   const [search, setSearch] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -173,6 +167,7 @@ export default function Events() {
             data={data}
             events={events}
             limit={limit}
+            isLoading={isLoading}
             loadMoreEvents={loadMoreEvents}
             fetcher={fetcher}
             search={search}
