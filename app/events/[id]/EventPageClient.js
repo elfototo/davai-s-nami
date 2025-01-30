@@ -5,8 +5,9 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/ru';
-
-import React, { useState, useEffect, useMemo } from 'react';
+import { useSWRConfig } from 'swr';
+import useSWR, { SWRConfig } from 'swr';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -16,6 +17,7 @@ import { BsCheckAll } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
 import { BsCopy } from "react-icons/bs";
 import { useEvents } from '../../../context/SwrContext';
+import { debounce } from 'lodash';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -26,9 +28,8 @@ export default function EventPageClient({ id }) {
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
   const { events } = useEvents();
+  const { isLoading } = useSWRConfig();
   const [event, setEvent] = useState(null);
-
-  console.log('events', events);
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
 
@@ -41,95 +42,101 @@ export default function EventPageClient({ id }) {
   const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
   const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
 
-  useEffect(() => {
-    const idEvent = events.find((event) => event.id ===  parseInt(id.id));
+  const fetchIdEvent = async (id) => {
+    try {
+      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ids: [id],
+          fields: [
+            'event_id',
+            'id',
+            'title',
+            'image',
+            'url',
+            'price',
+            'address',
+            'from_date',
+            'full_text',
+            'place_id',
+            'main_category_id',
+          ],
+        }),
+      });
 
-    console.log('idEvent', idEvent);
+      if (!res.ok) {
+        throw new Error(`Ошибка поиска id ${res.statusText}`);
+      }
 
-    if (idEvent && (!event || event.id !== idEvent)) {
-      setEvent(idEvent);
-      console.log('берем событие из кэша');
+      const result = await res.json();
+      const taskId = result.task_id;
+      const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
 
-    } else if (!idEvent) {
+      const statusResponse = await fetch(statusUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+      });
 
-      console.log('берем событие с сервера');
-      const fetchIdEvent = async (id) => {
-        try {
-          const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer zevgEv-vimned-ditva8',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              ids: [id],
-              fields: [
-                'event_id',
-                'id',
-                'title',
-                'image',
-                'url',
-                'price',
-                'address',
-                'from_date',
-                'full_text',
-                'place_id',
-                'main_category_id',
-              ],
-            }),
-          });
+      if (!statusResponse.ok) {
+        throw new Error(`Ошибка: ${statusResponse.statusText}`);
+      }
 
-          if (!res.ok) {
-            throw new Error(`Ошибка поиска id ${res.statusText}`)
-          }
-
-          const result = await res.json();
-          console.log('Task created for id: ', result);
-
-          const taskId = result.task_id;
-          const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-          setTimeout(async () => {
-            try {
-              const statusResponse = await fetch(statusUrl, {
-                method: 'GET',
-                headers: {
-                  'Authorization': 'Bearer zevgEv-vimned-ditva8',
-                  'Content-Type': 'application/json',
-                },
-              });
-
-              if (!statusResponse.ok) {
-                throw new Error(`Ошибка: ${statusResponse.statusText}`);
-              }
-
-              const statusResult = await statusResponse.json();
-              console.log('Status result id', statusResult);
-
-              // setEvent(statusResult.events);
-              console.log('statusResult.events', statusResult.result.events);
-
-              const event = statusResult.result.events[0];
-              console.log('statusResult.events.id', event);
-
-              setEvent(event);
-              // ...
-            } catch (error) {
-              console.log('Ошибка при запросе статуса: ', error);
-              setStatus('Ошибка при выполнении задачи');
-            }
-          }, 1000);
-        } catch (error) {
-          console.log('Ошибка при создании задачи', error)
-        }
-      };
-      fetchIdEvent(id.id);
+      const statusResult = await statusResponse.json();
+      return statusResult.result.events[0]; // Вернуть первое событие
+    } catch (error) {
+      console.log('Ошибка при запросе:', error);
+      return null;
     }
-  }, [id.id]);
+  };
+
+  const { data: dataEvent, error: dataError, isLoading: dataIsLoading } = useSWR(
+    id ? `/api/events?ids=${id.id}` : null,
+    () => fetchIdEvent(id.id), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  }
+  );
+
+  useEffect(() => {
+    if (dataEvent) {
+      console.log('Берем данные с сервера');
+      setEvent(dataEvent);
+    } else if (!dataIsLoading && !dataError && events) {
+      const cachedEvent = events.find((event) => event.id === parseInt(id.id));
+      if (cachedEvent) {
+        console.log('Берем данные из кэша');
+        setEvent(cachedEvent);
+      }
+    }
+
+  }, [dataEvent, dataIsLoading, dataError, events, id.id]);
 
 
-  if (!event) {
-    return <div>Событие не найдено</div>;
+  if (dataIsLoading) {
+    return (
+      <main className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+        Загрузка данных с сервера...
+      </main>
+    );
+  }
+
+  // if (!event) {
+  //   return (
+  //     <main className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+  //       Загрузка...
+  //     </main>
+  //   );
+  // }
+
+  if (dataError) {
+    console.log('SWR dataError', dataError);
   }
 
   return (
@@ -142,8 +149,9 @@ export default function EventPageClient({ id }) {
               onClick={togglePhoto}
             >
               <div className="relative">
+
                 <Image
-                  src={event.image || '/img/cat.png'}
+                  src={event?.image || '/img/cat.png'}
                   width={1000}
                   height={1000}
                   className="object-cover object-center rounded-lg shadow-xl"
@@ -159,7 +167,7 @@ export default function EventPageClient({ id }) {
 
           <div className="overflow-hidden shadow-xl rounded-lg lg:w-full h-96 lg:h-full lg:max-w-[40%]">
             <Image
-              src={event.image || '/img/cat.png'}
+              src={event?.image || '/img/cat.png'}
               width={500}
               height={500}
               alt="avatar"
@@ -169,30 +177,30 @@ export default function EventPageClient({ id }) {
           </div>
 
           <div className="mt-8 lg:px-10 lg:mt-0">
-            <h1 className="text-2xl font-bold text-[#333] lg:text-3xl font-roboto mb-5 lg:mt-0 mx-1">{event.title}</h1>
+            <h1 className="text-2xl font-bold text-[#333] lg:text-3xl font-roboto mb-5 lg:mt-0 mx-1">{event?.title}</h1>
             <div className="p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]">
               <div className="flex mb-3">
                 <p className="text-[#777]">Цена: </p>
-                <p className="font-roboto text-[#333] ml-[34px]">{event.price}</p>
+                <p className="font-roboto text-[#333] ml-[34px]">{event?.price}</p>
               </div>
               <div className="flex items-baseline my-3">
                 <p className="text-[#777]">Дата: </p>
-                <p className="font-roboto text-[#333] ml-[36px]">{dayjs(event.from_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
+                <p className="font-roboto text-[#333] ml-[36px]">{dayjs(event?.from_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
               </div>
               <div className="flex items-baseline my-3">
                 <p className="text-[#777]">Начало:</p>
                 <p className="font-roboto text-[#333] ml-4">
-                  {dayjs(event.from_date).utc().tz('Europe/Moscow', true).format('HH:mm')}
+                  {dayjs(event?.from_date).utc().tz('Europe/Moscow', true).format('HH:mm')}
                 </p>
               </div>
               <div className="flex items-baseline my-3">
                 <p className="text-[#777]">Место: </p>
-                {event.place_id ? (
+                {event?.place_id ? (
                   <Link href={`/places/${event.place_id}`}>
-                    <p className="font-roboto text-[#333] hover:text-[#F52D85] ml-[26px] cursor-pointer">{event.address}</p>
+                    <p className="font-roboto text-[#333] hover:text-[#F52D85] ml-[26px] cursor-pointer">{event?.address}</p>
                   </Link>
                 ) : (
-                  <p className="font-roboto text-[#333] ml-[25px]">{event.address}</p>
+                  <p className="font-roboto text-[#333] ml-[25px]">{event?.address}</p>
                 )}
               </div>
             </div>
@@ -204,7 +212,7 @@ export default function EventPageClient({ id }) {
                 {copied ? <BsCheckAll size={18} className="md:mr-2 mr-0" /> : <BsCopy size={18} className="md:mr-2 mr-0" />}
                 {copied ? <p className='md:block hidden'>Ссылка скопирована</p> : <p className='md:block hidden'>Скопировать ссылку</p>}
               </button>
-              <Link
+              {event ? (<Link
                 href={event.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -212,17 +220,17 @@ export default function EventPageClient({ id }) {
               >
                 {event.price === 'Бесплатно' || event.price === 'во встрече' ? 'На сайт мероприятия' : 'Купить билеты'}
                 <FaArrowRight size={18} className="ml-3" />
-              </Link>
+              </Link>) : ''}
             </div>
           </div>
         </div>
 
-        <p className="font-roboto font-bold text-[#777] mt-10">{event.full_text ? 'Описание:' : ''}</p>
+        <p className="font-roboto font-bold text-[#777] mt-10">{event?.full_text ? 'Описание:' : ''}</p>
         <ReactMarkdown
           className="prose prose-sm md:prose-lg lg:prose-xl text-gray-800 leading-relaxed mt-4"
           remarkPlugins={[remarkGfm]}
         >
-          {event.full_text}
+          {event?.full_text}
         </ReactMarkdown>
       </div>
     </div>

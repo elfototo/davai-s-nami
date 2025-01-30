@@ -39,8 +39,9 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
   useEffect(() => {
     let eventsToSort = [];
     const eventIds = new Set();
+    console.log('sortedEvents', sortedEvents);
 
-    if (events.length > 0) {
+    if (events && events.length > 0) {
       console.log('берем данные из кэша');
       eventsToSort = [...events];
       eventsToSort.forEach(event => eventIds.add(event.id));
@@ -85,17 +86,18 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
         loadMoreEvents();
       }
       setSortedEvents(sorted);
+      console.log('sortedEvents', sortedEvents);
     };
 
   }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
 
-  if (isLoading) {
+  if (sortedEvents.length === 0) {
     return (
       <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
         Загрузка...
       </div>
     );
-  }
+  };
 
   return (
     <>
@@ -130,6 +132,7 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
 
 
 export default function Events() {
+
 
   const { index, isLoading, fetcher, data, events, loadMoreEvents, setHasMore, hasMore, limit } = useEvents();
   const [search, setSearch] = useState('');
@@ -183,37 +186,11 @@ export default function Events() {
             setIsOpen={setIsOpen}
             sortPrice={sortPrice}
             category={category} />
-          {/* <div style={{ display: 'none' }}>
-            <Page
-              index={index + 1}
-              data={data}
-              loadMoreEvents={loadMoreEvents}
-              events={events}
-              fetcher={fetcher}
-              search={search}
-              setSearch={setSearch}
-              setBgColor={setBgColor}
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-              selectedTags={selectedTags}
-              setSelectedTags={setSelectedTags}
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              sortPrice={sortPrice}
-              category={category}
-            />
-          </div> */}
 
           <div className='mx-auto flex justify-center gap-6 mt-10'>
-            {/* <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => setIndex(index - 1)}>Назад</button> */}
             {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button>}
-
           </div>
-
         </section>
-
       </div>
     </>
   );

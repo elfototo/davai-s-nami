@@ -73,6 +73,7 @@ export const EventsProvider = ({ children }) => {
             const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
 
             try {
+                
                 const statusResponse = await fetch(statusUrl, {
                     method: 'GET',
                     headers: {
@@ -140,30 +141,39 @@ export const EventsProvider = ({ children }) => {
     // const [events, setEvents] = useState();
 
     let events = [];
+    const eventById = {};
+
     if (cache.size > 0) {
         for (let i = 0; i < cache.size; i++) {
             const cachedData = cache.get(`/api/data?page=${i}`)?.data;
+            console.log('cachedData', cachedData);
             if (Array.isArray(cachedData)) {
+                cachedData.forEach(event => {
+                    eventById[event.id] = event;
+                });
                 events.push(...cachedData);
             }
         }
     }
+
+    console.log('events (события на странице)', events);
+    console.log('eventById (события по id)', eventById);
 
     console.log('events', events);
 
     function localStorageProvider() {
         // When initializing, we restore the data from `localStorage` into a map.
         const map = new Map(JSON.parse(localStorage.getItem('app-cache') || '[]'))
-       
+
         // Before unloading the app, we write back all the data into `localStorage`.
         window.addEventListener('beforeunload', () => {
-          const appCache = JSON.stringify(Array.from(map.entries()))
-          localStorage.setItem('app-cache', appCache)
+            const appCache = JSON.stringify(Array.from(map.entries()))
+            localStorage.setItem('app-cache', appCache)
         })
-       
+
         // We still use the map for write & read for performance.
         return map;
-      }
+    }
 
     return (
         <SWRConfig value={{ provider: typeof window !== 'undefined' ? localStorageProvider : () => new Map() }}>
@@ -172,12 +182,11 @@ export const EventsProvider = ({ children }) => {
                     index,
                     setIndex,
                     fetcher,
-                    data,
-                    events,
-                    loadMoreEvents,
                     setHasMore,
                     hasMore,
-                    limit
+                    limit,
+                    events,
+                    loadMoreEvents
                 }}
             >
                 {children}

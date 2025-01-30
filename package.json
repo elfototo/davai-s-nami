@@ -25,6 +25,7 @@
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2",
     "gsap": "^3.12.5",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.447.0",
     "next": "^14.0.0",
     "react": "^18.2.0",
