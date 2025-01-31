@@ -23,7 +23,8 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, events, category, sortPrice, loadMoreEvents, data, limit }) {
+function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, cache, category, sortPrice, loadMoreEvents, data, limit }) {
+
   const [sortedEvents, setSortedEvents] = useState([]);
 
   const getCategoryNameById = (id) => {
@@ -36,13 +37,26 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
     return categoryObj ? categoryObj.id : null;
   };
 
+  let events = [];
+  const eventById = {};
+
   useEffect(() => {
     let eventsToSort = [];
     const eventIds = new Set();
     console.log('sortedEvents', sortedEvents);
 
-    if (events && events.length > 0) {
+    if (cache && cache.size > 0) {
       console.log('берем данные из кэша');
+      for (let i = 0; i < cache.size; i++) {
+        const cachedData = cache.get(`/api/data?page=${i}`)?.data;
+        console.log('cachedData', cachedData);
+        if (Array.isArray(cachedData)) {
+          cachedData.forEach(event => {
+            eventById[event.id] = event;
+          });
+          events.push(...cachedData);
+        }
+      }
       eventsToSort = [...events];
       eventsToSort.forEach(event => eventIds.add(event.id));
 
@@ -133,8 +147,7 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
 
 export default function Events() {
 
-
-  const { index, isLoading, fetcher, data, events, loadMoreEvents, setHasMore, hasMore, limit } = useEvents();
+  const { cache, findDataById } = useEvents();
   const [search, setSearch] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -143,6 +156,144 @@ export default function Events() {
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+
+  const [index, setIndex] = useState(0);
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 8;
+
+  let today = dayjs().format('YYYY-MM-DD');
+  let nextSixMonth = dayjs().add(6, 'month').format('YYYY-MM-DD');
+
+  const fetcher = async () => {
+    // setIsLoadingPage(true);
+
+    try {
+      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          date_from: today,
+          date_to: nextSixMonth,
+          fields: [
+            'event_id',
+            'id',
+            'title',
+            'image',
+            'url',
+            'price',
+            'address',
+            'from_date',
+            'full_text',
+            'place_id',
+            'main_category_id',
+          ],
+          page: index,
+          limit: limit,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Ошибка получения task_id: ', res.statusText);
+      };
+
+      const result = await res.json();
+
+      console.log('result для пагинации', result);
+
+      let newEvents = [];
+
+      if (result.task_id) {
+        const taskId = result.task_id;
+
+        console.log('есть result.task_i')
+
+        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+        try {
+          const statusResponse = await fetch(statusUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer zevgEv-vimned-ditva8',
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!statusResponse.ok) {
+            throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
+          }
+
+          const statusResult = await statusResponse.json();
+          console.log('statusResult', statusResult);
+
+          if (Array.isArray(statusResult)) {
+            newEvents = statusResult;
+          } else if (statusResult.events && Array.isArray(statusResult.events)) {
+            newEvents = statusResult.events;
+          } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+            newEvents = statusResult.result.events;
+          } else {
+            console.log('Неизвестная структура данных');
+          }
+
+          console.log('newEvents', newEvents);
+
+          if (newEvents.length < limit) {
+            setHasMore(false);
+          }
+
+          return newEvents;
+
+        } catch (error) {
+          console.log(`Ошибка запроса: `, error);
+        }
+      } else {
+        console.log('Возвращаем result без task_id', result)
+
+        if (Array.isArray(result)) {
+          newEvents = result;
+        } else if (result.result && Array.isArray(result.result)) {
+          newEvents = result.result;
+        } else if (result.result.events && Array.isArray(result.result.events)) {
+          newEvents = result.result.events;
+        } else {
+          console.log('Неизвестная структура данных');
+        }
+
+        console.log('newEvents', newEvents);
+
+        if (newEvents.length < limit) {
+          setHasMore(false);
+        }
+        return newEvents;
+      }
+    } catch (error) {
+      console.log('Ошибка создания задачи', error);
+    }
+  };
+
+  const {
+    data,
+    error,
+    isLoading,
+  } = useSWR(`/api/data?page=${index}`,
+    fetcher);
+
+  if (isLoading) console.log('ЗАГРУЗКА');
+  if (error) console.log('ОШИБКА', error.info);
+  console.log('Загруженные данные: ', data);
+
+  const loadMoreEvents = () => {
+    if (isLoading || !hasMore) return;
+    const nextPage = index + 1;
+    setIndex(nextPage);
+    console.log('дополнить loadMoreEvents после пагинации');
+  };
+
+  console.log('cache', cache);
 
   return (
     <>
@@ -168,7 +319,7 @@ export default function Events() {
           <Page
             index={index}
             data={data}
-            events={events}
+            cache={cache}
             limit={limit}
             isLoading={isLoading}
             loadMoreEvents={loadMoreEvents}

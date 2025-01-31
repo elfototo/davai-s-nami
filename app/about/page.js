@@ -9,6 +9,8 @@ import timezone from 'dayjs/plugin/timezone';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import useSWR, { SWRConfig } from 'swr';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -18,18 +20,141 @@ dayjs.extend(isBetween);
 
 export default function About() {
 
-  const { events } = useEvents();
+  const { cache, findDataById } = useEvents();
 
-  const filterEventsMobth = events.filter((event) => {
-    const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow');
-    const today = dayjs().utc().tz('Europe/Moscow').startOf('day');
-    const tomorrow = today.add(1, 'day').startOf('day');
+  const today = dayjs().utc().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
+  const month = dayjs().utc().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
 
-    const isToday = eventDate.isSame(today, 'day');
-    const isTomorrow = eventDate.isSame(tomorrow, 'day');
 
-    return isToday || isTomorrow;
-  });
+  const fetcher = async () => {
+    try {
+
+      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          date_from: today,
+          date_to: month,
+          fields: [
+            'event_id',
+            'id',
+            'title',
+            'image',
+            'url',
+            'price',
+            'address',
+            'from_date',
+            'full_text',
+            'place_id',
+            'main_category_id',
+          ],
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка: ${res.statusText}`);
+      }
+
+      const result = await res.json();
+      console.log('Task created с диапазоном дат: ', result);
+
+      let eventsfromFetcher = [];
+
+      if (result.task_id) {
+        const taskId = result.task_id;
+        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+        setTimeout(async () => {
+          try {
+            const statusResponse = await fetch(statusUrl, {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (!statusResponse.ok) {
+              throw new Error(`Ошибка: ${statusResponse.statusText}`);
+            }
+
+            const statusResult = await statusResponse.json();
+            console.log('Status result: ', statusResult);
+
+            if (Array.isArray(statusResult)) {
+              eventsfromFetcher = statusResult;
+            } else if (statusResult.events && Array.iaArray(statusResult.events)) {
+              eventsfromFetcher = statusResult.events;
+            } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+              eventsfromFetcher = statusResult.result.events;
+            } else {
+              console.error('Неизвестная структура данных:', statusResult);
+              setStatus('Не удалось обработать данные');
+              return;
+            }
+
+            console.log('eventsfromFetcher', eventsfromFetcher)
+
+            return eventsfromFetcher;
+
+          } catch (error) {
+            console.log('Ошибка при запросе', error);
+          }
+        }, 5000);
+      } else {
+        console.log('result', result);
+        if (result.result && Array.isArray(result.result)) {
+          console.log('result.result', result.result.events)
+          eventsfromFetcher = result.result;
+        } else if (result.result.events && Array.isArray(result.result.events)) {
+          console.log('result.result.events', result.result.events)
+          eventsfromFetcher = result.result.events;
+        } else {
+          console.log('Неизвестная структура данных');
+          return;
+        }
+
+        console.log('eventsfromFetcher', eventsfromFetcher)
+
+        return eventsfromFetcher;
+      }
+
+    } catch (error) {
+      console.log('Ошибка при выполнении задачи', error);
+    }
+  };
+
+  const {
+    data: dataEventForMonth,
+    error: dataErrorForMonth,
+    isLoading: dataIsForMonth
+  } = useSWR(
+    `/api/data?dateRange=${today}`, fetcher
+  );
+
+  console.log('dataEventForMonth', dataEventForMonth)
+
+  const [filterEventsMonth, setFilterEventsMonth] = useState(null);
+
+  useEffect(() => {
+    if (dataEventForMonth) {
+      const randomEvents = getRandomEvents(dataEventForMonth, 4);
+      setFilterEventsMonth(randomEvents);
+      console.log('filterEventsMonth', filterEventsMonth);
+    }
+  }, [dataEventForMonth])
+
+  const getRandomEvents = (array, count) => {
+    const shuffled = array.slice();
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; 
+    }
+    return shuffled.slice(0, count);
+  };
 
   return (
     <div className="max-w-custom-container mx-auto bg-gray-100 min-h-screen py-12">
@@ -120,7 +245,7 @@ export default function About() {
 
           <div className='flex justify-center flex-wrap'>
             <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-              {filterEventsMobth.length > 0 ? (filterEventsMobth.slice(0, 4).map((card) => (
+              {!dataIsForMonth ? (filterEventsMonth?.map((card) => (
                 <Card
                   type='mini'
                   category={card.category}

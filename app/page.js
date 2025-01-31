@@ -31,13 +31,14 @@ dayjs.extend(isBetween);
 
 export default function Home() {
 
-  const { index, setIndex, dataCache } = useEvents();
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoadingGame, setIsLoadingGame] = useState(false);
   const [weekendEvents, setWeekendEvents] = useState([]);
+  const [monthEvents, setMonthEvents] = useState([]);
   const [eventsTodayTomorrow, setEventsTodayTomorrow] = useState([]);
   const [eventsForGame, setEventsForGame] = useState([]);
+
   const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
   const today = todayforcount.format('YYYY-MM-DD');
   const tomorrow = todayforcount.add(1, 'day').startOf('day').format('YYYY-MM-DD');
@@ -47,8 +48,9 @@ export default function Home() {
   const startOfWeekend = startOfWeekendforCount.format(('YYYY-MM-DD'));
   const endOfWeekend = startOfWeekendforCount.add(1, 'day').format('YYYY-MM-DD');
 
-  const dateRange1 = { date_from: today, date_to: tomorrow, limit: 4 };
-  const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend, limit: 4 };
+  const dateRange1 = { date_from: today, date_to: tomorrow, limit: 10 };
+  const dateRangemonth = { date_from: today, date_to: month, limit: 10 };
+  const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend, limit: 10 };
   const dateRangeForGame = { date_from: today, date_to: month, limit: 50 };
 
 
@@ -89,81 +91,100 @@ export default function Home() {
 
 
       const result = await res.json();
-      console.log('Task created: ', result);
+      console.log('Task created с диапазоном дат: ', result);
 
-      const taskId = result.task_id;
-      const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+      let eventsfromFetcher = [];
 
-      setTimeout(async () => {
-        try {
-          const statusResponse = await fetch(statusUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': 'Bearer zevgEv-vimned-ditva8',
-              'Content-Type': 'application/json',
-            },
-          });
+      if (result.task_id) {
+        const taskId = result.task_id;
+        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
 
-          if (!statusResponse.ok) {
-            throw new Error(`Ошибка: ${statusResponse.statusText}`);
+        setTimeout(async () => {
+          try {
+            const statusResponse = await fetch(statusUrl, {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (!statusResponse.ok) {
+              throw new Error(`Ошибка: ${statusResponse.statusText}`);
+            }
+
+            const statusResult = await statusResponse.json();
+            console.log('Status result: ', statusResult);
+
+
+
+            if (Array.isArray(statusResult)) {
+              eventsfromFetcher = statusResult;
+            } else if (statusResult.events && Array.iaArray(statusResult.events)) {
+              eventsfromFetcher = statusResult.events;
+            } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+              eventsfromFetcher = statusResult.result.events;
+            } else {
+              console.error('Неизвестная структура данных:', statusResult);
+              setStatus('Не удалось обработать данные');
+              return;
+            }
+
+            console.log('eventsfromFetcher', eventsfromFetcher)
+
+            if (dateRange.date_from === dateRange1.date_from && dateRange.date_to === dateRange1.date_to) {
+
+              setEventsTodayTomorrow(eventsfromFetcher);
+
+            } else if (dateRange.date_from === dateRange2.date_from && dateRange.date_to === dateRange2.date_to) {
+
+              setWeekendEvents(eventsfromFetcher);
+
+            } else if (dateRange.date_from === dateRangeForGame.date_from && dateRange.date_to === dateRangeForGame.date_to) {
+              setEventsForGame(eventsfromFetcher);
+            };
+
+            return eventsfromFetcher;
+
+          } catch (error) {
+            console.log('Ошибка при запросе', error);
           }
-
-          const statusResult = await statusResponse.json();
-          console.log('Status result: ', statusResult);
-
-          let eventsfromFetcher = [];
-
-          if (Array.isArray(statusResult)) {
-            eventsfromFetcher = statusResult;
-          } else if (statusResult.events && Array.iaArray(statusResult.events)) {
-            eventsfromFetcher = statusResult.events;
-          } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-            eventsfromFetcher = statusResult.result.events;
-          } else {
-            console.error('Неизвестная структура данных:', statusResult);
-            setStatus('Не удалось обработать данные');
-            return;
-          }
-
-          console.log('eventsfromFetcher', eventsfromFetcher)
-
-          if (dateRange.date_from === dateRange1.date_from && dateRange.date_to === dateRange1.date_to) {
-
-            setEventsTodayTomorrow(eventsfromFetcher);
-
-          } else if (dateRange.date_from === dateRange2.date_from && dateRange.date_to === dateRange2.date_to) {
-
-            setWeekendEvents(eventsfromFetcher);
-
-          } else if (dateRange.date_from === dateRangeForGame.date_from && dateRange.date_to === dateRangeForGame.date_to) {
-            setEventsForGame(eventsfromFetcher);
-          };
-
-          return eventsfromFetcher;
-
-        } catch (error) {
-          console.log('Ошибка при запросе', error);
+        }, 5000);
+      } else {
+        console.log('result', result);
+        if (result.result && Array.isArray(result.result)) {
+          console.log('result.result', result.result.events)
+          eventsfromFetcher = result.result;
+        } else if (result.result.events && Array.isArray(result.result.events)) {
+          console.log('result.result.events', result.result.events)
+          eventsfromFetcher = result.result.events;
+        } else {
+          console.log('Неизвестная структура данных');
+          setStatus('Не удалось обработать данные');
+          return;
         }
-      })
+
+        console.log('eventsfromFetcher', eventsfromFetcher)
+
+        // if (dateRange.date_from === dateRange1.date_from && dateRange.date_to === dateRange1.date_to) {
+
+        //   setEventsTodayTomorrow(eventsfromFetcher);
+
+        // } else if (dateRange.date_from === dateRange2.date_from && dateRange.date_to === dateRange2.date_to) {
+
+        //   setWeekendEvents(eventsfromFetcher);
+
+        // } else if (dateRange.date_from === dateRangeForGame.date_from && dateRange.date_to === dateRangeForGame.date_to) {
+        //   setEventsForGame(eventsfromFetcher);
+        // };
+
+        return eventsfromFetcher;
+      }
+
     } catch (error) {
       console.log('Ошибка при выполнении задачи', error);
     }
   };
-
-  
-
-  // for (let i = 0; i < cache.size; i++) {
-  //   const data = cache.get(`/api/data?page=${i}`)?.data;
-  //   console.log('data from cache', data);
-  //   if (data.length > 0) {
-  //     dataCache.push(...data);
-  //   }
-  //   console.log('dataCache', dataCache);
-  // }
-
-  // const [events, setEvents] = useState(dataCache);
-
-  // console.log('events', events);
 
 
   const toggleShowGame = () => {
@@ -215,12 +236,80 @@ export default function Home() {
     }
   }
 
+  const {
+    data: dataEventDateRange1,
+    error: dataErrorDateRange1,
+    isLoading: dataIsDateRange1
+  } = useSWR(
+    dateRange1 ? `/api/data?dateRange=${dateRange1}` : null,
+    () => fetcher(dateRange1),
+  );
+
+  const {
+    data: dataEventDateRangeForGame,
+    error: dataErrorDateRangeForGame,
+    isLoading: dataIsDateRangeForGame
+  } = useSWR(
+    dateRangeForGame ? `/api/data?dateRange=${dateRangeForGame}` : null,
+    () => fetcher(dateRangeForGame), 
+  );
+
+  const {
+    data: dataEventDateRange2,
+    error: dataErrorDateRange2,
+    isLoading: dataIsDateRange2
+  } = useSWR(
+    dateRange2 ? `/api/data?dateRange=${dateRange2}` : null,
+    () => fetcher(dateRange2)
+  );
+
+  const {
+    data: dataEventDateRangeMonth,
+    error: dataErrorDateRangeMonth,
+    isLoading: dataIsDateRangeMonth
+  } = useSWR(
+    dateRangemonth ? `/api/data?dateRange=${dateRangemonth}` : null,
+    () => fetcher(dateRangemonth)
+  );
 
   useEffect(() => {
-    fetcher(dateRange1);
-    fetcher(dateRange2);
-    // fetcher(dateRangeForGame);
-  }, []);
+    if (dataEventDateRange1) {
+      const randomEvents = getRandomEvents(dataEventDateRange1, 4);
+      setEventsTodayTomorrow(randomEvents);
+    }
+
+    if (dataEventDateRange2) {
+      const randomEvents = getRandomEvents(dataEventDateRange2, 4);
+
+      setWeekendEvents(randomEvents);
+
+    } 
+
+    if (dataEventDateRangeMonth) {
+      const randomEvents = getRandomEvents(dataEventDateRangeMonth, 4);
+      setMonthEvents(randomEvents);
+    }
+    
+    if (dataEventDateRangeForGame) {
+      setEventsForGame(dataEventDateRangeForGame);
+    }
+  }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeForGame])
+
+  const getRandomEvents = (array, count) => {
+    const shuffled = array.slice();
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; 
+    }
+    return shuffled.slice(0, count);
+  };
+
+
+  // useEffect(() => {
+  //   fetcher(dateRange1);
+  //   fetcher(dateRange2);
+  //   // fetcher(dateRangeForGame);
+  // }, []);
 
   return (
     <>
@@ -259,7 +348,7 @@ export default function Home() {
         </div>
         <div className='flex justify-center flex-wrap'>
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-            {eventsTodayTomorrow.length > 0 ? (eventsTodayTomorrow.slice(0, 4).map((card) => (
+            {!dataIsDateRangeMonth ? (monthEvents.map((card) => (
               <Card
                 type='mini'
                 category={card.category}
@@ -287,7 +376,7 @@ export default function Home() {
         </div>
         <div className='flex justify-center items-center flex-wrap'>
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-            {eventsTodayTomorrow.length > 0 ? (eventsTodayTomorrow.slice(0, 4).map((card) => (
+            {!dataIsDateRange1 ? (eventsTodayTomorrow.map((card) => (
               <Card
                 type='mini'
                 category={card.category}
@@ -314,7 +403,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-          {weekendEvents.length > 0 ? (weekendEvents.map((card) => (
+          {!dataIsDateRange2 ? (weekendEvents?.map((card) => (
             <Card
               type='mini'
               category={card.category}

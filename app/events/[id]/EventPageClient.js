@@ -27,8 +27,8 @@ export default function EventPageClient({ id }) {
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { events } = useEvents();
-  const { isLoading } = useSWRConfig();
+  const { cache, findDataById } = useEvents();
+  // const { isLoading } = useSWRConfig();
   const [event, setEvent] = useState(null);
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
@@ -44,14 +44,14 @@ export default function EventPageClient({ id }) {
 
   const fetchIdEvent = async (id) => {
     try {
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+      const res = await fetch(`http://159.223.239.75:8005/api/get_valid_event/${id}`, {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer zevgEv-vimned-ditva8',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ids: [id],
+          // ids: [id],
           fields: [
             'event_id',
             'id',
@@ -73,67 +73,105 @@ export default function EventPageClient({ id }) {
       }
 
       const result = await res.json();
-      const taskId = result.task_id;
-      const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
 
-      const statusResponse = await fetch(statusUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
-      });
+      console.log('result на странице id', result);
 
-      if (!statusResponse.ok) {
-        throw new Error(`Ошибка: ${statusResponse.statusText}`);
+      if (result.task_id) {
+        try {
+          setTimeout(async () => {
+
+            const taskId = result.task_id;
+            const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+            const statusResponse = await fetch(statusUrl, {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (!statusResponse.ok) {
+              throw new Error(`Ошибка: ${statusResponse.statusText}`);
+            }
+
+            const statusResult = await statusResponse.json();
+
+            if (statusResult && Array.isArray(statusResult)) {
+              console.log('statusResult на странице id', statusResult.result);
+              return statusResult;
+            } else if (statusResult.result && Array.isArray(statusResult.result)) {
+              console.log('statusResult.result на странице id', statusResult.result);
+              return statusResult.result;
+            } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+              console.log('result.result.events на странице id', statusResult.result.events);
+              return statusResult.result.events[0];
+            } else {
+              console.error('Неизвестная структура данных:', statusResult);
+            };
+          });
+
+        } catch (error) {
+          console.log('Ошибка при запросе', error);
+        }
+      } else {
+        if (result && Array.isArray(result)) {
+          console.log('result на странице id', result.result);
+          return result;
+        } else if (result.result && Array.isArray(result.result)) {
+          console.log('result.result на странице id', result.result);
+          return result.result;
+        } else if (result.result.events && Array.isArray(result.result.events)) {
+          console.log('result.result.events на странице id', result.result.events);
+          return result.result.events[0];
+        } else {
+          console.error('Неизвестная структура данных:', result);
+        }
       }
-
-      const statusResult = await statusResponse.json();
-      return statusResult.result.events[0]; // Вернуть первое событие
     } catch (error) {
       console.log('Ошибка при запросе:', error);
       return null;
     }
   };
 
-  const { data: dataEvent, error: dataError, isLoading: dataIsLoading } = useSWR(
-    id ? `/api/events?ids=${id.id}` : null,
+  const {
+    data: dataEvent,
+    error: dataError,
+    isLoading: dataIsLoading
+  } = useSWR(
+    id ? `/api/data?id=${id.id}` : null,
     () => fetchIdEvent(id.id), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   }
   );
 
+  console.log('findDataById id.id', findDataById(parseInt(id.id)));
+
   useEffect(() => {
     if (dataEvent) {
       console.log('Берем данные с сервера');
       setEvent(dataEvent);
-    } else if (!dataIsLoading && !dataError && events) {
-      const cachedEvent = events.find((event) => event.id === parseInt(id.id));
+    } else if (!dataIsLoading && !dataError && cache.size > 0) {
+      // const cachedEvent = events.find((event) => event.id === parseInt(id.id));
+      const cachedEvent = findDataById(parseInt(id.id));
+      console.log('cachedEvent', cachedEvent);
       if (cachedEvent) {
         console.log('Берем данные из кэша');
         setEvent(cachedEvent);
       }
     }
 
-  }, [dataEvent, dataIsLoading, dataError, events, id.id]);
+  }, [dataEvent, dataIsLoading, dataError, cache, id.id]);
 
 
   if (dataIsLoading) {
     return (
-      <main className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+      <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
         Загрузка данных с сервера...
-      </main>
+      </div>
     );
-  }
-
-  // if (!event) {
-  //   return (
-  //     <main className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
-  //       Загрузка...
-  //     </main>
-  //   );
-  // }
+  };
 
   if (dataError) {
     console.log('SWR dataError', dataError);
