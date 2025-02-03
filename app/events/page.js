@@ -3,7 +3,7 @@
 import HeroSearch from '../components/HeroSearch';
 import Filtres from '../components/Filtres';
 import Card from '../components/Card'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { categoriesID } from '../data/events';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
@@ -26,6 +26,12 @@ dayjs.extend(isSameOrBefore);
 function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, cache, category, sortPrice, loadMoreEvents, data, limit }) {
 
   const [sortedEvents, setSortedEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
+  const loadedEventIdsRef = useRef(new Set());
+
+  console.log('sortedEvents в самом начале', sortedEvents);
+  console.log('loadedEventIdsRef в самом начале', loadedEventIdsRef);
+
 
   const getCategoryNameById = (id) => {
     const categoryObj = categoriesID.find((cat) => cat.id === id);
@@ -41,37 +47,48 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
   const eventById = {};
 
   useEffect(() => {
-    let eventsToSort = [];
-    const eventIds = new Set();
-    console.log('sortedEvents', sortedEvents);
+    let eventsToSort = [...allEvents];
+
+    allEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
+
+    console.log('allEvents', allEvents);
+    console.log('cache.size', cache.size);
+    console.log('cache', cache);
 
     if (cache && cache.size > 0) {
       console.log('берем данные из кэша');
+
       for (let i = 0; i < cache.size; i++) {
+
         const cachedData = cache.get(`/api/data?page=${i}`)?.data;
         console.log('cachedData', cachedData);
+
         if (Array.isArray(cachedData)) {
+
           cachedData.forEach(event => {
-            eventById[event.id] = event;
+
+            if (!loadedEventIdsRef.current.has(event.id)) {
+              loadedEventIdsRef.current.add(event.id);
+              eventsToSort.push(event);
+            };
           });
-          events.push(...cachedData);
         }
       }
-      eventsToSort = [...events];
-      eventsToSort.forEach(event => eventIds.add(event.id));
 
     } else if (data && data.length > 0) {
       console.log('Берем данные с сервера');
 
       data.forEach(event => {
-        if (!eventIds.has(event.id)) {
+        if (!loadedEventIdsRef.current.has(event.id)) {
+          loadedEventIdsRef.current.add(event.id);
           eventsToSort.push(event);
-          eventIds.add(event.id);
         }
       });
     }
 
     if (eventsToSort.length > 0) {
+
+      setAllEvents(eventsToSort);
 
       const filteredEvents = eventsToSort.filter((event) => {
         const eventCategoryName = getCategoryNameById(event.main_category_id);
@@ -82,7 +99,14 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
           (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
 
         const matchesSearch = search
-          ? (event.title?.toLowerCase() || '').includes(search.toLowerCase())
+          ? (
+            (event.title?.toLowerCase() || '').includes(search.toLowerCase()) || 
+            (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) || 
+            (event.address?.toLowerCase() || '').includes(search.toLowerCase()) || 
+            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) || 
+            (event.place_id && event.place_id.toString().includes(search)) || 
+            (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
+          )
           : true;
 
         const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
@@ -99,13 +123,15 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
       if (sorted.length === 0 || sorted.length % limit !== 0) {
         loadMoreEvents();
       }
+      console.log('loadedEventIdsRef в самом конце', loadedEventIdsRef);
+
       setSortedEvents(sorted);
       console.log('sortedEvents', sortedEvents);
     };
 
   }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
 
-  if (sortedEvents.length === 0) {
+  if (isLoading) {
     return (
       <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
         Загрузка...
@@ -166,7 +192,6 @@ export default function Events() {
   let nextSixMonth = dayjs().add(6, 'month').format('YYYY-MM-DD');
 
   const fetcher = async () => {
-    // setIsLoadingPage(true);
 
     try {
       const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {

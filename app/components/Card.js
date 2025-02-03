@@ -9,6 +9,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import Link from 'next/link';
 import { BsFillGeoAltFill } from "react-icons/bs";
 import { AiFillClockCircle } from "react-icons/ai";
+import { useEvents } from '../../context/SwrContext';
 
 
 dayjs.extend(isoWeek);
@@ -17,6 +18,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const Card = ({ type, main_category_id, title, from_date, address, price, id, image }) => {
+
+  const { convertImageUrlToJpeg } = useEvents();
   const [showFulltext, setShowFulltext] = useState(false);
   const [showFullTitletext, setShowFullTitletext] = useState(false);
 
@@ -29,6 +32,8 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
     setShowFullTitletext(!showFullTitletext)
   }
 
+  const imageUrl = image || '/img/cat.png';
+  const processedImageUrl = convertImageUrlToJpeg(imageUrl);
 
   const heightImage = {
     mini: 'object-cover object-center w-full h-[200px] transform transition duration-300 group-hover:scale-105 relative',
@@ -43,7 +48,7 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
           <div className='relative overflow-hidden border-b border-[#D9D9D9]'>
 
             <Image className={heightImage[type]}
-              src={image ? image : '/img/cat.png'}
+              src={processedImageUrl}
               width={500}
               height={500}
               alt="avatar" />

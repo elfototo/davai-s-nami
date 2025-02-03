@@ -27,9 +27,13 @@ export default function EventPageClient({ id }) {
 
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { cache, findDataById } = useEvents();
-  // const { isLoading } = useSWRConfig();
+  const { cache, findDataById, convertImageUrlToJpeg } = useEvents();
   const [event, setEvent] = useState(null);
+
+  const imageUrl = event?.image || '/img/cat.png';
+  const processedImageUrl = convertImageUrlToJpeg(imageUrl);
+  console.log('processedImageUrl', imageUrl, processedImageUrl);
+
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
 
@@ -189,7 +193,7 @@ export default function EventPageClient({ id }) {
               <div className="relative">
 
                 <Image
-                  src={event?.image || '/img/cat.png'}
+                  src={processedImageUrl}
                   width={1000}
                   height={1000}
                   className="object-cover object-center rounded-lg shadow-xl"
@@ -205,7 +209,7 @@ export default function EventPageClient({ id }) {
 
           <div className="overflow-hidden shadow-xl rounded-lg lg:w-full h-96 lg:h-full lg:max-w-[40%]">
             <Image
-              src={event?.image || '/img/cat.png'}
+              src={processedImageUrl}
               width={500}
               height={500}
               alt="avatar"

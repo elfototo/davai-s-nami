@@ -25,7 +25,6 @@ export default function About() {
   const today = dayjs().utc().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
   const month = dayjs().utc().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
 
-
   const fetcher = async () => {
     try {
 
@@ -139,8 +138,21 @@ export default function About() {
 
   const [filterEventsMonth, setFilterEventsMonth] = useState(null);
 
+  const dateRangemonth = { date_from: today, date_to: month, limit: 10 };
+
   useEffect(() => {
-    if (dataEventForMonth) {
+
+    if (cache && cache.size > 0) {
+      const cacheData = cache.get(`/api/data?dateRange=${dateRangemonth}`)?.data;
+      console.log('cacheData', cacheData);
+
+      if (Array.isArray(cacheData)) {
+        const randomEvents = getRandomEvents(cacheData, 4);
+        setFilterEventsMonth(randomEvents);
+      console.log('cacheData', randomEvents);
+
+      }
+    } else if (dataEventForMonth) {
       const randomEvents = getRandomEvents(dataEventForMonth, 4);
       setFilterEventsMonth(randomEvents);
       console.log('filterEventsMonth', filterEventsMonth);
@@ -151,7 +163,7 @@ export default function About() {
     const shuffled = array.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; 
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled.slice(0, count);
   };

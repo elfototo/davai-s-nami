@@ -19,10 +19,6 @@ import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../context/SwrContext';
 
-
-// import { useEvents } from '../context/EventsContext';
-
-
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -166,18 +162,6 @@ export default function Home() {
 
         console.log('eventsfromFetcher', eventsfromFetcher)
 
-        // if (dateRange.date_from === dateRange1.date_from && dateRange.date_to === dateRange1.date_to) {
-
-        //   setEventsTodayTomorrow(eventsfromFetcher);
-
-        // } else if (dateRange.date_from === dateRange2.date_from && dateRange.date_to === dateRange2.date_to) {
-
-        //   setWeekendEvents(eventsfromFetcher);
-
-        // } else if (dateRange.date_from === dateRangeForGame.date_from && dateRange.date_to === dateRangeForGame.date_to) {
-        //   setEventsForGame(eventsfromFetcher);
-        // };
-
         return eventsfromFetcher;
       }
 
@@ -304,12 +288,6 @@ export default function Home() {
     return shuffled.slice(0, count);
   };
 
-
-  // useEffect(() => {
-  //   fetcher(dateRange1);
-  //   fetcher(dateRange2);
-  //   // fetcher(dateRangeForGame);
-  // }, []);
 
   return (
     <>
