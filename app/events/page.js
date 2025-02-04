@@ -43,9 +43,6 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
     return categoryObj ? categoryObj.id : null;
   };
 
-  let events = [];
-  const eventById = {};
-
   useEffect(() => {
     let eventsToSort = [...allEvents];
 

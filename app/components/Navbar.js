@@ -5,36 +5,122 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { MdAccountCircle } from "react-icons/md";
+import useSWR, { SWRConfig } from 'swr';
+import { useEvents } from '../../context/SwrContext';
 
+const pages = [
+  { title: 'Места', path: '/places' },
+  { title: 'О нас', path: '/about' },
+  { title: 'События', path: '/events' },
+  { title: 'Культура', path: '/events?category=Культура' },
+  { title: 'Кино', path: '/events?category=Кино' },
+  { title: 'Лекции', path: '/events?category=Лекции' },
+  { title: 'Вечеринки', path: '/events?category=Вечеринки' },
+  { title: 'Музыка', path: '/events?category=Музыка' },
+  { title: 'Сегодня', path: '/events?category=Сегодня' },
+  { title: 'Завтра', path: '/events?category=Завтра' },
+  { title: 'Выходные', path: '/events?category=Выходные' },
+  { title: 'Вконтакте', path: 'https://vk.com/davaisnamispb' },
+  { title: 'Телеграм', path: 'https://t.me/DavaiSNami' },
+];
 
 const Navbar = () => {
+
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSearchFocused, setIsSearchFocused] = useState(false); // состояние для фокуса на поиске
-  const searchRef = useRef(null); 
+  const [filterSearch, setFilterSearch] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
+  const { cache, findDataById } = useEvents();
+  const loadedEventIdsRef = useRef(new Set());
+  const searchRef = useRef(null);
   const dropdownRef = useRef(null);
+  const limit = 10;
 
-  const pages = [
-    { title: 'Места', path: '/places' },
-    { title: 'О нас', path: '/about' },
-    { title: 'События', path: '/events' },
-    { title: 'Культура', path: '/events?category=Культура' },
-    { title: 'Кино', path: '/events?category=Кино' },
-    { title: 'Лекции', path: '/events?category=Лекции' },
-    { title: 'Вечеринки', path: '/events?category=Вечеринки' },
-    { title: 'Музыка', path: '/events?category=Музыка' },
-    { title: 'Сегодня', path: '/events?category=Сегодня' },
-    { title: 'Завтра', path: '/events?category=Завтра' },
-    { title: 'Выходные', path: '/events?category=Выходные' },
-    { title: 'Вконтакте', path: 'https://vk.com/davaisnamispb' },
-    { title: 'Телеграм', path: 'https://t.me/DavaiSNami' },
+  console.log('filterSearch', filterSearch);
 
-  ];
+  const fetcher = async (target) => {
+    try {
+      console.log('fetcher target', target);
 
-  const filteredPages = pages.filter(page =>
-    page.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    page.path.toLowerCase().includes(searchQuery.toLowerCase())
+      const res = await fetch(`http://159.223.239.75:8005/api/search/?query=${target}&limit=${limit}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка: ${res.statusText}`);
+      }
+
+
+      const result = await res.json();
+      console.log('Task created с глобального поиска: ', result);
+
+      let eventsfromFetcher = [];
+
+      console.log('result', result);
+
+      if (result.events && Array.isArray(result.events)) {
+        console.log('result.events', result.events)
+        eventsfromFetcher = eventsfromFetcher.concat(result.events);
+      }
+      
+      if (result.places && Array.isArray(result.places)) {
+        console.log('result.places', result.places)
+        eventsfromFetcher = eventsfromFetcher.concat(result.places);
+      } 
+
+      console.log('eventsfrom Search', eventsfromFetcher)
+
+      return eventsfromFetcher;
+
+    } catch (error) {
+      console.log('Ошибка при выполнении задачи', error);
+    }
+  };
+
+  const {
+    data: dataEventSearchQuery,
+    error: errorSearchQuery,
+    isLoading: isLoadingsearchQuery
+  } = useSWR(
+    searchQuery ? `/api/search/?query=${searchQuery}` : null,
+    () => fetcher(searchQuery),
   );
+
+  console.log('dataEventSearchQuery', dataEventSearchQuery);
+
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilterSearch(pages);
+      return;
+    }
+    let eventsToSort = [...pages];
+    console.log('searchQuery', searchQuery)
+
+    if (dataEventSearchQuery && dataEventSearchQuery.length > 0) {
+      dataEventSearchQuery.forEach(event => {
+
+        if (event.place_name) {
+          event.path = event.path || `/places/${event.id}`;
+        } else if (event.title) {
+          event.path = event.path || `/events/${event.id}`;
+        }
+
+        eventsToSort.push(event);
+
+      });
+    }
+
+    const filtered = eventsToSort.filter((event) => {
+      return event.title?.toString().toLowerCase().includes(searchQuery.toLowerCase()) || event.path.toString().toLowerCase().includes(searchQuery.toLowerCase()) || event.place_name?.toString().toLowerCase().includes(searchQuery.toLowerCase());
+    })
+
+    setFilterSearch(filtered);
+
+  }, [dataEventSearchQuery, searchQuery, allEvents]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -45,11 +131,10 @@ const Navbar = () => {
   };
 
   const handleItemClick = () => {
-    setSearchQuery(''); // Очищаем поле ввода при клике на элемент списка
+    setSearchQuery('');
   };
 
   const handleClickOutside = (e) => {
-    // Проверяем, был ли клик за пределами поля поиска или выпадающего списка
     if (
       searchRef.current && !searchRef.current.contains(e.target) &&
       dropdownRef.current && !dropdownRef.current.contains(e.target)
@@ -102,15 +187,15 @@ const Navbar = () => {
                 {searchQuery && (
                   <div className="absolute left-0 right-0 mt-2 bg-white shadow-lg max-h-60 overflow-y-auto z-10">
                     <ul>
-                      {filteredPages.length > 0 ? (
-                        filteredPages.map((page) => (
+                      {filterSearch.length > 0 ? (
+                        filterSearch.map((event) => (
                           <li
-                            key={page.path}
+                            key={event.path}
                             onClick={handleItemClick}
                             className="px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
                           >
-                            <Link href={page.path}>
-                              <div className="block">{page.title}</div>
+                            <Link href={event.path}>
+                              <div className="block">{event.title || event.place_name}</div>
                             </Link>
                           </li>
                         ))

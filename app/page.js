@@ -112,8 +112,6 @@ export default function Home() {
             const statusResult = await statusResponse.json();
             console.log('Status result: ', statusResult);
 
-
-
             if (Array.isArray(statusResult)) {
               eventsfromFetcher = statusResult;
             } else if (statusResult.events && Array.iaArray(statusResult.events)) {
