@@ -2,25 +2,27 @@
 
 import HeroSearch from '../components/HeroSearch';
 import { useEffect, useState, useRef } from 'react';
-import { places } from '../data/events';
 import PlaceCard from '../components/PlaceCard';
 import { SiMoscowmetro } from "react-icons/si";
 import useSWR, { SWRConfig } from 'swr';
-
-
+import { useEvents } from '../../context/SwrContext';
+import { Suspense } from 'react';
+import Loading from './loading';
 
 export default function Places() {
+  const { cache, findDataById } = useEvents();
   const [search, setSearch] = useState('');
   const [hasMore, setHasMore] = useState(true);
   const [indexPlaces, setIndexPlace] = useState(0);
 
   const [places, setPlaces] = useState([]);
   const [allPlaces, setAllPlaces] = useState([]);
-  const loadedEventIdsRef = useRef(new Set());
+  const loadedPlacesIdsRef = useRef(new Set());
 
 
   let limit = 8;
 
+  console.log("cache", cache)
   const loadMorePlaces = () => {
     if (isLoadingDataPlaces || !hasMore) return;
     const nextPage = indexPlaces + 1;
@@ -134,26 +136,53 @@ export default function Places() {
     data: dataPlaces,
     error: errorDataPlaces,
     isLoading: isLoadingDataPlaces,
-  } = useSWR(`/api/data?place=${indexPlaces}`,
+  } = useSWR(`/api/data?place_page=${indexPlaces}`,
     fetcherPlaces);
 
   console.log('dataPlaces', dataPlaces);
 
   useEffect(() => {
 
-    let placesSort = [...places];
+    let placesSort = [...allPlaces];
 
-    if (dataPlaces && dataPlaces.length > 0) {
+    allPlaces.forEach(place => loadedPlacesIdsRef.current.add(place.id));
+
+    console.log('allPlaces', allPlaces);
+    console.log('cache.size', cache.size);
+    console.log('cache', cache);
+
+    if (cache && cache.size > 0) {
+      console.log('берем данные из кэша');
+
+      for (let i = 0; i < cache.size; i++) {
+        const cachedData = cache.get(`/api/data?place_page=${i}`)?.data;
+
+        if (Array.isArray(cachedData)) {
+
+          cachedData.forEach(place => {
+
+            if (!loadedPlacesIdsRef.current.has(place.id)) {
+              loadedPlacesIdsRef.current.add(place.id);
+              placesSort.push(place);
+            };
+          });
+        }
+      }
+
+    } else if (dataPlaces && dataPlaces.length > 0) {
       console.log('Берем данные с сервера');
 
       dataPlaces.forEach(place => {
-        placesSort.push(place);
+        if (!loadedPlacesIdsRef.current.has(place.id)) {
+          loadedPlacesIdsRef.current.add(place.id);
+          placesSort.push(place);
+        }
       });
     }
 
     if (placesSort.length > 0) {
 
-      setPlaces(placesSort);
+      setAllPlaces(placesSort);
 
       const filteredPlaces = placesSort.filter((place) => {
         const matchesSearch = search
@@ -167,59 +196,69 @@ export default function Places() {
         return matchesSearch || '';
       })
 
-      // if (filteredPlaces.length === 0 || filteredPlaces.length % limit !==0) {
+      console.log('filteredPlaces', filteredPlaces);
+
+      // if (filteredPlaces?.length === 0 || filteredPlaces?.length % limit !==0) {
       //   loadMorePlaces();
       // }
+      console.log('loadedPlacesIdsRef в самом конце', loadedPlacesIdsRef);
 
-      console.log('filteredPlaces', filteredPlaces);
+
       setPlaces(filteredPlaces);
+      console.log('places в конце', places);
     }
 
   }, [dataPlaces, search]);
 
-  // if (isLoadingDataPlaces) {
-  //   return (
-  //     <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
-  //       Загрузка...
-  //     </div>
-  //   );
-  // };
+  if (!places || places.length === 0) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
+        <div className="relative flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-violet-500 border-solid border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
+          <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
+        </div>
+      </div>
+    );
+  };
 
 
   return (
     <div>
-      <HeroSearch
-        search={search}
-        setSearch={setSearch}
-      />
-      <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center '>
-        <div className='w-full grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-          {
-            places?.length > 0 ? (
-              places?.map((card) => (
-                <PlaceCard
-                  id={card.id}
-                  key={card.id}
-                  place_name={card.place_name}
-                  place_address={card.place_address}
-                  place_metro={card.place_metro}
-                  place_city={card.place_city}
-                  image={card.place_image}
-                />
-              ))
-            ) : (
-              <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
-                Нет доступных Мест.
-              </div>
-            )
-          }
+      <Suspense fallback={<Loading />}>
+        <HeroSearch
+          search={search}
+          setSearch={setSearch}
+        />
+        <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center '>
+          <div className='w-full grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+            {
+              places?.length > 0 ? (
+                places?.map((card) => (
+                  <PlaceCard
+                    id={card.id}
+                    key={card.id}
+                    place_name={card.place_name}
+                    place_address={card.place_address}
+                    place_metro={card.place_metro}
+                    place_city={card.place_city}
+                    image={card.place_image}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
+                  Нет доступных Мест.
+                </div>
+              )
+            }
+
+          </div>
 
         </div>
-
-      </div>
-      <div className='mx-auto flex justify-center gap-6 mt-10'>
-        {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMorePlaces()}>Загрузить еще</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMorePlaces()}>Загрузить еще</button>}
-      </div>
+        <div className='mx-auto flex justify-center gap-6 mt-10'>
+          {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMorePlaces()}>Загрузить еще</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMorePlaces()}>Загрузить еще</button>}
+        </div>
+      </Suspense>
     </div>
   )
 }

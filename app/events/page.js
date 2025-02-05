@@ -15,6 +15,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
+import { Suspense } from 'react';
+import Loading from './loading';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -23,7 +25,7 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, endDate, setEndDate, selectedTags, setSelectedTags, isOpen, cache, category, sortPrice, loadMoreEvents, data, limit }) {
+function Page({ index, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit }) {
 
   const [sortedEvents, setSortedEvents] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
@@ -128,41 +130,47 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
 
   }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
 
-  if (isLoading) {
+  if (!sortedEvents || sortedEvents.length === 0) {
     return (
-      <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
-        Загрузка...
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
+        <div className="relative flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-violet-500 border-solid border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
+          <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
+        </div>
       </div>
     );
   };
 
   return (
     <>
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
-        {
-          sortedEvents.length > 0 ? (
-            sortedEvents.map((card) => (
-              <Card
-                type="mini"
-                category={card.category}
-                main_category_id={card.main_category_id}
-                price={card.price}
-                title={card.title}
-                from_date={card.from_date}
-                address={card.address}
-                key={card.event_id}
-                id={card.id}
-                data={card}
-                image={card.image}
-              />
-            ))
-          ) : (
-            <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
-              Нет доступных событий.
-            </div>
-          )
-        }
-      </div>
+      <Suspense fallback={<Loading />}>
+        <div className="grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
+          {
+            sortedEvents.length > 0 ? (
+              sortedEvents.map((card) => (
+                <Card
+                  type="mini"
+                  category={card.category}
+                  main_category_id={card.main_category_id}
+                  price={card.price}
+                  title={card.title}
+                  from_date={card.from_date}
+                  address={card.address}
+                  key={card.event_id}
+                  id={card.id}
+                  data={card}
+                  image={card.image}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
+                Нет доступных событий.
+              </div>
+            )
+          }
+        </div>
+      </Suspense>
     </>
   )
 }

@@ -11,6 +11,8 @@ import isBetween from 'dayjs/plugin/isBetween';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useSWR, { SWRConfig } from 'swr';
+import { Suspense } from 'react';
+import Loading from './loading';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -149,7 +151,7 @@ export default function About() {
       if (Array.isArray(cacheData)) {
         const randomEvents = getRandomEvents(cacheData, 4);
         setFilterEventsMonth(randomEvents);
-      console.log('cacheData', randomEvents);
+        console.log('cacheData', randomEvents);
 
       }
     } else if (dataEventForMonth) {
@@ -254,27 +256,28 @@ export default function About() {
             </Link>
           </div>
 
-
-          <div className='flex justify-center flex-wrap'>
-            <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-              {!dataIsForMonth ? (filterEventsMonth?.map((card) => (
-                <Card
-                  type='mini'
-                  category={card.category}
-                  main_category_id={card.main_category_id}
-                  price={card.price}
-                  title={card.title}
-                  from_date={card.from_date}
-                  address={card.address}
-                  key={card.event_id}
-                  id={card.id}
-                  data={card}
-                  image={card.image} />
-              ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
-                Нет доступных событий.
-              </p>}
+          
+            <div className='flex justify-center flex-wrap'>
+              <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+                {!dataIsForMonth ? (filterEventsMonth?.map((card) => (
+                  <Card
+                    type='mini'
+                    category={card.category}
+                    main_category_id={card.main_category_id}
+                    price={card.price}
+                    title={card.title}
+                    from_date={card.from_date}
+                    address={card.address}
+                    key={card.event_id}
+                    id={card.id}
+                    data={card}
+                    image={card.image} />
+                ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
+                  Нет доступных событий.
+                </p>}
+              </div>
             </div>
-          </div>
+          
         </div>
       </div>
 

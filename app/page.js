@@ -18,6 +18,9 @@ import Loader from './components/Loader';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../context/SwrContext';
+import { Suspense } from 'react';
+import Loading from './loading';
+
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -233,7 +236,7 @@ export default function Home() {
     isLoading: dataIsDateRangeForGame
   } = useSWR(
     dateRangeForGame ? `/api/data?dateRange=${dateRangeForGame}` : null,
-    () => fetcher(dateRangeForGame), 
+    () => fetcher(dateRangeForGame),
   );
 
   const {
@@ -265,13 +268,13 @@ export default function Home() {
 
       setWeekendEvents(randomEvents);
 
-    } 
+    }
 
     if (dataEventDateRangeMonth) {
       const randomEvents = getRandomEvents(dataEventDateRangeMonth, 4);
       setMonthEvents(randomEvents);
     }
-    
+
     if (dataEventDateRangeForGame) {
       setEventsForGame(dataEventDateRangeForGame);
     }
@@ -281,11 +284,10 @@ export default function Home() {
     const shuffled = array.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; 
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled.slice(0, count);
   };
-
 
   return (
     <>
@@ -315,34 +317,38 @@ export default function Home() {
           <Categories />
         </div>
       </section>
-      <section className='max-w-custom-container mx-auto px-4'>
-        <div className='flex justify-between items-baseline'>
-          <h1 className='font-roboto font-bold'>Горячие новинки месяца</h1>
-          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
-            <p className="text-[#777]">Смотреть весь список</p>
-          </Link>
-        </div>
-        <div className='flex justify-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-            {!dataIsDateRangeMonth ? (monthEvents.map((card) => (
-              <Card
-                type='mini'
-                category={card.category}
-                main_category_id={card.main_category_id}
-                price={card.price}
-                title={card.title}
-                from_date={card.from_date}
-                address={card.address}
-                key={card.event_id}
-                id={card.id}
-                data={card}
-                image={card.image} />
-            ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
-              Нет доступных событий.
-            </p>}
+      
+        <section className='max-w-custom-container mx-auto px-4'>
+          <div className='flex justify-between items-baseline'>
+            <h1 className='font-roboto font-bold'>Горячие новинки месяца</h1>
+            <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
+              <p className="text-[#777]">Смотреть весь список</p>
+            </Link>
           </div>
-        </div>
-      </section>
+          <div className='flex justify-center flex-wrap'>
+            <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+              
+                {!dataIsDateRangeMonth ? (monthEvents.map((card) => (
+                  <Card
+                    type='mini'
+                    category={card.category}
+                    main_category_id={card.main_category_id}
+                    price={card.price}
+                    title={card.title}
+                    from_date={card.from_date}
+                    address={card.address}
+                    key={card.event_id}
+                    id={card.id}
+                    data={card}
+                    image={card.image} />
+                ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
+                  Нет доступных событий.
+                </p>}
+              
+            </div>
+          </div>
+        </section>
+      
       <section className='max-w-custom-container mx-auto px-4'>
         <div className='flex justify-between items-baseline'>
           <h1 className='font-roboto font-bold'>Куда сходить сегодня и завтра</h1>
