@@ -22,19 +22,139 @@ dayjs.extend(isBetween);
 
 export default function eventPlace({ params }) {
 
-    // const [events, setEvents] = useState(data);
     const { cache } = useEvents();
+
     const [eventsInPlace, setEventsInPlace] = useState([]);
+    const [place, setPlace] = useState(null);
+
     const { id } = params;
     console.log(id);
-    const place = places.find(event => event.id === Number(id));
 
-    console.log(place);
+    // const place = places.find(event => event.id === Number(id));
+
+    // console.log(place);
 
     const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
     const today = todayforcount.format('YYYY-MM-DD');
 
-    const fetchIdPlace = async (id) => {
+    const fetchPlaceById = async (id) => {
+        try {
+            const res = await fetch(`http://159.223.239.75:8005/api/get_place/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fields: [
+                        'id',
+                        'place_name',
+                        'place_address',
+                        'place_url',
+                        'url_to_address',
+                        'place_metro',
+                        'place_city',
+                        'place_image'
+                    ],
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error(`Ошибка поиска id ${res.statusText}`);
+            }
+
+            const result = await res.json();
+
+            console.log('result на странице id', result);
+
+            if (result.task_id) {
+                try {
+                    setTimeout(async () => {
+
+                        const taskId = result.task_id;
+                        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+                        const statusResponse = await fetch(statusUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': 'Bearer zevgEv-vimned-ditva8',
+                                'Content-Type': 'application/json',
+                            },
+                        });
+
+                        if (!statusResponse.ok) {
+                            throw new Error(`Ошибка: ${statusResponse.statusText}`);
+                        }
+
+                        const statusResult = await statusResponse.json();
+
+                        if (statusResult && Array.isArray(statusResult)) {
+                            console.log('statusResult на странице id', statusResult.result);
+                            return statusResult;
+                        } else if (statusResult.result && Array.isArray(statusResult.result)) {
+                            console.log('statusResult.result на странице id', statusResult.result);
+                            return statusResult.result;
+                        } else if (statusResult.result.events && Array.isArray(statusResult.result.places)) {
+                            console.log('result.result.events на странице id', statusResult.result.places);
+                            return statusResult.result.places[0];
+                        } else {
+                            console.error('Неизвестная структура данных:', statusResult);
+                        };
+                    });
+
+                } catch (error) {
+                    console.log('Ошибка при запросе', error);
+                }
+            } else {
+                if (result && Array.isArray(result)) {
+                    console.log('result на странице id', result.result);
+                    return result;
+                } else if (result.result && Array.isArray(result.result)) {
+                    console.log('result.result на странице id', result.result);
+                    return result.result;
+                } else if (result.result.places && Array.isArray(result.result.places)) {
+                    console.log('result.result.events на странице id', result.result.places);
+                    return result.result.places[0];
+                } else {
+                    console.error('Неизвестная структура данных:', result);
+                }
+            }
+        } catch (error) {
+            console.log('Ошибка при запросе:', error);
+            return null;
+        }
+    };
+
+    const {
+        data: dataPlaceById,
+        error: errorPlaceByID,
+        isLoading: isLoadingById
+    } = useSWR(
+        id ? `/api/data?place_id=${id}` : null,
+        () => fetchPlaceById(id), {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+    }
+    );
+
+    console.log('dataPlaceById', dataPlaceById)
+
+    useEffect(() => {
+        if (dataPlaceById) {
+            console.log('Берем данные с сервера');
+            setPlace(dataPlaceById);
+        // } else if (!dataPlaceById && !isLoadingById && cache.size > 0) {
+        //     const cachePlace = findDataById(id);
+        //     console.log('cachePlace', cachePlace);
+        //     if (cachePlace) {
+        //         console.log('берем данные из кэша');
+        //         setPlace(cachePlace);
+        //     }
+        }
+    }, [dataPlaceById, isLoadingById, cache, id]);
+
+    // запрос мероприятий в этом места
+    const fetchEventsInPlaceByID = async (id) => {
         try {
             const res = await fetch(`http://159.223.239.75:8005/api/get_valid_events/`, {
                 method: 'POST',
@@ -44,7 +164,7 @@ export default function eventPlace({ params }) {
                 },
                 body: JSON.stringify({
                     date_from: today,
-                        place: [id],
+                    place: [id],
                     fields: [
                         'event_id',
                         'id',
@@ -129,30 +249,34 @@ export default function eventPlace({ params }) {
     };
 
     const {
-        data: dataPlaceId,
-        error: errorPlaceId,
-        isLoading: isLoadingPlaceId
+        data: dataEventsByPlaceId,
+        error: errorEventsPlaceId,
+        isLoading: isLoadingEventsPlaceId
     } = useSWR(
-        place.id ? `/api/data?id=${place.id}` : null,
-        () => fetchIdPlace(place.id), {
+        place?.id ? `/api/data?id=${place?.id}` : null,
+        () => fetchEventsInPlaceByID(place?.id), {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
     }
     );
 
-    console.log('dataPlaceId', dataPlaceId)
+    console.log('dataEventsByPlaceId', dataEventsByPlaceId)
 
     useEffect(() => {
-        if (!isLoadingPlaceId && dataPlaceId) {
-            setEventsInPlace(dataPlaceId);
+        if (!isLoadingEventsPlaceId && dataEventsByPlaceId) {
+            setEventsInPlace(dataEventsByPlaceId);
         }
 
-    }, [dataPlaceId])
+    }, [dataEventsByPlaceId])
 
-    const filteredPlace = dataPlaceId?.filter((event) => event.place_id === place.id);
+    const filteredPlace = dataEventsByPlaceId?.filter((event) => event.place_id === place.id);
 
-    if (!place) {
-        return <div>Место не найдено</div>;
+    if (isLoadingById) {
+        return (
+            <div className='fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 fade-in'>
+              Загрузка...
+            </div>
+          );
     }
 
     return (
@@ -166,7 +290,7 @@ export default function eventPlace({ params }) {
                         <div className='overflow-hidden rounded-xl shadow-xl h-96'>
                             <Image className='object-cover object-center w-full lg:w-[32rem] h-96 cursor-pointer 
                              hover:scale-105 transform transition-all duration-300'
-                                src={place.image || '/img/cat.png'}
+                                src={place?.place_image || '/img/cat.png'}
                                 width={1000}
                                 height={1000}
                                 alt="avatar"
@@ -176,14 +300,14 @@ export default function eventPlace({ params }) {
                         <div className='mt-8 lg:px-10 lg:mt-0'>
 
                             <h1 className="text-2xl font-bold text-[#333] lg:text-3xl my-0 font-roboto mb-5 mx-1">
-                                {place.place_name}
+                                {place?.place_name}
                             </h1>
 
                             <div className='mx-1 mb-3 p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]'>
                                 <div className='flex mb-3'>
                                     <p className='text-[#777]'>Метро: </p>
                                     <p className='font-roboto text-[#333] text-gray-[#333]  lg:w-72 ml-[20px]'>
-                                        {place.place_metro}</p>
+                                        {place?.place_metro}</p>
                                 </div>
 
                                 <div className='flex items-baseline mt-3 '>
@@ -191,7 +315,7 @@ export default function eventPlace({ params }) {
 
 
                                     <p className='font-roboto text-[#333] ml-6'>
-                                        {place.place_address}</p>
+                                        {place?.place_address}</p>
 
                                 </div>
                             </div>

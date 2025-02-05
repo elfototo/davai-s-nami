@@ -97,11 +97,11 @@ function Page({ index, search, isLoading, setBgColor, startDate, setStartDate, e
 
         const matchesSearch = search
           ? (
-            (event.title?.toLowerCase() || '').includes(search.toLowerCase()) || 
-            (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) || 
-            (event.address?.toLowerCase() || '').includes(search.toLowerCase()) || 
-            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) || 
-            (event.place_id && event.place_id.toString().includes(search)) || 
+            (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
+            (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
+            (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
+            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
+            (event.place_id && event.place_id.toString().includes(search)) ||
             (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
           )
           : true;
