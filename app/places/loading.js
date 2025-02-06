@@ -1,12 +1,37 @@
+'use client';
+
 export default function Loading() {
-    // Or a custom loading skeleton component
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
-            <div className="relative flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-violet-500 border-solid border-t-transparent rounded-full animate-spin"></div>
-                <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
-                <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
+        <div className="space-y-4">
+            <div className="h-[65px] w-[100%] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+
+            <div className="t-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center">
+                
+                <section className="w-full">
+                    <div className=" grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                        <div className="h-[290px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+                    </div>
+                </section>
             </div>
+
+
+            <style jsx>{`
+          @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+          }
+          .animate-shimmer {
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
+          }
+        `}</style>
         </div>
-    )
+    );
 }

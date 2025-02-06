@@ -18,8 +18,6 @@ import Loader from './components/Loader';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../context/SwrContext';
-import { Suspense } from 'react';
-import Loading from './loading';
 
 
 dayjs.extend(isoWeek);
@@ -37,6 +35,7 @@ export default function Home() {
   const [monthEvents, setMonthEvents] = useState([]);
   const [eventsTodayTomorrow, setEventsTodayTomorrow] = useState([]);
   const [eventsForGame, setEventsForGame] = useState([]);
+  const { cache, findDataById } = useEvents();
 
   const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
   const today = todayforcount.format('YYYY-MM-DD');
@@ -171,7 +170,6 @@ export default function Home() {
     }
   };
 
-
   const toggleShowGame = () => {
     setShowGame(!showGame);
   }
@@ -226,59 +224,97 @@ export default function Home() {
     error: dataErrorDateRange1,
     isLoading: dataIsDateRange1
   } = useSWR(
-    dateRange1 ? `/api/data?dateRange=${dateRange1}` : null,
+    dateRange1 ? `/api/data?dateRange=${dateRange1.date_from, dateRange1.date_to}` : null,
     () => fetcher(dateRange1),
   );
+  console.log("dataEventDateRange1", dataEventDateRange1);
 
   const {
     data: dataEventDateRangeForGame,
     error: dataErrorDateRangeForGame,
     isLoading: dataIsDateRangeForGame
   } = useSWR(
-    dateRangeForGame ? `/api/data?dateRange=${dateRangeForGame}` : null,
+    dateRangeForGame ? `/api/data?dateRange=${dateRangeForGame.date_from, dateRangeForGame.date_to}` : null,
     () => fetcher(dateRangeForGame),
   );
+  console.log("dataEventDateRangeForGame", dataEventDateRangeForGame);
+
 
   const {
     data: dataEventDateRange2,
     error: dataErrorDateRange2,
     isLoading: dataIsDateRange2
   } = useSWR(
-    dateRange2 ? `/api/data?dateRange=${dateRange2}` : null,
+    dateRange2 ? `/api/data?dateRange=${dateRange2.date_from, dateRange2.date_to}` : null,
     () => fetcher(dateRange2)
   );
+  console.log("dataEventDateRange2", dataEventDateRange2);
+
 
   const {
     data: dataEventDateRangeMonth,
     error: dataErrorDateRangeMonth,
     isLoading: dataIsDateRangeMonth
   } = useSWR(
-    dateRangemonth ? `/api/data?dateRange=${dateRangemonth}` : null,
+    dateRangemonth ? `/api/data?dateRange=${dateRangemonth.date_from, dateRangemonth.date_to}` : null,
     () => fetcher(dateRangemonth)
   );
+  console.log("dataEventDateRangeMonth", dataEventDateRangeMonth);
+
+
+  const cacheDataRange1 = cache?.get(`/api/data?dateRange=${dateRange1.date_from, dateRange1.date_to}`)?.data;
+  console.log('cacheDataRange1', cacheDataRange1);
+
+  const cacheDataRange2 = cache?.get(`/api/data?dateRange=${dateRange2.date_from, dateRange2.date_to}`)?.data;
+  console.log('cacheDataRange2', cacheDataRange2);
+
+  const cacheDataEventDateRangeMonth = cache?.get(`/api/data?dateRange=${dateRangemonth.date_from, dateRangemonth.date_to}`)?.data;
+  console.log('cacheDataEventDateRangeMonth', cacheDataEventDateRangeMonth);
+
 
   useEffect(() => {
-    if (dataEventDateRange1) {
-      const randomEvents = getRandomEvents(dataEventDateRange1, 4);
+    if (cacheDataRange1) {
+      const randomEvents = getRandomEvents(cacheDataRange1, 4);
+      console.log('берем данные из кэша для cacheDataRange1', randomEvents);
+
       setEventsTodayTomorrow(randomEvents);
+      console.log('eventsTodayTomorrow', eventsTodayTomorrow);
+
+    } else if (dataEventDateRange1) {
+      const randomEvents = getRandomEvents(dataEventDateRange1, 4);
+      console.log('берем данные с сервера для dataEventDateRange1', randomEvents);
+      setEventsTodayTomorrow(randomEvents);
+
     }
 
-    if (dataEventDateRange2) {
-      const randomEvents = getRandomEvents(dataEventDateRange2, 4);
+    if (cacheDataRange2) {
+      const randomEvents = getRandomEvents(cacheDataRange2, 4);
+      console.log('берем данные из кэша для cacheDataRange2', randomEvents);
 
       setWeekendEvents(randomEvents);
+    } else if (dataEventDateRange2) {
+      const randomEvents = getRandomEvents(dataEventDateRange2, 4);
+      console.log('берем данные с сервера для dataEventDateRange2', randomEvents);
 
+      setWeekendEvents(randomEvents);
     }
 
-    if (dataEventDateRangeMonth) {
+    if (cacheDataEventDateRangeMonth) {
+      const randomEvents = getRandomEvents(cacheDataEventDateRangeMonth, 4);
+      console.log('берем данные из кэша для cacheDataEventDateRangeMonth', randomEvents);
+
+      setMonthEvents(randomEvents);
+    } else if (dataEventDateRangeMonth) {
       const randomEvents = getRandomEvents(dataEventDateRangeMonth, 4);
+      console.log('берем данные с сервера для dataEventDateRangeMonth', randomEvents);
+
       setMonthEvents(randomEvents);
     }
 
     if (dataEventDateRangeForGame) {
       setEventsForGame(dataEventDateRangeForGame);
     }
-  }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeForGame])
+  }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeForGame, cacheDataRange1, cacheDataRange2, cacheDataEventDateRangeMonth])
 
   const getRandomEvents = (array, count) => {
     const shuffled = array.slice();
@@ -288,6 +324,15 @@ export default function Home() {
     }
     return shuffled.slice(0, count);
   };
+
+  const loader = (
+    <div className=" absolute flex items-center justify-cente mx-auto">
+      <div className="relative flex items-center justify-center">
+        <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
+        <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
+      </div>
+    </div>
+  )
 
   return (
     <>
@@ -317,38 +362,40 @@ export default function Home() {
           <Categories />
         </div>
       </section>
-      
-        <section className='max-w-custom-container mx-auto px-4'>
-          <div className='flex justify-between items-baseline'>
-            <h1 className='font-roboto font-bold'>Горячие новинки месяца</h1>
-            <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
-              <p className="text-[#777]">Смотреть весь список</p>
-            </Link>
+
+      <section className='max-w-custom-container mx-auto px-4'>
+        <div className='flex justify-between items-baseline'>
+          <h1 className='font-roboto font-bold'>Горячие новинки месяца</h1>
+          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
+            <p className="text-[#777]">Смотреть весь список</p>
+          </Link>
+        </div>
+        <div className='flex justify-center flex-wrap'>
+          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+
+            {dataIsDateRangeMonth ? (
+              loader
+            ) :
+              (monthEvents?.slice(0, 4).map((card) => (
+                <Card
+                  type='mini'
+                  category={card.category}
+                  main_category_id={card.main_category_id}
+                  price={card.price}
+                  title={card.title}
+                  from_date={card.from_date}
+                  address={card.address}
+                  key={card.event_id}
+                  id={card.id}
+                  data={card}
+                  image={card.image} />
+              )))
+            }
+
           </div>
-          <div className='flex justify-center flex-wrap'>
-            <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-              
-                {!dataIsDateRangeMonth ? (monthEvents.map((card) => (
-                  <Card
-                    type='mini'
-                    category={card.category}
-                    main_category_id={card.main_category_id}
-                    price={card.price}
-                    title={card.title}
-                    from_date={card.from_date}
-                    address={card.address}
-                    key={card.event_id}
-                    id={card.id}
-                    data={card}
-                    image={card.image} />
-                ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
-                  Нет доступных событий.
-                </p>}
-              
-            </div>
-          </div>
-        </section>
-      
+        </div>
+      </section>
+
       <section className='max-w-custom-container mx-auto px-4'>
         <div className='flex justify-between items-baseline'>
           <h1 className='font-roboto font-bold'>Куда сходить сегодня и завтра</h1>
@@ -358,22 +405,23 @@ export default function Home() {
         </div>
         <div className='flex justify-center items-center flex-wrap'>
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-            {!dataIsDateRange1 ? (eventsTodayTomorrow.map((card) => (
-              <Card
-                type='mini'
-                category={card.category}
-                main_category_id={card.main_category_id}
-                price={card.price}
-                title={card.title}
-                from_date={card.from_date}
-                address={card.address}
-                key={card.event_id}
-                id={card.id}
-                data={card}
-                image={card.image} />
-            ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
-              Нет доступных событий.
-            </p>}
+            {dataIsDateRange1 ?
+              loader :
+              (eventsTodayTomorrow?.slice(0, 4).map((card) => (
+                <Card
+                  type='mini'
+                  category={card.category}
+                  main_category_id={card.main_category_id}
+                  price={card.price}
+                  title={card.title}
+                  from_date={card.from_date}
+                  address={card.address}
+                  key={card.event_id}
+                  id={card.id}
+                  data={card}
+                  image={card.image} />
+              )))
+            }
           </div>
         </div>
       </section>
@@ -384,25 +432,28 @@ export default function Home() {
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
-        <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-          {!dataIsDateRange2 ? (weekendEvents?.map((card) => (
-            <Card
-              type='mini'
-              category={card.category}
-              main_category_id={card.main_category_id}
-              price={card.price}
-              title={card.title}
-              from_date={card.from_date}
-              address={card.address}
-              key={card.event_id}
-              id={card.id}
-              data={card}
-              image={card.image} />
-          ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
-            Нет доступных событий.
-          </p>}
-
+        <div className='flex justify-center items-center flex-wrap'>
+          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mb-10'>
+            {dataIsDateRange2 ?
+              loader :
+              (weekendEvents?.slice(0, 4).map((card) => (
+                <Card
+                  type='mini'
+                  category={card.category}
+                  main_category_id={card.main_category_id}
+                  price={card.price}
+                  title={card.title}
+                  from_date={card.from_date}
+                  address={card.address}
+                  key={card.event_id}
+                  id={card.id}
+                  data={card}
+                  image={card.image} />
+              )))
+            }
+          </div>
         </div>
+
 
         {isLoadingGame && (
           <div className='fade-in'>
@@ -450,5 +501,28 @@ export default function Home() {
 
 
     </>
+    // <div className="p-4 space-y-4">
+    //   <div className="h-6 w-1/3 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+    //   <div className="h-4 w-2/3 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+    //   <div className="h-4 w-1/2 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+
+    //   <div className="grid grid-cols-2 gap-4 mt-4">
+    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
+    //   </div>
+
+    //   <style jsx>{`
+    //     @keyframes shimmer {
+    //       0% { background-position: 200% 0; }
+    //       100% { background-position: -200% 0; }
+    //     }
+    //     .animate-shimmer {
+    //       background-size: 200% 100%;
+    //       animation: shimmer 2s infinite linear;
+    //     }
+    //   `}</style>
+    // </div>
   );
 }

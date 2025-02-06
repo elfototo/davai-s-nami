@@ -1,4 +1,5 @@
 'use client'
+
 import Image from 'next/image';
 import Card from '../components/Card';
 import { useEvents } from '../../context/SwrContext';
@@ -11,8 +12,6 @@ import isBetween from 'dayjs/plugin/isBetween';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useSWR, { SWRConfig } from 'swr';
-import { Suspense } from 'react';
-import Loading from './loading';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -23,13 +22,19 @@ dayjs.extend(isBetween);
 export default function About() {
 
   const { cache, findDataById } = useEvents();
+  const [filterEventsMonth, setFilterEventsMonth] = useState([]);
 
+  const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
   const today = dayjs().utc().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
-  const month = dayjs().utc().tz('Europe/Moscow').startOf('day').format('YYYY-MM-DD');
+  const month = todayforcount.add(1, 'month').startOf('day').format('YYYY-MM-DD');
 
-  const fetcher = async () => {
+  const dateRangemonth = { date_from: today, date_to: month, limit: 10 };
+
+  const fetcher = async (dateRange) => {
     try {
 
+      console.log('fetcher args', dateRange.date_from);
+      console.log('fetcher args', dateRange.date_to);
       const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
         method: 'POST',
         headers: {
@@ -37,8 +42,8 @@ export default function About() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          date_from: today,
-          date_to: month,
+          date_from: dateRange.date_from,
+          date_to: dateRange.date_to,
           fields: [
             'event_id',
             'id',
@@ -52,6 +57,7 @@ export default function About() {
             'place_id',
             'main_category_id',
           ],
+          limit: dateRange.limit,
         }),
       });
 
@@ -86,10 +92,12 @@ export default function About() {
             console.log('Status result: ', statusResult);
 
             if (Array.isArray(statusResult)) {
+              console.log('statusResult', statusResult)
               eventsfromFetcher = statusResult;
             } else if (statusResult.events && Array.iaArray(statusResult.events)) {
               eventsfromFetcher = statusResult.events;
             } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+              console.log('statusResult.result.events', statusResult.result.events)
               eventsfromFetcher = statusResult.result.events;
             } else {
               console.error('Неизвестная структура данных:', statusResult);
@@ -129,38 +137,38 @@ export default function About() {
   };
 
   const {
-    data: dataEventForMonth,
-    error: dataErrorForMonth,
-    isLoading: dataIsForMonth
+    data: dataEventDateRangeMonth,
+    error: dataErrorDateRangeMonth,
+    isLoading: dataIsDateRangeMonth
   } = useSWR(
-    `/api/data?dateRange=${today}`, fetcher
+    dateRangemonth ? `/api/data?dateRange=${dateRangemonth.date_from, dateRangemonth.date_to}` : null,
+    () => fetcher(dateRangemonth)
   );
 
-  console.log('dataEventForMonth', dataEventForMonth)
+  console.log('dataEventDateRangeMonth', dataEventDateRangeMonth)
 
-  const [filterEventsMonth, setFilterEventsMonth] = useState(null);
 
-  const dateRangemonth = { date_from: today, date_to: month, limit: 10 };
+  const cacheData = cache?.get(`/api/data?dateRange=${dateRangemonth.date_from, dateRangemonth.date_to}`)?.data;
+
+  console.log('cacheData', cacheData);
+
 
   useEffect(() => {
 
-    if (cache && cache.size > 0) {
-      const cacheData = cache.get(`/api/data?dateRange=${dateRangemonth}`)?.data;
-      console.log('cacheData', cacheData);
-
-      if (Array.isArray(cacheData)) {
-        const randomEvents = getRandomEvents(cacheData, 4);
-        setFilterEventsMonth(randomEvents);
-        console.log('cacheData', randomEvents);
-
-      }
-    } else if (dataEventForMonth) {
-      const randomEvents = getRandomEvents(dataEventForMonth, 4);
+    if (cacheData && Array.isArray(cacheData)) {
+      const randomEvents = getRandomEvents(cacheData, 4);
       setFilterEventsMonth(randomEvents);
-      console.log('filterEventsMonth', filterEventsMonth);
-    }
-  }, [dataEventForMonth])
+      console.log('берем данные из кэша', randomEvents);
+    } else if (dataEventDateRangeMonth) {
+      const randomEvents = getRandomEvents(dataEventDateRangeMonth, 4);
 
+      setFilterEventsMonth(randomEvents);
+      console.log('берем данные с сервера', filterEventsMonth);
+    }
+
+  }, [dataEventDateRangeMonth, cacheData])
+
+  console.log('filterEventsMonth', filterEventsMonth)
   const getRandomEvents = (array, count) => {
     const shuffled = array.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -168,16 +176,21 @@ export default function About() {
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled.slice(0, count);
+
   };
+  const loader = (
+    <div className=" absolute flex items-center justify-cente mx-auto">
+      <div className="relative flex items-center justify-center">
+        <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
+        <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
+      </div>
+    </div>
+  )
 
   return (
     <div className="max-w-custom-container mx-auto bg-gray-100 min-h-screen py-12">
       <div className="container mx-auto  px-6">
 
-        {/* Заголовок
-        <h1 className="text-5xl font-bold text-gray-800 text-center mb-12 mt-0">
-          О нас
-        </h1> */}
 
         <div className="mb-16">
           <div className='p-8 lg:flex items-center justify-between'>
@@ -256,10 +269,12 @@ export default function About() {
             </Link>
           </div>
 
-          
-            <div className='flex justify-center flex-wrap'>
-              <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-                {!dataIsForMonth ? (filterEventsMonth?.map((card) => (
+
+          <div className='flex justify-center flex-wrap'>
+            <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mt-5'>
+              {dataIsDateRangeMonth ?
+                loader :
+                (filterEventsMonth?.slice(0.4).map((card) => (
                   <Card
                     type='mini'
                     category={card.category}
@@ -272,12 +287,10 @@ export default function About() {
                     id={card.id}
                     data={card}
                     image={card.image} />
-                ))) : <p className="col-span-full text-center text-gray-600 text-lg font-semibold">
-                  Нет доступных событий.
-                </p>}
-              </div>
+                )))}
             </div>
-          
+          </div>
+
         </div>
       </div>
 

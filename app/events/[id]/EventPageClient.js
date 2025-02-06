@@ -18,8 +18,8 @@ import { FaArrowRight } from "react-icons/fa6";
 import { BsCopy } from "react-icons/bs";
 import { useEvents } from '../../../context/SwrContext';
 import { debounce } from 'lodash';
-import { Suspense } from 'react';
-import Loading from './loading';
+// import { Suspense } from 'react';
+// import Loading from './loading';
 
 
 dayjs.locale('ru');
@@ -175,12 +175,12 @@ export default function EventPageClient({ id }) {
   if (dataIsLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
-            <div className="relative flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-violet-500 border-solid border-t-transparent rounded-full animate-spin"></div>
-                <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
-                <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
-            </div>
+        <div className="relative flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-violet-500 border-solid border-t-transparent rounded-full animate-spin"></div>
+          <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
+          <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
         </div>
+      </div>
     );
   };
 
@@ -189,7 +189,9 @@ export default function EventPageClient({ id }) {
   }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
+      {/* <Suspense fallback={<Loading />}> */}
+
       <div className="relative max-w-custom-container mx-auto">
         <div className="flex flex-col justify-center w-full min-h-screen px-6 py-5 md:py-10 mx-auto lg:inset-x-0">
           <div className="lg:flex lg:items-center bg-[#fff] rounded-xl p-10">
@@ -284,6 +286,7 @@ export default function EventPageClient({ id }) {
           </ReactMarkdown>
         </div>
       </div>
-    </Suspense>
+      {/* </Suspense> */}
+    </>
   );
 }
