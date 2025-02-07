@@ -15,8 +15,6 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
-import { Suspense } from 'react';
-import Loading from './loading';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -25,34 +23,223 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit }) {
+function Page({ index, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit, selectedTagsId, setSelectedTagsId }) {
 
   const [sortedEvents, setSortedEvents] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
   const loadedEventIdsRef = useRef(new Set());
+  const [filteredEvents, setfilteredEvents] = useState([]);
 
   console.log('sortedEvents в самом начале', sortedEvents);
   console.log('loadedEventIdsRef в самом начале', loadedEventIdsRef);
-
-
-  const getCategoryNameById = (id) => {
-    const categoryObj = categoriesID.find((cat) => cat.id === id);
-    return categoryObj ? categoryObj.category : null;
-  };
 
   const getCategoryIdByName = (name) => {
     const categoryObj = categoriesID.find((cat) => cat.category === name);
     return categoryObj ? categoryObj.id : null;
   };
 
+  const getCategoryNameById = (id) => {
+    const categoryObj = categoriesID.find((cat) => cat.id === id);
+    return categoryObj ? categoryObj.category : null;
+  };
+
+  // поиск по мероприятиям запросы
+  // const fetcherSearch = async (target) => {
+  //   try {
+  //     console.log('fetcher target', target);
+
+  //     const res = await fetch(`http://159.223.239.75:8005/api/search/?query=${target}&type=event`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error(`Ошибка: ${res.statusText}`);
+  //     }
+
+
+  //     const result = await res.json();
+  //     console.log('Task created с глобального поиска: ', result);
+
+  //     let eventsfromFetcher = [];
+
+  //     console.log('result', result);
+
+  //     if (result.events && Array.isArray(result.events)) {
+  //       console.log('result.events', result.events)
+  //       eventsfromFetcher = eventsfromFetcher.concat(result.events);
+  //     }
+
+  //     if (result.places && Array.isArray(result.places)) {
+  //       console.log('result.places', result.places)
+  //       eventsfromFetcher = eventsfromFetcher.concat(result.places);
+  //     }
+
+  //     console.log('eventsfrom Search', eventsfromFetcher)
+
+  //     return eventsfromFetcher;
+
+  //   } catch (error) {
+  //     console.log('Ошибка при выполнении задачи', error);
+  //   }
+  // };
+
+  // const {
+  //   data: dataEventSearch,
+  //   error: errorSearch,
+  //   isLoading: isLoadingsearch
+  // } = useSWR(
+  //   search ? `/api/search/?query=${search}&type=event` : null,
+  //   () => fetcherSearch(search),
+  // );
+
+  // console.log('dataEventSearch', dataEventSearch)
+
+  // запрос по категориям
+  // let today = dayjs().format('YYYY-MM-DD');
+  // let nextSixMonth = dayjs().add(12, 'month').format('YYYY-MM-DD');
+
+  // const fetcherForCategories = async (categories) => {
+
+  //   try {
+  //     const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         fields: [
+  //           'event_id',
+  //           'id',
+  //           'title',
+  //           'image',
+  //           'url',
+  //           'price',
+  //           'address',
+  //           'from_date',
+  //           'full_text',
+  //           'place_id',
+  //           'main_category_id',
+  //         ],
+  //         limit: limit,
+  //         page: index + 1,
+  //         category: categories,
+  //         // date_from: today,
+  //         // date_to: nextSixMonth,
+  //       }),
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error('Ошибка получения task_id: ', res.statusText);
+  //     };
+
+  //     const result = await res.json();
+
+  //     console.log('result для категорий', result);
+
+  //     let newEvents = [];
+
+  //     if (result.task_id) {
+  //       const taskId = result.task_id;
+
+  //       console.log('есть result.task_i')
+
+  //       const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+  //       try {
+  //         const statusResponse = await fetch(statusUrl, {
+  //           method: 'GET',
+  //           headers: {
+  //             'Authorization': 'Bearer zevgEv-vimned-ditva8',
+  //             'Content-Type': 'application/json',
+  //           },
+  //         });
+
+  //         if (!statusResponse.ok) {
+  //           throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
+  //         }
+
+  //         const statusResult = await statusResponse.json();
+  //         console.log('statusResult', statusResult);
+
+  //         if (Array.isArray(statusResult)) {
+  //           newEvents = statusResult;
+  //         } else if (statusResult.events && Array.isArray(statusResult.events)) {
+  //           newEvents = statusResult.events;
+  //         } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+  //           newEvents = statusResult.result.events;
+  //         } else {
+  //           console.log('Неизвестная структура данных');
+  //         }
+
+  //         console.log('newEvents', newEvents);
+
+  //         // if (newEvents.length < limit) {
+  //         //   setHasMore(false);
+  //         // }
+
+  //         return newEvents;
+
+  //       } catch (error) {
+  //         console.log(`Ошибка запроса: `, error);
+  //       }
+  //     } else {
+  //       console.log('Возвращаем result без task_id', result)
+
+  //       if (Array.isArray(result)) {
+  //         newEvents = result;
+  //       } else if (result.result && Array.isArray(result.result)) {
+  //         newEvents = result.result;
+  //       } else if (result.result.events && Array.isArray(result.result.events)) {
+  //         newEvents = result.result.events;
+  //       } else {
+  //         console.log('Неизвестная структура данных');
+  //       }
+
+  //       console.log('newEvents', newEvents);
+
+  //       // if (newEvents.length < limit) {
+  //       //   setHasMore(false);
+  //       // }
+  //       return newEvents;
+  //     }
+  //   } catch (error) {
+  //     console.log('Ошибка создания задачи', error);
+  //   }
+  // };
+
+  // const {
+  //   data: dataCategories,
+  //   error: errorCategories,
+  //   isLoading: isLoadingCategories
+  // } = useSWR(
+  //   selectedTagsId.length ? `/api/search/?categories=${selectedTagsId.join(',')}&page=${index}` : null, () =>
+  //   fetcherForCategories(selectedTagsId));
+
+  // useEffect(() => {
+  //   setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
+  // }, [selectedTags]);
+
+  // const { mutate } = useSWRConfig();
+
+  // useEffect(() => {
+  //   if (selectedTagsId.length) {
+  //     mutate(`/api/search/?categories=${selectedTagsId.join(',')}&page=${index}`);
+  //   }
+  // }, [selectedTagsId, mutate, index]);
+
+  // console.log("запрос по категориям", dataCategories);
+  // console.log('selectedTags', selectedTags);
+  // console.log('selectedTagsId', selectedTagsId);
+
   useEffect(() => {
     let eventsToSort = [...allEvents];
 
     allEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
-
-    console.log('allEvents', allEvents);
-    console.log('cache.size', cache.size);
-    console.log('cache', cache);
 
     if (cache && cache.size > 0) {
       console.log('берем данные из кэша');
@@ -89,53 +276,59 @@ function Page({ index, search, isLoading, startDate, endDate, selectedTags, cach
 
       setAllEvents(eventsToSort);
 
-      const filteredEvents = eventsToSort.filter((event) => {
-        const eventCategoryName = getCategoryNameById(event.main_category_id);
-        const matchesCategory = !category || eventCategoryName === category;
+      setfilteredEvents(eventsToSort.filter((event) => {
+          const eventCategoryName = getCategoryNameById(event.main_category_id);
+          const matchesCategory = !category || eventCategoryName === category;
 
-        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
-        const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
-          (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
+          const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
+          const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
+            (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
 
-        const matchesSearch = search
-          ? (
-            (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
-            (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
-            (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
-            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
-            (event.place_id && event.place_id.toString().includes(search)) ||
-            (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
-          )
-          : true;
+          const matchesSearch = search
+            ? (
+              (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
+              (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
+              (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
+              (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
+              (event.place_id && event.place_id.toString().includes(search)) ||
+              (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
+            )
+            : true;
 
-        const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
+          const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
 
-        return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-      });
+          return matchesCategory && isInDateRange && matchesSearch && matchesTags;
+        })
+      )
 
       const sorted = sortPrice
         ? filteredEvents.sort((a, b) => (sortPrice === 'asc' ? a.price - b.price : b.price - a.price))
         : filteredEvents;
 
+      setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
+
       console.log('sorted', sorted);
 
-      if (sorted.length === 0 || sorted.length % limit !== 0) {
+      if (sorted.length < limit || sorted.length % limit !== 0) {
         loadMoreEvents();
       }
+
       console.log('loadedEventIdsRef в самом конце', loadedEventIdsRef);
 
       setSortedEvents(sorted);
       console.log('sortedEvents', sortedEvents);
     };
 
-  }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
+  }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index, filteredEvents]);
 
-  if (!sortedEvents || sortedEvents.length === 0) {
+
+  // скелетон для cards
+  if (!sortedEvents || isLoading) {
     return (
       <div className="space-y-4">
 
         <div className="t-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center">
-          
+
           <section className="w-full">
             <div className="grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
               <div className="h-[396px] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
@@ -205,6 +398,8 @@ export default function Events() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTagsId, setSelectedTagsId] = useState([]);
+
   const [sortPrice, setSortPrice] = useState(null);
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
@@ -216,7 +411,7 @@ export default function Events() {
   const limit = 8;
 
   let today = dayjs().format('YYYY-MM-DD');
-  let nextSixMonth = dayjs().add(6, 'month').format('YYYY-MM-DD');
+  let nextSixMonth = dayjs().add(12, 'month').format('YYYY-MM-DD');
 
   const fetcher = async () => {
 
@@ -344,13 +539,8 @@ export default function Events() {
     setIndex(nextPage);
     console.log('дополнить loadMoreEvents после пагинации');
   };
-
-  console.log('cache', cache);
-
   return (
     <>
-      {/* <Suspense fallback={<Loading />}> */}
-
       <HeroSearch search={search} setSearch={setSearch} />
       <div className="mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center">
         <aside className="lg:w-[20%] w-full mb-3 mr-3 relative">
@@ -371,6 +561,8 @@ export default function Events() {
         </aside>
         <section className={`lg:w-[80%] w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <Page
+            selectedTagsId={selectedTagsId}
+            setSelectedTagsId={setSelectedTagsId}
             index={index}
             data={data}
             cache={cache}
@@ -397,7 +589,6 @@ export default function Events() {
           </div>
         </section>
       </div>
-      {/* </Suspense> */}
     </>
   );
 };

@@ -35,7 +35,6 @@ export default function EventPageClient({ id }) {
 
   const imageUrl = event?.image || '/img/cat.png';
   const processedImageUrl = convertImageUrlToJpeg(imageUrl);
-  console.log('processedImageUrl', imageUrl, processedImageUrl);
 
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
@@ -44,7 +43,12 @@ export default function EventPageClient({ id }) {
     navigator.clipboard.writeText(window.location.href).then(() => setCopied(true));
   };
 
-  console.log('id из пропсов', id.id);
+  console.log('id из пропсов id.id', id.id);
+  console.log('id из пропсов id', id);
+  const idNumber = parseInt(id.id);
+  console.log('idNumber', idNumber);
+
+
 
   const styleCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
   const styleNoCopied = 'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-[#F52D85] text-[#F52D85] transform transition-colors duration-300';
@@ -58,7 +62,6 @@ export default function EventPageClient({ id }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          // ids: [id],
           fields: [
             'event_id',
             'id',
@@ -105,14 +108,20 @@ export default function EventPageClient({ id }) {
             const statusResult = await statusResponse.json();
 
             if (statusResult && Array.isArray(statusResult)) {
-              console.log('statusResult на странице id', statusResult.result);
-              return statusResult;
+              console.log('statusResult на странице id c taskId', statusResult.result);
+              return statusResult[0];
             } else if (statusResult.result && Array.isArray(statusResult.result)) {
-              console.log('statusResult.result на странице id', statusResult.result);
-              return statusResult.result;
+
+              console.log('statusResult.result на странице id c taskId', statusResult.result);
+              return statusResult.result[0];
             } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-              console.log('result.result.events на странице id', statusResult.result.events);
+
+              console.log('result.result.events на странице id c taskId', statusResult.result.events);
               return statusResult.result.events[0];
+            } else if (statusResult.events && Array.isArray(statusResult.events)) {
+
+              console.log('result.events на странице id c taskId', statusResult.events);
+              return statusResult.events[0];
             } else {
               console.error('Неизвестная структура данных:', statusResult);
             };
@@ -122,13 +131,16 @@ export default function EventPageClient({ id }) {
           console.log('Ошибка при запросе', error);
         }
       } else {
+
         if (result && Array.isArray(result)) {
           console.log('result на странице id', result.result);
-          return result;
+          return result[0];
         } else if (result.result && Array.isArray(result.result)) {
+
           console.log('result.result на странице id', result.result);
-          return result.result;
+          return result.result[0];
         } else if (result.result.events && Array.isArray(result.result.events)) {
+
           console.log('result.result.events на странице id', result.result.events);
           return result.result.events[0];
         } else {
@@ -146,30 +158,33 @@ export default function EventPageClient({ id }) {
     error: dataError,
     isLoading: dataIsLoading
   } = useSWR(
-    id ? `/api/data?id=${id.id}` : null,
-    () => fetchIdEvent(id.id), {
+    idNumber ? `/api/data?id=${idNumber}` : null,
+    () => fetchIdEvent(idNumber), {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   }
   );
 
-  console.log('findDataById id.id', findDataById(parseInt(id.id)));
+  console.log('findDataById id.id', findDataById(idNumber));
+  const cachedEvent = findDataById(idNumber);
 
   useEffect(() => {
     if (dataEvent) {
       console.log('Берем данные с сервера');
       setEvent(dataEvent);
-    } else if (!dataIsLoading && !dataError && cache.size > 0) {
+    } else if (!dataIsLoading && !dataError && cache?.size > 0 && cachedEvent) {
 
-      const cachedEvent = findDataById(parseInt(id.id));
-      console.log('cachedEvent', cachedEvent);
-      if (cachedEvent) {
-        console.log('Берем данные из кэша');
+      if (Array.isArray(cachedEvent)) {
+        setEvent(cachedEvent[0]);
+      } else {
         setEvent(cachedEvent);
       }
+      console.log('Берем данные из кэша');
     }
 
-  }, [dataEvent, dataIsLoading, dataError, cache, id.id]);
+  }, [dataEvent, dataIsLoading, dataError, cache, idNumber, cachedEvent]);
+
+  console.log('event', event);
 
 
   if (dataIsLoading) {
@@ -249,7 +264,7 @@ export default function EventPageClient({ id }) {
                   <p className="text-[#777]">Место: </p>
                   {event?.place_id ? (
                     <Link href={`/places/${event.place_id}`}>
-                      <p className="font-roboto text-[#333] hover:text-[#F52D85] ml-[26px] cursor-pointer">{event?.address}</p>
+                      <p className="font-roboto text-[#333] hover:text-[#F52D85] ml-[26px] cursor-pointer">{event.address}</p>
                     </Link>
                   ) : (
                     <p className="font-roboto text-[#333] ml-[25px]">{event?.address}</p>
@@ -264,7 +279,7 @@ export default function EventPageClient({ id }) {
                   {copied ? <BsCheckAll size={18} className="md:mr-2 mr-0" /> : <BsCopy size={18} className="md:mr-2 mr-0" />}
                   {copied ? <p className='md:block hidden'>Ссылка скопирована</p> : <p className='md:block hidden'>Скопировать ссылку</p>}
                 </button>
-                {event ? (<Link
+                {event?.url ? (<Link
                   href={event.url}
                   target="_blank"
                   rel="noopener noreferrer"

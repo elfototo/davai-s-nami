@@ -12,8 +12,6 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
-import { Suspense } from 'react';
-import Loading from './loading';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -31,6 +29,7 @@ export default function eventPlace({ params }) {
 
     const { id } = params;
     console.log('id', typeof parseInt(id));
+    const idNumber = parseInt(id);
 
     const fetchPlaceById = async (id) => {
         try {
@@ -85,13 +84,13 @@ export default function eventPlace({ params }) {
 
                         if (statusResult && Array.isArray(statusResult)) {
                             console.log('statusResult на странице id', statusResult);
-                            return statusResult;
+                            return statusResult[0];
                         } else if (statusResult.result && Array.isArray(statusResult.result)) {
                             console.log('statusResult.result на странице id', statusResult.result);
-                            return statusResult.result;
+                            return statusResult.result[0];
                         } else if (statusResult.result.places && Array.isArray(statusResult.result.places)) {
                             console.log('result.result.places на странице id', statusResult.result.places);
-                            setPlace(statusResult.result.places[0]);
+                            // setPlace(statusResult.result.places[0]);
                             return statusResult.result.places[0];
                         } else {
                             console.error('Неизвестная структура данных:', statusResult);
@@ -104,14 +103,21 @@ export default function eventPlace({ params }) {
             } else {
                 if (result && Array.isArray(result)) {
                     console.log('result на странице id', result);
-                    return result;
+                    return result[0];
+
                 } else if (result.result && Array.isArray(result.result)) {
                     console.log('result.result на странице id', result.result);
-                    return result.result;
+                    return result.result[0];
+
                 } else if (result.result.places && Array.isArray(result.result.places)) {
-                    console.log('result.result.places на странице id', result.result.places);
-                    setPlace(result.result.places[0]);
+                    console.log('result.result на странице id', result.result.places);
+                    // setPlace(result.result.places[0]);
                     return result.result.places[0];
+
+                } else if (result.places && Array.isArray(result.places)) {
+                    console.log('result.result.places на странице id', result.places);
+                    // setPlace(result.places[0]);
+                    return result.places[0];
                 } else {
                     console.error('Неизвестная структура данных:', result);
                 }
@@ -127,11 +133,11 @@ export default function eventPlace({ params }) {
         error: errorPlaceByID,
         isLoading: isLoadingById
     } = useSWR(
-        id ? `/api/data?place_id=${parseInt(id)}` : null,
-        () => fetchPlaceById(parseInt(id))
+        idNumber ? `/api/data?place_id=${idNumber}` : null,
+        () => fetchPlaceById(idNumber)
     );
 
-    console.log('dataPlaceById', dataPlaceById)
+    console.log('dataPlaceById место из сервера в SWR', dataPlaceById);
 
     // запрос мероприятий в этом места
     const fetchEventsInPlaceByID = async (id) => {
@@ -143,7 +149,7 @@ export default function eventPlace({ params }) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    place: [parseInt(id)],
+                    place: [id],
                     fields: [
                         'event_id',
                         'id',
@@ -191,7 +197,7 @@ export default function eventPlace({ params }) {
                         const statusResult = await statusResponse.json();
 
                         if (statusResult && Array.isArray(statusResult)) {
-                            console.log('statusResult на странице id для events', statusResult.result);
+                            console.log('statusResult на странице id для events', statusResult);
                             return statusResult;
                         } else if (statusResult.result && Array.isArray(statusResult.result)) {
                             console.log('statusResult.result на странице id для events', statusResult.result);
@@ -200,6 +206,9 @@ export default function eventPlace({ params }) {
                             console.log('result.result.events на странице id для events', statusResult.result.events);
                             // setEventsInPlace(statusResult.result.events)
                             return statusResult.result.events;
+                        } else if (statusResult.events && Array.isArray(statusResult.result.events)) {
+                            console.log('result.result.events на странице id для events', statusResult.events);
+                            return statusResult.events;
                         } else {
                             console.error('Неизвестная структура данных для events:', statusResult);
                         };
@@ -217,8 +226,10 @@ export default function eventPlace({ params }) {
                     return result.result;
                 } else if (result.result.events && Array.isArray(result.result.events)) {
                     console.log('result.result.events на странице id для events', result.result.events);
-                    // setEventsInPlace(result.result.events)
                     return result.result.events;
+                } else if (result.events && Array.isArray(result.events)) {
+                    console.log('result.result.events на странице id для events', result.events);
+                    return result.events;
                 } else {
                     console.error('Неизвестная структура данных для events:', result);
                 }
@@ -234,24 +245,28 @@ export default function eventPlace({ params }) {
         error: errorEventsPlaceId,
         isLoading: isLoadingEventsPlaceId
     } = useSWR(
-        id ? `/api/data?event_from_place=${parseInt(id)}` : null,
-        () => fetchEventsInPlaceByID(parseInt(id)), {
+        idNumber ? `/api/data?event_from_place=${idNumber}` : null,
+        () => fetchEventsInPlaceByID(idNumber), {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         revalidateIfStale: true,
     }
     );
 
-    console.log('eventsInPlace', eventsInPlace);
-    console.log('dataEventsByPlaceId', dataEventsByPlaceId);
-
-    console.log('place', place);
+    console.log('dataEventsByPlaceId события в этом месте в SWR', dataEventsByPlaceId);
 
     useEffect(() => {
+        if (dataPlaceById && !isLoadingById) {
+            setPlace(dataPlaceById);
+            console.log('place в useEffect', place);
+        }
 
         if (!isLoadingEventsPlaceId && dataEventsByPlaceId) {
             setEventsInPlace(dataEventsByPlaceId);
-        };
+            console.log('массив событий в useEffect', eventsInPlace);
+        }
+
+
 
         // if (dataPlaceById) {
         //     console.log('Берем данные с сервера');
@@ -265,7 +280,7 @@ export default function eventPlace({ params }) {
         //     }
         // };
 
-    }, [dataPlaceById, isLoadingById, errorPlaceByID, cache, dataEventsByPlaceId, isLoadingEventsPlaceId, place, eventsInPlace]);
+    }, [dataPlaceById, isLoadingById,  dataEventsByPlaceId, isLoadingEventsPlaceId, place, eventsInPlace]);
 
 
     if (isLoadingById || isLoadingEventsPlaceId || !place) {
@@ -281,7 +296,7 @@ export default function eventPlace({ params }) {
     }
 
     return (
-        <Suspense fallback={<Loading />}>
+        
             <div className='max-w-custom-container mx-auto'>
                 <div className='flex relative'>
 
@@ -350,6 +365,6 @@ export default function eventPlace({ params }) {
                     </div>
                 </div>
             </div>
-        </Suspense>
+        
     )
 };
