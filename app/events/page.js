@@ -23,9 +23,11 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit, selectedTagsId, setSelectedTagsId }) {
+function Page({ index, setIndex, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit, selectedTagsId, setSelectedTagsId, sortedEvents, setSortedEvents }) {
 
-  const [sortedEvents, setSortedEvents] = useState([]);
+  // const [sortedEvents, setSortedEvents] = useState([]);
+  const [sortedEventsByCategories, setSortedEventsByCategories] = useState([]);
+
   const [allEvents, setAllEvents] = useState([]);
   const loadedEventIdsRef = useRef(new Set());
   const [filteredEvents, setfilteredEvents] = useState([]);
@@ -99,142 +101,144 @@ function Page({ index, search, isLoading, startDate, endDate, selectedTags, cach
   // console.log('dataEventSearch', dataEventSearch)
 
   // запрос по категориям
-  // let today = dayjs().format('YYYY-MM-DD');
-  // let nextSixMonth = dayjs().add(12, 'month').format('YYYY-MM-DD');
 
-  // const fetcherForCategories = async (categories) => {
+  const fetcherForCategories = async (categories) => {
 
-  //   try {
-  //     const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         fields: [
-  //           'event_id',
-  //           'id',
-  //           'title',
-  //           'image',
-  //           'url',
-  //           'price',
-  //           'address',
-  //           'from_date',
-  //           'full_text',
-  //           'place_id',
-  //           'main_category_id',
-  //         ],
-  //         limit: limit,
-  //         page: index + 1,
-  //         category: categories,
-  //         // date_from: today,
-  //         // date_to: nextSixMonth,
-  //       }),
-  //     });
+    try {
+      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer zevgEv-vimned-ditva8',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fields: [
+            'event_id',
+            'id',
+            'title',
+            'image',
+            'url',
+            'price',
+            'address',
+            'from_date',
+            'full_text',
+            'place_id',
+            'main_category_id',
+          ],
+          // limit: limit,
+          // page: index,
+          category: categories,
+        }),
+      });
 
-  //     if (!res.ok) {
-  //       throw new Error('Ошибка получения task_id: ', res.statusText);
-  //     };
+      if (!res.ok) {
+        throw new Error('Ошибка получения task_id: ', res.statusText);
+      };
 
-  //     const result = await res.json();
+      const result = await res.json();
 
-  //     console.log('result для категорий', result);
+      console.log('result для категорий', result);
 
-  //     let newEvents = [];
+      let newEvents = [];
 
-  //     if (result.task_id) {
-  //       const taskId = result.task_id;
+      if (result.task_id) {
+        const taskId = result.task_id;
 
-  //       console.log('есть result.task_i')
+        console.log('есть result.task_i')
 
-  //       const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
 
-  //       try {
-  //         const statusResponse = await fetch(statusUrl, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Authorization': 'Bearer zevgEv-vimned-ditva8',
-  //             'Content-Type': 'application/json',
-  //           },
-  //         });
+        try {
+          const statusResponse = await fetch(statusUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer zevgEv-vimned-ditva8',
+              'Content-Type': 'application/json',
+            },
+          });
 
-  //         if (!statusResponse.ok) {
-  //           throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
-  //         }
+          if (!statusResponse.ok) {
+            throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
+          }
 
-  //         const statusResult = await statusResponse.json();
-  //         console.log('statusResult', statusResult);
+          const statusResult = await statusResponse.json();
+          console.log('statusResult', statusResult);
 
-  //         if (Array.isArray(statusResult)) {
-  //           newEvents = statusResult;
-  //         } else if (statusResult.events && Array.isArray(statusResult.events)) {
-  //           newEvents = statusResult.events;
-  //         } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-  //           newEvents = statusResult.result.events;
-  //         } else {
-  //           console.log('Неизвестная структура данных');
-  //         }
+          if (Array.isArray(statusResult)) {
+            newEvents = statusResult;
+          } else if (statusResult.events && Array.isArray(statusResult.events)) {
+            newEvents = statusResult.events;
+          } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+            newEvents = statusResult.result.events;
+          } else {
+            console.log('Неизвестная структура данных');
+          }
 
-  //         console.log('newEvents', newEvents);
+          console.log('newEvents', newEvents);
 
-  //         // if (newEvents.length < limit) {
-  //         //   setHasMore(false);
-  //         // }
+          // if (newEvents.length < limit) {
+          //   setHasMore(false);
+          // }
 
-  //         return newEvents;
+          return newEvents;
 
-  //       } catch (error) {
-  //         console.log(`Ошибка запроса: `, error);
-  //       }
-  //     } else {
-  //       console.log('Возвращаем result без task_id', result)
+        } catch (error) {
+          console.log(`Ошибка запроса: `, error);
+        }
+      } else {
+        console.log('Возвращаем result без task_id', result)
 
-  //       if (Array.isArray(result)) {
-  //         newEvents = result;
-  //       } else if (result.result && Array.isArray(result.result)) {
-  //         newEvents = result.result;
-  //       } else if (result.result.events && Array.isArray(result.result.events)) {
-  //         newEvents = result.result.events;
-  //       } else {
-  //         console.log('Неизвестная структура данных');
-  //       }
+        if (Array.isArray(result)) {
+          newEvents = result;
+        } else if (result.result && Array.isArray(result.result)) {
+          newEvents = result.result;
+        } else if (result.result.events && Array.isArray(result.result.events)) {
+          newEvents = result.result.events;
+        } else {
+          console.log('Неизвестная структура данных');
+        }
 
-  //       console.log('newEvents', newEvents);
+        console.log('newEvents', newEvents);
 
-  //       // if (newEvents.length < limit) {
-  //       //   setHasMore(false);
-  //       // }
-  //       return newEvents;
-  //     }
-  //   } catch (error) {
-  //     console.log('Ошибка создания задачи', error);
-  //   }
-  // };
+        // if (newEvents.length < limit) {
+        //   setHasMore(false);
+        // }
+        return newEvents;
+      }
+    } catch (error) {
+      console.log('Ошибка создания задачи', error);
+    }
+  };
 
-  // const {
-  //   data: dataCategories,
-  //   error: errorCategories,
-  //   isLoading: isLoadingCategories
-  // } = useSWR(
-  //   selectedTagsId.length ? `/api/search/?categories=${selectedTagsId.join(',')}&page=${index}` : null, () =>
-  //   fetcherForCategories(selectedTagsId));
+  const {
+    data: dataCategories,
+    error: errorCategories,
+    isLoading: isLoadingCategories
+  } = useSWR(
+    selectedTagsId.length ? `/api/search/?categories=${selectedTagsId.join(',')}` : null, () =>
+    fetcherForCategories(selectedTagsId));
 
-  // useEffect(() => {
-  //   setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
-  // }, [selectedTags]);
+  useEffect(() => {
+    if (selectedTags.length === 0) {
+      setSortedEventsByCategories([]);
+    }
+  }, [selectedTags]);
 
-  // const { mutate } = useSWRConfig();
+  useEffect(() => {
+    setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
+    console.log('selectedTags to tags id');
 
-  // useEffect(() => {
-  //   if (selectedTagsId.length) {
-  //     mutate(`/api/search/?categories=${selectedTagsId.join(',')}&page=${index}`);
-  //   }
-  // }, [selectedTagsId, mutate, index]);
+  }, [selectedTags]);
 
-  // console.log("запрос по категориям", dataCategories);
-  // console.log('selectedTags', selectedTags);
-  // console.log('selectedTagsId', selectedTagsId);
+  useEffect(() => {
+    if (dataCategories && selectedTags.length > 0) {
+      setSortedEventsByCategories(dataCategories);
+    }
+  }, [dataCategories, selectedTags]);
+
+  console.log("запрос по категориям", dataCategories);
+  console.log('selectedTags', selectedTags);
+  console.log('selectedTagsId', selectedTagsId);
 
   useEffect(() => {
     let eventsToSort = [...allEvents];
@@ -277,28 +281,30 @@ function Page({ index, search, isLoading, startDate, endDate, selectedTags, cach
       setAllEvents(eventsToSort);
 
       setfilteredEvents(eventsToSort.filter((event) => {
-          const eventCategoryName = getCategoryNameById(event.main_category_id);
-          const matchesCategory = !category || eventCategoryName === category;
+        // const eventCategoryName = getCategoryNameById(event.main_category_id);
+        // const matchesCategory = !category || eventCategoryName === category;
 
-          const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
-          const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
-            (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
+        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
+        const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
+          (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
 
-          const matchesSearch = search
-            ? (
-              (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
-              (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
-              (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
-              (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
-              (event.place_id && event.place_id.toString().includes(search)) ||
-              (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
-            )
-            : true;
+        const matchesSearch = search
+          ? (
+            (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
+            (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
+            (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
+            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
+            (event.place_id && event.place_id.toString().includes(search)) ||
+            (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
+          )
+          : true;
 
-          const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
+        // const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
 
-          return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-        })
+        return isInDateRange && matchesSearch
+
+        // return matchesCategory && isInDateRange && matchesSearch && matchesTags;
+      })
       )
 
       const sorted = sortPrice
@@ -309,9 +315,24 @@ function Page({ index, search, isLoading, startDate, endDate, selectedTags, cach
 
       console.log('sorted', sorted);
 
-      if (sorted.length < limit || sorted.length % limit !== 0) {
+      // if (sorted.length < limit || sorted.length % limit !== 0) {
+      //   loadMoreEvents();
+      // }
+      if (sorted.length < limit) {
         loadMoreEvents();
       }
+
+      const loadedCount = sorted.length;
+      const indexCount = Math.floor(loadedCount / limit);
+      console.log('indexCount', indexCount);
+      console.log('index', index);
+
+
+      if (index !== indexCount) {
+        setIndex(indexCount);
+      }
+
+
 
       console.log('loadedEventIdsRef в самом конце', loadedEventIdsRef);
 
@@ -319,11 +340,11 @@ function Page({ index, search, isLoading, startDate, endDate, selectedTags, cach
       console.log('sortedEvents', sortedEvents);
     };
 
-  }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index, filteredEvents]);
+  }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
 
 
   // скелетон для cards
-  if (!sortedEvents || isLoading) {
+  if (isLoading) {
     return (
       <div className="space-y-4">
 
@@ -361,8 +382,24 @@ function Page({ index, search, isLoading, startDate, endDate, selectedTags, cach
   return (
     <>
       <div className="grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
-        {
-          sortedEvents.length > 0 ? (
+        {sortedEventsByCategories?.length > 0 && selectedTags ? (
+          sortedEventsByCategories.map((card) => (
+            <Card
+              type="mini"
+              category={card.category}
+              main_category_id={card.main_category_id}
+              price={card.price}
+              title={card.title}
+              from_date={card.from_date}
+              address={card.address}
+              key={card.event_id}
+              id={card.id}
+              data={card}
+              image={card.image}
+            />
+          ))
+        ) :
+          sortedEvents?.length > 0 ? (
             sortedEvents.map((card) => (
               <Card
                 type="mini"
@@ -394,11 +431,14 @@ function Page({ index, search, isLoading, startDate, endDate, selectedTags, cach
 export default function Events() {
 
   const { cache, findDataById } = useEvents();
+  const loadedEventIdsRef = useRef(new Set());
+
   const [search, setSearch] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedTagsId, setSelectedTagsId] = useState([]);
+  const [sortedEvents, setSortedEvents] = useState([]);
 
   const [sortPrice, setSortPrice] = useState(null);
   const [category, setCategory] = useState('');
@@ -408,7 +448,7 @@ export default function Events() {
   const [index, setIndex] = useState(0);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const limit = 8;
+  const limit = 4;
 
   let today = dayjs().format('YYYY-MM-DD');
   let nextSixMonth = dayjs().add(12, 'month').format('YYYY-MM-DD');
@@ -533,8 +573,22 @@ export default function Events() {
   if (error) console.log('ОШИБКА', error.info);
   console.log('Загруженные данные: ', data);
 
+  //   const loadMoreEvents = () => {
+  //     if (isLoading || !hasMore) return;
+
+  //     const loadedCount = sortedEvents.length; // Количество загруженных событий
+  //     const currentPage = Math.floor(loadedCount / limit); // Текущая страница
+  //     const nextPage = currentPage + 1; // Следующая страница
+
+  //     if (nextPage > index) {
+  //         setIndex(nextPage);
+  //         console.log('Обновленный индекс:', nextPage);
+  //     }
+  // };
+
   const loadMoreEvents = () => {
     if (isLoading || !hasMore) return;
+
     const nextPage = index + 1;
     setIndex(nextPage);
     console.log('дополнить loadMoreEvents после пагинации');
@@ -561,6 +615,7 @@ export default function Events() {
         </aside>
         <section className={`lg:w-[80%] w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <Page
+            setIndex={setIndex}
             selectedTagsId={selectedTagsId}
             setSelectedTagsId={setSelectedTagsId}
             index={index}
@@ -582,7 +637,10 @@ export default function Events() {
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             sortPrice={sortPrice}
-            category={category} />
+            category={category}
+            sortedEvents={sortedEvents}
+            setSortedEvents={setSortedEvents}
+          />
 
           <div className='mx-auto flex justify-center gap-6 mt-10'>
             {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button>}

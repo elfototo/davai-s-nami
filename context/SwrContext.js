@@ -41,21 +41,40 @@ export const EventsProvider = ({ children }) => {
         return null;
     };
 
+    const findDataByIdPlace = (place_id) => {
+        const keys = Array.from(cache.keys());
+        let results = [];
+
+        for (const key of keys) {
+            const cachedData = cache.get(key);
+            if (cachedData && Array.isArray(cachedData.data)) {
+                const matchedItems = cachedData.data.filter((item) => item.place_id === place_id);
+                results = results.concat(matchedItems);
+            }
+        }
+        const uniqueResults = results.filter((event, index, self) =>
+            index === self.findIndex((e) => e.id === event.id)
+        );
+
+        return results.length > 0 ? uniqueResults : null;
+    };
+
     // Функция преобразования ссылок https://ucare.timepad.ru 
     const convertImageUrlToJpeg = (url) => {
         if (url && url.startsWith('https://ucare.timepad.ru')) {
-          if (!url.includes('-/format/jpeg/')) {
-            return `${url}-/format/jpeg/` 
-          }
+            if (!url.includes('-/format/jpeg/')) {
+                return `${url}-/format/jpeg/`
+            }
         }
         return url;
-      };
+    };
 
     return (
         <EventsContext.Provider
             value={{
                 cache,
                 findDataById,
+                findDataByIdPlace,
                 convertImageUrlToJpeg
             }}
         >

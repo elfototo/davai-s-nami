@@ -132,10 +132,10 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                     <div className="mb-5">
                         <div className='flex justify-between items-baseline  mb-3'>
                             <h3 className="text-lg">Когда</h3>
-                            <Link href='/events'>
-                                <button className='underline text-blue-600' onClick={cancelFilter}>
+                            <Link href="/events">
+                                <div className='underline text-blue-600' onClick={cancelFilter}>
                                     Отмена
-                                </button>
+                                </div>
                             </Link>
                         </div>
 
