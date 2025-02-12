@@ -23,328 +23,12 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, setIndex, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit, selectedTagsId, setSelectedTagsId, sortedEvents, setSortedEvents }) {
+function Page({ index, setIndex, dataEvents, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit, selectedTagsId, setSelectedTagsId, sortedEvents, setSortedEvents, isLoadingEvents }) {
 
-  // const [sortedEvents, setSortedEvents] = useState([]);
-  const [sortedEventsByCategories, setSortedEventsByCategories] = useState([]);
-
-  const [allEvents, setAllEvents] = useState([]);
-  const loadedEventIdsRef = useRef(new Set());
-  const [filteredEvents, setfilteredEvents] = useState([]);
-
-  console.log('sortedEvents в самом начале', sortedEvents);
-  console.log('loadedEventIdsRef в самом начале', loadedEventIdsRef);
-
-  const getCategoryIdByName = (name) => {
-    const categoryObj = categoriesID.find((cat) => cat.category === name);
-    return categoryObj ? categoryObj.id : null;
-  };
-
-  const getCategoryNameById = (id) => {
-    const categoryObj = categoriesID.find((cat) => cat.id === id);
-    return categoryObj ? categoryObj.category : null;
-  };
-
-  // поиск по мероприятиям запросы
-  // const fetcherSearch = async (target) => {
-  //   try {
-  //     console.log('fetcher target', target);
-
-  //     const res = await fetch(`http://159.223.239.75:8005/api/search/?query=${target}&type=event`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error(`Ошибка: ${res.statusText}`);
-  //     }
-
-
-  //     const result = await res.json();
-  //     console.log('Task created с глобального поиска: ', result);
-
-  //     let eventsfromFetcher = [];
-
-  //     console.log('result', result);
-
-  //     if (result.events && Array.isArray(result.events)) {
-  //       console.log('result.events', result.events)
-  //       eventsfromFetcher = eventsfromFetcher.concat(result.events);
-  //     }
-
-  //     if (result.places && Array.isArray(result.places)) {
-  //       console.log('result.places', result.places)
-  //       eventsfromFetcher = eventsfromFetcher.concat(result.places);
-  //     }
-
-  //     console.log('eventsfrom Search', eventsfromFetcher)
-
-  //     return eventsfromFetcher;
-
-  //   } catch (error) {
-  //     console.log('Ошибка при выполнении задачи', error);
-  //   }
-  // };
-
-  // const {
-  //   data: dataEventSearch,
-  //   error: errorSearch,
-  //   isLoading: isLoadingsearch
-  // } = useSWR(
-  //   search ? `/api/search/?query=${search}&type=event` : null,
-  //   () => fetcherSearch(search),
-  // );
-
-  // console.log('dataEventSearch', dataEventSearch)
-
-  // запрос по категориям
-
-  const fetcherForCategories = async (categories) => {
-
-    try {
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fields: [
-            'event_id',
-            'id',
-            'title',
-            'image',
-            'url',
-            'price',
-            'address',
-            'from_date',
-            'full_text',
-            'place_id',
-            'main_category_id',
-          ],
-          // limit: limit,
-          // page: index,
-          category: categories,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error('Ошибка получения task_id: ', res.statusText);
-      };
-
-      const result = await res.json();
-
-      console.log('result для категорий', result);
-
-      let newEvents = [];
-
-      if (result.task_id) {
-        const taskId = result.task_id;
-
-        console.log('есть result.task_i')
-
-        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-        try {
-          const statusResponse = await fetch(statusUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': 'Bearer zevgEv-vimned-ditva8',
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (!statusResponse.ok) {
-            throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
-          }
-
-          const statusResult = await statusResponse.json();
-          console.log('statusResult', statusResult);
-
-          if (Array.isArray(statusResult)) {
-            newEvents = statusResult;
-          } else if (statusResult.events && Array.isArray(statusResult.events)) {
-            newEvents = statusResult.events;
-          } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-            newEvents = statusResult.result.events;
-          } else {
-            console.log('Неизвестная структура данных');
-          }
-
-          console.log('newEvents', newEvents);
-
-          // if (newEvents.length < limit) {
-          //   setHasMore(false);
-          // }
-
-          return newEvents;
-
-        } catch (error) {
-          console.log(`Ошибка запроса: `, error);
-        }
-      } else {
-        console.log('Возвращаем result без task_id', result)
-
-        if (Array.isArray(result)) {
-          newEvents = result;
-        } else if (result.result && Array.isArray(result.result)) {
-          newEvents = result.result;
-        } else if (result.result.events && Array.isArray(result.result.events)) {
-          newEvents = result.result.events;
-        } else {
-          console.log('Неизвестная структура данных');
-        }
-
-        console.log('newEvents', newEvents);
-
-        // if (newEvents.length < limit) {
-        //   setHasMore(false);
-        // }
-        return newEvents;
-      }
-    } catch (error) {
-      console.log('Ошибка создания задачи', error);
-    }
-  };
-
-  const {
-    data: dataCategories,
-    error: errorCategories,
-    isLoading: isLoadingCategories
-  } = useSWR(
-    selectedTagsId.length ? `/api/search/?categories=${selectedTagsId.join(',')}` : null, () =>
-    fetcherForCategories(selectedTagsId));
-
-  useEffect(() => {
-    if (selectedTags.length === 0) {
-      setSortedEventsByCategories([]);
-    }
-  }, [selectedTags]);
-
-  useEffect(() => {
-    setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
-    console.log('selectedTags to tags id');
-
-  }, [selectedTags]);
-
-  useEffect(() => {
-    if (dataCategories && selectedTags.length > 0) {
-      setSortedEventsByCategories(dataCategories);
-    }
-  }, [dataCategories, selectedTags]);
-
-  console.log("запрос по категориям", dataCategories);
-  console.log('selectedTags', selectedTags);
-  console.log('selectedTagsId', selectedTagsId);
-
-  useEffect(() => {
-    let eventsToSort = [...allEvents];
-
-    allEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
-
-    if (cache && cache.size > 0) {
-      console.log('берем данные из кэша');
-
-      for (let i = 0; i < cache.size; i++) {
-
-        const cachedData = cache.get(`/api/data?page=${i}`)?.data;
-        console.log('cachedData', cachedData);
-
-        if (Array.isArray(cachedData)) {
-
-          cachedData.forEach(event => {
-
-            if (!loadedEventIdsRef.current.has(event.id)) {
-              loadedEventIdsRef.current.add(event.id);
-              eventsToSort.push(event);
-            };
-          });
-        }
-      }
-
-    } else if (data && data.length > 0) {
-      console.log('Берем данные с сервера');
-
-      data.forEach(event => {
-        if (!loadedEventIdsRef.current.has(event.id)) {
-          loadedEventIdsRef.current.add(event.id);
-          eventsToSort.push(event);
-        }
-      });
-    }
-
-    if (eventsToSort.length > 0) {
-
-      setAllEvents(eventsToSort);
-
-      setfilteredEvents(eventsToSort.filter((event) => {
-        // const eventCategoryName = getCategoryNameById(event.main_category_id);
-        // const matchesCategory = !category || eventCategoryName === category;
-
-        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
-        const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
-          (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
-
-        const matchesSearch = search
-          ? (
-            (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
-            (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
-            (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
-            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
-            (event.place_id && event.place_id.toString().includes(search)) ||
-            (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
-          )
-          : true;
-
-        // const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
-
-        return isInDateRange && matchesSearch
-
-        // return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-      })
-      )
-
-      const sorted = sortPrice
-        ? filteredEvents.sort((a, b) => (sortPrice === 'asc' ? a.price - b.price : b.price - a.price))
-        : filteredEvents;
-
-      setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
-
-      console.log('sorted', sorted);
-
-      // if (sorted.length < limit || sorted.length % limit !== 0) {
-      //   loadMoreEvents();
-      // }
-      if (sorted.length < limit) {
-        loadMoreEvents();
-      }
-
-      const loadedCount = sorted.length;
-      const indexCount = Math.floor(loadedCount / limit);
-      console.log('indexCount', indexCount);
-      console.log('index', index);
-
-
-      if (index !== indexCount) {
-        setIndex(indexCount);
-      }
-
-
-
-      console.log('loadedEventIdsRef в самом конце', loadedEventIdsRef);
-
-      setSortedEvents(sorted);
-      console.log('sortedEvents', sortedEvents);
-    };
-
-  }, [category, search, sortPrice, startDate, endDate, selectedTags, data, index]);
 
 
   // скелетон для cards
-  if (isLoading) {
+  if (!sortedEvents) {
     return (
       <div className="space-y-4">
 
@@ -382,23 +66,7 @@ function Page({ index, setIndex, search, isLoading, startDate, endDate, selected
   return (
     <>
       <div className="grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto">
-        {sortedEventsByCategories?.length > 0 && selectedTags ? (
-          sortedEventsByCategories.map((card) => (
-            <Card
-              type="mini"
-              category={card.category}
-              main_category_id={card.main_category_id}
-              price={card.price}
-              title={card.title}
-              from_date={card.from_date}
-              address={card.address}
-              key={card.event_id}
-              id={card.id}
-              data={card}
-              image={card.image}
-            />
-          ))
-        ) :
+        {
           sortedEvents?.length > 0 ? (
             sortedEvents.map((card) => (
               <Card
@@ -427,7 +95,6 @@ function Page({ index, setIndex, search, isLoading, startDate, endDate, selected
   )
 }
 
-
 export default function Events() {
 
   const { cache, findDataById } = useEvents();
@@ -444,155 +111,335 @@ export default function Events() {
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-
   const [index, setIndex] = useState(0);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
   const limit = 4;
 
-  let today = dayjs().format('YYYY-MM-DD');
-  let nextSixMonth = dayjs().add(12, 'month').format('YYYY-MM-DD');
+  const dateRange = {
+    date_from: startDate,
+    date_to: endDate,
+  }
 
-  const fetcher = async () => {
+  const API_URL = 'http://159.223.239.75:8005/api/get_valid_events/';
+  const SEARCH_URL = 'http://159.223.239.75:8005/api/search/';
+  const API_HEADERS = {
+    'Authorization': 'Bearer zevgEv-vimned-ditva8',
+    'Content-Type': 'application/json',
+  };
 
-    try {
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          date_from: today,
-          date_to: nextSixMonth,
-          fields: [
-            'event_id',
-            'id',
-            'title',
-            'image',
-            'url',
-            'price',
-            'address',
-            'from_date',
-            'full_text',
-            'place_id',
-            'main_category_id',
-          ],
-          page: index,
-          limit: limit,
-        }),
-      });
+  const MIN_EVENTS = 8;
 
-      if (!res.ok) {
-        throw new Error('Ошибка получения task_id: ', res.statusText);
-      };
+  const fetchEvents = async ( categories, dateRange, search ) => {
 
-      const result = await res.json();
+    let events = [];
+    console.log('Проверка аргументов: categories', categories);
+    console.log('Проверка аргументов: dateRange', dateRange);
+    console.log('Проверка аргументов: search', search);
 
-      console.log('result для пагинации', result);
 
-      let newEvents = [];
+    if (search) {
+      const searchParams = new URLSearchParams({ query: search, type: 'event' });
+      try {
+        const res = await fetch(`${SEARCH_URL}?${searchParams}`, {
+          method: 'GET',
+          headers: API_HEADERS
+        });
 
-      if (result.task_id) {
-        const taskId = result.task_id;
+        if (!res.ok) throw new Error('search: ошибка поиска');
 
-        console.log('есть result.task_i')
+        const result = await res.json();
 
-        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+        if (result && Array.isArray(result)) {
+          events = result;
+          console.log('search: структура result', events);
 
-        try {
-          const statusResponse = await fetch(statusUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': 'Bearer zevgEv-vimned-ditva8',
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (!statusResponse.ok) {
-            throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
-          }
-
-          const statusResult = await statusResponse.json();
-          console.log('statusResult', statusResult);
-
-          if (Array.isArray(statusResult)) {
-            newEvents = statusResult;
-          } else if (statusResult.events && Array.isArray(statusResult.events)) {
-            newEvents = statusResult.events;
-          } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-            newEvents = statusResult.result.events;
-          } else {
-            console.log('Неизвестная структура данных');
-          }
-
-          console.log('newEvents', newEvents);
-
-          if (newEvents.length < limit) {
-            setHasMore(false);
-          }
-
-          return newEvents;
-
-        } catch (error) {
-          console.log(`Ошибка запроса: `, error);
-        }
-      } else {
-        console.log('Возвращаем result без task_id', result)
-
-        if (Array.isArray(result)) {
-          newEvents = result;
-        } else if (result.result && Array.isArray(result.result)) {
-          newEvents = result.result;
-        } else if (result.result.events && Array.isArray(result.result.events)) {
-          newEvents = result.result.events;
+        } else if (result.events && Array.isArray(result.events)) {
+          events = result.events;
+          console.log('search: структура result.events', events);
         } else {
-          console.log('Неизвестная структура данных');
+          console.log('search: неизвестная структура данных')
         }
+      } catch (error) {
+        console.log('search: ошибка', error);
 
-        console.log('newEvents', newEvents);
-
-        if (newEvents.length < limit) {
-          setHasMore(false);
-        }
-        return newEvents;
       }
-    } catch (error) {
-      console.log('Ошибка создания задачи', error);
+    } else {
+      const body = {
+        fields: [
+          'event_id', 'id', 'title', 'image', 'url', 'price', 'address',
+          'from_date', 'full_text', 'place_id', 'main_category_id',
+        ],
+        page: index,
+        limit: limit,
+      };
+      if (categories?.length > 0) body.category = categories;
+      if (startDate) {
+        body.date_from = dateRange.date_from;
+        body.date_to = dateRange.date_to;
+      }
+
+      try {
+        console.log('body', body)
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: API_HEADERS,
+          body: JSON.stringify(body)
+          
+        });
+        if (!res.ok) throw new Error('Ошибка загрузки данных');
+
+        const result = await res.json();
+
+        if (result && Array.isArray(result)) {
+          events = result;
+          console.log('основной запрос: структура result', result);
+        } else if (result.result && Array.isArray(result.result)) {
+          events = result.result;
+          console.log('основной запрос: структура result.result', events)
+        } else if (result.events && Array.isArray(result.events)) {
+          events = result.events;
+          console.log('основной запрос: структура result.events', events)
+        } else if (result.result.events && Array.isArray(result.result.events)) {
+          events = result.result.events;
+          console.log('основной запрос: структура result.result.events', events)
+        } else {
+          console.log('основной запрос: неизвестная структура данных');
+        }
+      } catch (error) {
+        console.log('основной запрос: ошибка', error);
+      }
     }
+    console.log('основной запрос: events', events);
+    if (events.length < limit) {
+      setHasMore(false);
+    }
+    return events;
   };
 
   const {
-    data,
-    error,
-    isLoading,
-  } = useSWR(`/api/data?page=${index}`,
-    fetcher);
+    data: dataEvents,
+    error: errorEvents,
+    isLoading: isLoadingEvents,
+  } = useSWR(
+    `/api/data?filter=${selectedTagsId.join(',')},${dateRange},${search}?page=${index}`,
+    () => fetchEvents(selectedTagsId, dateRange, search),
+  );
 
-  if (isLoading) console.log('ЗАГРУЗКА');
-  if (error) console.log('ОШИБКА', error.info);
-  console.log('Загруженные данные: ', data);
+  const [allEvents, setAllEvents] = useState([]);
+  const [filteredEvents, setfilteredEvents] = useState([]);
 
-  //   const loadMoreEvents = () => {
-  //     if (isLoading || !hasMore) return;
+  console.log('sortedEvents в самом начале', sortedEvents);
 
-  //     const loadedCount = sortedEvents.length; // Количество загруженных событий
-  //     const currentPage = Math.floor(loadedCount / limit); // Текущая страница
-  //     const nextPage = currentPage + 1; // Следующая страница
+  const getCategoryIdByName = (name) => {
+    const categoryObj = categoriesID.find((cat) => cat.category === name);
+    setIndex(0);
+    return categoryObj ? categoryObj.id : null;
+  };
 
-  //     if (nextPage > index) {
-  //         setIndex(nextPage);
-  //         console.log('Обновленный индекс:', nextPage);
+  useEffect(() => {
+    setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
+    console.log('selectedTags to tags id');
+
+  }, [selectedTags]);
+
+  const getCategoryNameById = (id) => {
+    const categoryObj = categoriesID.find((cat) => cat.id === id);
+    return categoryObj ? categoryObj.category : null;
+  };
+
+  useEffect(() => {
+    let eventsToSort = [...allEvents];
+
+    allEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
+
+    if (dataEvents && dataEvents.length > 0) {
+      console.log('Берем данные с сервера');
+
+      dataEvents.forEach(event => {
+        if (!loadedEventIdsRef.current.has(event.id)) {
+          loadedEventIdsRef.current.add(event.id);
+          eventsToSort.push(event);
+        }
+      });
+    }
+
+    if (eventsToSort.length > 0) {
+
+      setAllEvents(eventsToSort);
+
+      setfilteredEvents(eventsToSort.filter((event) => {
+        const eventCategoryName = getCategoryNameById(event.main_category_id);
+        const matchesCategory = !category || eventCategoryName === category;
+
+        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
+        const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
+          (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
+
+        const matchesSearch = search
+          ? (
+            (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
+            (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
+            (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
+            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
+            (event.place_id && event.place_id.toString().includes(search)) ||
+            (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
+          )
+          : true;
+
+        const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
+
+        return matchesCategory && isInDateRange && matchesSearch && matchesTags;
+      }))
+
+      console.log('filteredEvents', filteredEvents);
+
+
+      if (filteredEvents.length < limit || filteredEvents.length % limit !== 0) {
+        loadMoreEvents();
+      }
+
+      console.log('index', index);
+
+
+      setSortedEvents(filteredEvents);
+      console.log('sortedEvents', sortedEvents);
+    };
+
+  }, [category, search, sortPrice, startDate, endDate, selectedTags, dataEvents, index]);
+
+  console.log('sortedEvents с основным запросом', sortedEvents)
+
+  console.log("dataEvents", dataEvents);
+  console.log("ошибка dataEvents", errorEvents);
+  console.log("Загрузка dataEvents", isLoadingEvents);
+
+  // const fetcher = async () => {
+
+  //   try {
+  //     const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         date_from: today,
+  //         date_to: nextSixMonth,
+  //         fields: [
+  //           'event_id',
+  //           'id',
+  //           'title',
+  //           'image',
+  //           'url',
+  //           'price',
+  //           'address',
+  //           'from_date',
+  //           'full_text',
+  //           'place_id',
+  //           'main_category_id',
+  //         ],
+  //         page: index,
+  //         limit: limit,
+  //       }),
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error('Ошибка получения task_id: ', res.statusText);
+  //     };
+
+  //     const result = await res.json();
+
+  //     console.log('result для пагинации', result);
+
+  //     let newEvents = [];
+
+  //     if (result.task_id) {
+  //       const taskId = result.task_id;
+
+  //       console.log('есть result.task_i')
+
+  //       const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
+
+  //       try {
+  //         const statusResponse = await fetch(statusUrl, {
+  //           method: 'GET',
+  //           headers: {
+  //             'Authorization': 'Bearer zevgEv-vimned-ditva8',
+  //             'Content-Type': 'application/json',
+  //           },
+  //         });
+
+  //         if (!statusResponse.ok) {
+  //           throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
+  //         }
+
+  //         const statusResult = await statusResponse.json();
+  //         console.log('statusResult', statusResult);
+
+  //         if (Array.isArray(statusResult)) {
+  //           newEvents = statusResult;
+  //         } else if (statusResult.events && Array.isArray(statusResult.events)) {
+  //           newEvents = statusResult.events;
+  //         } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
+  //           newEvents = statusResult.result.events;
+  //         } else {
+  //           console.log('Неизвестная структура данных');
+  //         }
+
+  //         console.log('newEvents', newEvents);
+
+  //         if (newEvents.length < limit) {
+  //           setHasMore(false);
+  //         }
+
+  //         return newEvents;
+
+  //       } catch (error) {
+  //         console.log(`Ошибка запроса: `, error);
+  //       }
+  //     } else {
+  //       console.log('Возвращаем result без task_id', result)
+
+  //       if (Array.isArray(result)) {
+  //         newEvents = result;
+  //       } else if (result.result && Array.isArray(result.result)) {
+  //         newEvents = result.result;
+  //       } else if (result.result.events && Array.isArray(result.result.events)) {
+  //         newEvents = result.result.events;
+  //       } else {
+  //         console.log('Неизвестная структура данных');
+  //       }
+
+  //       console.log('newEvents', newEvents);
+
+  //       if (newEvents.length < limit) {
+  //         setHasMore(false);
+  //       }
+  //       return newEvents;
   //     }
+  //   } catch (error) {
+  //     console.log('Ошибка создания задачи', error);
+  //   }
   // };
 
-  const loadMoreEvents = () => {
-    if (isLoading || !hasMore) return;
+  // const {
+  //   data,
+  //   error,
+  //   isLoading,
+  // } = useSWR(`/api/data?page=${index}`,
+  //   fetcher);
 
-    const nextPage = index + 1;
-    setIndex(nextPage);
-    console.log('дополнить loadMoreEvents после пагинации');
+  // if (isLoading) console.log('ЗАГРУЗКА');
+  // if (error) console.log('ОШИБКА', error.info);
+  // console.log('Загруженные данные: ', data);
+
+  const loadMoreEvents = () => {
+    if (isLoadingEvents || !hasMore) return;
+    setIndex(prevIndex => prevIndex + 1);
   };
+
   return (
     <>
       <HeroSearch search={search} setSearch={setSearch} />
@@ -615,16 +462,15 @@ export default function Events() {
         </aside>
         <section className={`lg:w-[80%] w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <Page
+            dataEvents={dataEvents}
+            isLoadingEvents={isLoadingEvents}
             setIndex={setIndex}
             selectedTagsId={selectedTagsId}
             setSelectedTagsId={setSelectedTagsId}
             index={index}
-            data={data}
             cache={cache}
             limit={limit}
-            isLoading={isLoading}
             loadMoreEvents={loadMoreEvents}
-            fetcher={fetcher}
             search={search}
             setSearch={setSearch}
             setBgColor={setBgColor}
