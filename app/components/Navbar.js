@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { MdAccountCircle } from "react-icons/md";
 import useSWR, { SWRConfig } from 'swr';

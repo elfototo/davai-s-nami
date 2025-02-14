@@ -9,7 +9,7 @@ import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
 
 function PagePlaces({ sortedPlaces, isLoadingDataPlaces }) {
 
-  if (isLoadingDataPlaces || !sortedPlaces) {
+  if (isLoadingDataPlaces) {
     return (
       <div className="space-y-4">
 
