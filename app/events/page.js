@@ -115,9 +115,11 @@ export default function Events() {
   const limit = 8;
 
   const dateRange = {
-    date_from: startDate,
-    date_to: endDate,
+    date_from: dayjs(startDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
+    date_to: dayjs(endDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
   }
+  console.log('startDate', startDate)
+
 
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && previousPageData.length < limit) return null;
@@ -164,7 +166,7 @@ export default function Events() {
       if (selectedTagsId.length > 0) {
         body.category = selectedTagsId;
       }
-      if (startDate) {
+      if (startDate && endDate) {
         body.date_from = dateRange.date_from;
         body.date_to = dateRange.date_to;
       }
@@ -314,7 +316,11 @@ export default function Events() {
 
   return (
     <>
-      <HeroSearch search={search} setSearch={setSearch} />
+      <HeroSearch 
+      search={search} 
+      setSearch={setSearch}
+      value={'Найти мероприятие'}
+      />
       <div className="mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center">
         <aside className="lg:w-[20%] w-full mb-3 mr-3 relative">
           <section className="block inset-0 lg:sticky lg:top-4 z-10">

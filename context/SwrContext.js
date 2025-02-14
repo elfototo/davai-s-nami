@@ -47,6 +47,8 @@ export const EventsProvider = ({ children }) => {
 
         for (const key of keys) {
             const cachedData = cache.get(key);
+
+            console.log('cachedData в кэше', cachedData);
             if (cachedData && Array.isArray(cachedData.data)) {
                 const matchedItems = cachedData.data.filter((item) => item.place_id === place_id);
                 results = results.concat(matchedItems);
@@ -56,6 +58,7 @@ export const EventsProvider = ({ children }) => {
             index === self.findIndex((e) => e.id === event.id)
         );
 
+        console.log('results cache', results)
         return results.length > 0 ? uniqueResults : null;
     };
 

@@ -241,6 +241,7 @@ export default function Places() {
       <HeroSearch
         search={search}
         setSearch={setSearch}
+        value={'Найти место'}
       />
       <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center '>
         <PagePlaces

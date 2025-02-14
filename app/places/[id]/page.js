@@ -12,7 +12,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
-import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../../config';
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS, API_URL_PL_BY_ID } from '../../../config';
 
 
 dayjs.extend(isoWeek);
@@ -36,7 +36,7 @@ export default function eventPlace({ params }) {
 
     const fetchPlaceById = async (id) => {
         try {
-            const res = await fetch(`${API_URL_PL}${id}`, {
+            const res = await fetch(`${API_URL_PL_BY_ID}${id}`, {
                 method: 'POST',
                 headers: API_HEADERS,
                 body: JSON.stringify({
@@ -185,7 +185,7 @@ export default function eventPlace({ params }) {
             console.log('Берем мероприятия из кэша', uniqueCacheEvents.length);
         }
 
-        if (!isLoadingEventsPlaceId && dataEventsByPlaceId && cacheEvents.length < 4) {
+        if (!isLoadingEventsPlaceId && dataEventsByPlaceId && cacheEvents?.length < 4) {
             // Объединяем массивы и снова убираем дубликаты
             result = [...cacheEvents, ...dataEventsByPlaceId]
                 .filter((event, index, self) =>

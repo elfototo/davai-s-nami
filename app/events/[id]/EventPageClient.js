@@ -18,7 +18,7 @@ import { FaArrowRight } from "react-icons/fa6";
 import { BsCopy } from "react-icons/bs";
 import { useEvents } from '../../../context/SwrContext';
 import { debounce } from 'lodash';
-import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../../config';
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS, API_URL_BY_ID } from '../../../config';
 
 
 
@@ -55,7 +55,7 @@ export default function EventPageClient({ id }) {
 
   const fetchIdEvent = async (id) => {
     try {
-      const res = await fetch(`${API_URL }${id}`, {
+      const res = await fetch(`${API_URL_BY_ID}${id}`, {
         method: 'POST',
         headers: API_HEADERS,
         body: JSON.stringify({
