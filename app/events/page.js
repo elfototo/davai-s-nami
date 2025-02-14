@@ -96,14 +96,12 @@ export default function Events() {
 
   const { cache, findDataById } = useEvents();
   const loadedEventIdsRef = useRef(new Set());
-
   const [search, setSearch] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedTagsId, setSelectedTagsId] = useState([]);
   const [sortedEvents, setSortedEvents] = useState([]);
-
   const [sortPrice, setSortPrice] = useState(null);
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
@@ -212,6 +210,7 @@ export default function Events() {
   } = useSWRInfinite(getKey, fetchEvents, {
     revalidateFirstPage: false, // Отключает повторный запрос первой страницы при обновлении
   });
+
   console.log("Generated key:", getKey(size, dataEvents?.[size - 1]));
 
   useEffect(() => {
@@ -234,9 +233,6 @@ export default function Events() {
     }
   }, [dataEvents]);
 
-
-
-  console.log('sortedEvents в самом начале', sortedEvents);
 
   const getCategoryIdByName = (name) => {
     const categoryObj = categoriesID.find((cat) => cat.category === name);
@@ -303,71 +299,6 @@ export default function Events() {
       }
     }
   }, [allEvents, category, search, startDate, endDate, selectedTags]);
-
-  // useEffect(() => {
-  //   let eventsToSort = [...allEvents];
-
-  //   allEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
-
-  //   if (dataEvents && dataEvents.length > 0) {
-  //     console.log('Берем данные с сервера');
-
-  //     dataEvents.forEach(event => {
-  //       if (!loadedEventIdsRef.current.has(event.id)) {
-  //         loadedEventIdsRef.current.add(event.id);
-  //         eventsToSort.push(event);
-  //       }
-  //     });
-  //   }
-
-  //   if (eventsToSort.length > 0) {
-
-  //     setAllEvents(eventsToSort);
-
-  //     setfilteredEvents(eventsToSort.filter((event) => {
-  //       const eventCategoryName = getCategoryNameById(event.main_category_id);
-  //       const matchesCategory = !category || eventCategoryName === category;
-
-  //       const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
-  //       const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
-  //         (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
-
-  //       const matchesSearch = search
-  //         ? (
-  //           (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
-  //           (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
-  //           (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
-  //           (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
-  //           (event.place_id && event.place_id.toString().includes(search)) ||
-  //           (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
-  //         )
-  //         : true;
-
-  //       const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
-
-  //       return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-  //     }))
-
-  //     console.log('filteredEvents', filteredEvents);
-
-
-  //     if (filteredEvents.length < limit || filteredEvents.length % limit !== 0) {
-  //       loadMoreEvents();
-  //     }
-
-  //     console.log('index', index);
-
-
-  //     setSortedEvents(filteredEvents);
-  //     console.log('sortedEvents', sortedEvents);
-  //   };
-
-  // }, [category, search, sortPrice, startDate, endDate, selectedTags, dataEvents, index]);
-
-  // useEffect(() => {
-  //   setIndex(0);
-  //   mutate();
-  // }, [setSelectedTags, setStartDate, setEndDate]);
 
   console.log('sortedEvents с основным запросом', sortedEvents)
 

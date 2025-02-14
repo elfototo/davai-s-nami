@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { MdAccountCircle } from "react-icons/md";
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+
 
 const pages = [
   { title: 'Места', path: '/places' },
@@ -42,12 +44,9 @@ const Navbar = () => {
     try {
       console.log('fetcher target', target);
 
-      const res = await fetch(`http://159.223.239.75:8005/api/search/?query=${target}&limit=${limit}`, {
+      const res = await fetch(`${SEARCH_URL}?query=${target}&limit=${limit}`, {
         method: 'GET',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
+        headers: API_HEADERS,
       });
 
       if (!res.ok) {

@@ -3,170 +3,15 @@
 import HeroSearch from '../components/HeroSearch';
 import { useEffect, useState, useRef } from 'react';
 import PlaceCard from '../components/PlaceCard';
-import { SiMoscowmetro } from "react-icons/si";
-import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
-import { Suspense } from 'react';
-import Loading from './loading';
+import useSWRInfinite from "swr/infinite";
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
 
+function PagePlaces({ sortedPlaces, isLoadingDataPlaces }) {
 
-export default function Places() {
-  const { cache, findDataById } = useEvents();
-  const [search, setSearch] = useState('');
-  const [hasMore, setHasMore] = useState(true);
-  const [indexPlaces, setIndexPlace] = useState(0);
-
-  const [places, setPlaces] = useState([]);
-  const [allPlaces, setAllPlaces] = useState([]);
-  const loadedPlacesIdsRef = useRef(new Set());
-
-
-  let limit = 8;
-
-  console.log("cache", cache)
-  const loadMorePlaces = () => {
-    if (isLoadingDataPlaces || !hasMore) return;
-    const nextPage = indexPlaces + 1;
-    setIndexPlace(nextPage);
-    console.log('дополнить loadMoreEvents после пагинации');
-  };
-
-  const fetcherPlaces = async () => {
-
-    try {
-      const res = await fetch( API_URL_PL, {
-        method: 'POST',
-        headers: API_HEADERS,
-        body: JSON.stringify({
-          fields: [
-            'id',
-            'place_name',
-            'place_address',
-            'place_metro',
-            'place_image'
-          ],
-          page: indexPlaces,
-          limit: limit,
-          order_by: 'id-asc'
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error('Ошибка получения task_id: ', res.statusText);
-      };
-
-      const result = await res.json();
-
-      console.log('result для пагинации', result);
-
-      let newEvents = [];
-
-        console.log('Возвращаем result без task_id', result)
-
-        if (Array.isArray(result)) {
-          newEvents = result;
-        } else if (result.result && Array.isArray(result.result)) {
-          newEvents = result.result;
-        } else if (result.result.places && Array.isArray(result.result.places)) {
-          newEvents = result.result.places;
-        } else {
-          console.log('Неизвестная структура данных');
-        }
-
-        console.log('newEvents', newEvents);
-
-        if (newEvents.length < limit) {
-          setHasMore(false);
-        }
-        return newEvents;
-    } catch (error) {
-      console.log('Ошибка создания задачи', error);
-    }
-  };
-
-  const {
-    data: dataPlaces,
-    error: errorDataPlaces,
-    isLoading: isLoadingDataPlaces,
-  } = useSWR(`/api/data?place_page=${indexPlaces}`,
-    fetcherPlaces);
-
-  console.log('dataPlaces', dataPlaces);
-
-  useEffect(() => {
-
-    let placesSort = [...allPlaces];
-
-    allPlaces.forEach(place => loadedPlacesIdsRef.current.add(place.id));
-
-    console.log('allPlaces', allPlaces);
-    console.log('cache.size', cache.size);
-    console.log('cache', cache);
-
-    if (cache && cache.size > 0) {
-      console.log('берем данные из кэша');
-
-      for (let i = 0; i < cache.size; i++) {
-        const cachedData = cache.get(`/api/data?place_page=${i}`)?.data;
-
-        if (Array.isArray(cachedData)) {
-
-          cachedData.forEach(place => {
-
-            if (!loadedPlacesIdsRef.current.has(place.id)) {
-              loadedPlacesIdsRef.current.add(place.id);
-              placesSort.push(place);
-            };
-          });
-        }
-      }
-
-    } else if (dataPlaces && dataPlaces.length > 0) {
-      console.log('Берем данные с сервера');
-
-      dataPlaces.forEach(place => {
-        if (!loadedPlacesIdsRef.current.has(place.id)) {
-          loadedPlacesIdsRef.current.add(place.id);
-          placesSort.push(place);
-        }
-      });
-    }
-
-    if (placesSort.length > 0) {
-
-      setAllPlaces(placesSort);
-
-      const filteredPlaces = placesSort.filter((place) => {
-        const matchesSearch = search
-          ? (
-            (place.place_name?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '') ||
-            (place.place_address?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '') ||
-            (place.place_metro?.toLocaleLowerCase() || '').includes(search?.toLocaleLowerCase() || '')
-          )
-          : true;
-
-        return matchesSearch || '';
-      })
-
-      console.log('filteredPlaces', filteredPlaces);
-
-      // if (filteredPlaces?.length === 0 || filteredPlaces?.length % limit !==0) {
-      //   loadMorePlaces();
-      // }
-      console.log('loadedPlacesIdsRef в самом конце', loadedPlacesIdsRef);
-
-
-      setPlaces(filteredPlaces);
-      console.log('places в конце', places);
-    }
-
-  }, [dataPlaces, search]);
-
-  if (!places || places.length === 0) {
+  if (isLoadingDataPlaces || !sortedPlaces) {
     return (
       <div className="space-y-4">
-        <div className="h-[65px] w-[100%] rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
 
         <div className="t-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center">
 
@@ -184,7 +29,6 @@ export default function Places() {
           </section>
         </div>
 
-
         <style jsx>{`
           @keyframes shimmer {
             0% { background-position: -200% 0; }
@@ -200,41 +44,214 @@ export default function Places() {
   };
 
   return (
+    <>
+      <div className='w-full grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+        {
+          sortedPlaces?.length > 0 ? (
+            sortedPlaces?.map((card) => (
+              <PlaceCard
+                id={card.id}
+                key={card.id}
+                place_name={card.place_name}
+                place_address={card.place_address}
+                place_metro={card.place_metro}
+                place_city={card.place_city}
+                image={card.place_image}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
+              Нет доступных Мест.
+            </div>
+          )
+        }
+
+      </div>
+
+    </>
+  )
+}
+
+export default function Places() {
+  const { cache, findDataById } = useEvents();
+  const [search, setSearch] = useState('');
+  const [hasMore, setHasMore] = useState(true);
+  const [sortedPlaces, setSortedPlaces] = useState([]);
+  const [allPlaces, setAllPlaces] = useState([]);
+  const loadedPlacesIdsRef = useRef(new Set());
+
+
+  const limit = 8;
+
+  console.log("cache", cache)
+
+  const getKey = (pageIndex, previousPageData) => {
+    if (previousPageData && previousPageData.length < limit) return null;
+    const offset = pageIndex * limit;
+
+    return `/api/data?query=${search}&page=${pageIndex}&offset=${offset}`;
+  };
+
+  const fetcherPlaces = async (url) => {
+
+    const urlObj = new URL(url, API_URL_PL);
+    const pageIndex = parseInt(urlObj.searchParams.get('page'), limit) || 0;
+
+    let places = [];
+
+    if (search) {
+      try {
+        const res = await fetch(`${SEARCH_URL}?query=${encodeURIComponent(search)}&type=place`, {
+          method: 'GET',
+          headers: API_HEADERS,
+        });
+        console.log("ответ с сервера res", res);
+
+        if (!res.ok) throw new Error('Ошибка поиска');
+        const result = await res.json();
+        console.log("ответ с сервера result", result);
+
+
+        places = Array.isArray(result) ? result :
+          Array.isArray(result.places) ? result.places :
+            [];
+      } catch (error) {
+        console.error('Ошибка поиска:', error);
+      }
+    } else {
+      try {
+        const res = await fetch(API_URL_PL, {
+          method: 'POST',
+          headers: API_HEADERS,
+          body: JSON.stringify({
+            fields: [
+              'id',
+              'place_name',
+              'place_address',
+              'place_metro',
+              'place_image'
+            ],
+            page: pageIndex,
+            limit: limit,
+            order_by: 'id-asc'
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error('Ошибка получения task_id: ', res.statusText);
+        };
+
+        const result = await res.json();
+
+        console.log('result для пагинации', result);
+
+        let newEvents = [];
+
+        console.log('Возвращаем result без task_id', result)
+
+        if (Array.isArray(result)) {
+          newEvents = result;
+        } else if (result.result && Array.isArray(result.result)) {
+          newEvents = result.result;
+        } else if (result.result.places && Array.isArray(result.result.places)) {
+          newEvents = result.result.places;
+        } else {
+          console.log('Неизвестная структура данных');
+        }
+        console.log('newEvents', newEvents);
+
+        return newEvents || [];
+      } catch (error) {
+        console.log('Ошибка создания задачи', error);
+      }
+    }
+
+    return places;
+  };
+
+  const {
+    data: dataPlaces,
+    error: errorDataPlaces,
+    isLoading: isLoadingDataPlaces,
+    mutate,
+    size,
+    setSize,
+    isValidating,
+  } = useSWRInfinite(getKey, fetcherPlaces, {
+    // revalidateFirstPage: false, // Отключает повторный запрос первой страницы при обновлении
+  });
+
+  console.log("Generated key:", getKey(size, dataPlaces?.[size - 1]));
+
+  console.log('dataPlaces', dataPlaces);
+
+  useEffect(() => {
+    if (dataPlaces) {
+      setHasMore(dataPlaces?.[dataPlaces.length - 1]?.length === limit);
+
+      // Объединяем все страницы данных в один массив
+      const newEvents = dataPlaces.flat();
+
+      // Фильтруем события, чтобы избежать дубликатов
+      const uniquePlaces = newEvents.filter(place => !loadedPlacesIdsRef.current.has(place.id));
+
+      // Добавляем новые события в allEvents
+      if (uniquePlaces.length > 0) {
+        setAllPlaces(prevPlaces => [...prevPlaces, ...uniquePlaces]);
+
+        // Обновляем loadedPlacesIdsRef
+        uniquePlaces.forEach(place => loadedPlacesIdsRef.current.add(place.id));
+      }
+    }
+  }, [dataPlaces]);
+
+  useEffect(() => {
+    if (allPlaces.length > 0) {
+      // Фильтрация событий
+      const filtered = allPlaces.filter((place) => {
+
+        const matchesSearch = search
+          ? (
+            (place.place_name?.toLowerCase() || '').includes(search.toLowerCase()) ||
+            (place.place_address && place.place_address.toString().includes(search)) ||
+            (place.place_metro?.toLowerCase() || '').includes(search.toLowerCase())
+          )
+          : true;
+
+        return matchesSearch;
+      });
+
+      setSortedPlaces(filtered);
+
+      // Проверка, нужно ли загружать больше событий
+      if (filtered.length < limit || filtered.length % limit !== 0) {
+        loadMorePlaces();
+      }
+    }
+  }, [allPlaces, search]);
+
+  const loadMorePlaces = () => {
+    if (isLoadingDataPlaces || !hasMore) return;
+    if (hasMore) setSize(size + 1);
+  };
+
+  return (
     <div>
-      {/* <Suspense fallback={<Loading />}> */}
+
       <HeroSearch
         search={search}
         setSearch={setSearch}
       />
       <div className='mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center '>
-        <div className='w-full grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
-          {
-            places?.length > 0 ? (
-              places?.map((card) => (
-                <PlaceCard
-                  id={card.id}
-                  key={card.id}
-                  place_name={card.place_name}
-                  place_address={card.place_address}
-                  place_metro={card.place_metro}
-                  place_city={card.place_city}
-                  image={card.place_image}
-                />
-              ))
-            ) : (
-              <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
-                Нет доступных Мест.
-              </div>
-            )
-          }
-
-        </div>
-
+        <PagePlaces
+          sortedPlaces={sortedPlaces}
+          isLoadingDataPlaces={isLoadingDataPlaces}
+        />
       </div>
       <div className='mx-auto flex justify-center gap-6 mt-10'>
-        {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMorePlaces()}>Загрузить еще</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMorePlaces()}>Загрузить еще</button>}
+        {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMorePlaces()}>{isValidating ? "Загрузка..." : "Загрузить еще"}</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMorePlaces()}>Загрузить еще</button>}
       </div>
-      {/* </Suspense> */}
+
     </div>
   )
 }
