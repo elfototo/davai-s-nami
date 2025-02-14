@@ -17,7 +17,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 
-const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate, isOpen, setIsOpen }) => {
+const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate, isOpen, setIsOpen, }) => {
     const [selectedButton, setSelectedButton] = useState('');
 
 
@@ -81,18 +81,12 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
         setSelectedButton('weekend');
     };
 
-    // const selectPrice = () => {
-    //     setSelectedButton('price');
-    //     setSortPrice((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    // }
-
     const clearSelection = () => {
         setStartDate(null);
         setEndDate(null);
         setBgColor('bg-white');
         setSelectedButton('');
         setSelectedTags([]);
-        // setSortPrice('default'); 
     };
 
     const cancelFilter = () => {

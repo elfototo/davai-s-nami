@@ -12,9 +12,9 @@ import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useSWRConfig } from 'swr';
-import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
+import useSWRInfinite from "swr/infinite";
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -23,12 +23,9 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ index, setIndex, dataEvents, search, isLoading, startDate, endDate, selectedTags, cache, category, sortPrice, loadMoreEvents, data, limit, selectedTagsId, setSelectedTagsId, sortedEvents, setSortedEvents, isLoadingEvents }) {
-
-
-
+function Page({ sortedEvents, isLoadingEvents }) {
   // скелетон для cards
-  if (!sortedEvents) {
+  if (isLoadingEvents) {
     return (
       <div className="space-y-4">
 
@@ -111,59 +108,50 @@ export default function Events() {
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [index, setIndex] = useState(0);
+  // const [index, setIndex] = useState(0);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [allEvents, setAllEvents] = useState([]);
+  const [filteredEvents, setfilteredEvents] = useState([]);
 
-  const limit = 4;
+  const limit = 8;
 
   const dateRange = {
     date_from: startDate,
     date_to: endDate,
   }
 
-  const API_URL = 'http://159.223.239.75:8005/api/get_valid_events/';
-  const SEARCH_URL = 'http://159.223.239.75:8005/api/search/';
-  const API_HEADERS = {
-    'Authorization': 'Bearer zevgEv-vimned-ditva8',
-    'Content-Type': 'application/json',
+  const getKey = (pageIndex, previousPageData) => {
+    if (previousPageData && previousPageData.length < limit) return null;
+    const offset = pageIndex * limit;
+
+    return `/api/data?filter=${selectedTagsId.join(',')},${dateRange.date_from || ''},${dateRange.date_to || ''},${search}&page=${pageIndex}&offset=${offset}`;
   };
 
-  const MIN_EVENTS = 8;
-
-  const fetchEvents = async ( categories, dateRange, search ) => {
+  const fetchEvents = async (url) => {
+    const urlObj = new URL(url, API_URL);
+    const pageIndex = parseInt(urlObj.searchParams.get('page'), 10) || 0;
 
     let events = [];
-    console.log('Проверка аргументов: categories', categories);
-    console.log('Проверка аргументов: dateRange', dateRange);
-    console.log('Проверка аргументов: search', search);
-
 
     if (search) {
-      const searchParams = new URLSearchParams({ query: search, type: 'event' });
       try {
-        const res = await fetch(`${SEARCH_URL}?${searchParams}`, {
+        const res = await fetch(`${SEARCH_URL}?query=${encodeURIComponent(search)}&type=event`, {
           method: 'GET',
-          headers: API_HEADERS
+          headers: API_HEADERS,
         });
+        console.log("ответ с сервера res", res);
 
-        if (!res.ok) throw new Error('search: ошибка поиска');
-
+        if (!res.ok) throw new Error('Ошибка поиска');
         const result = await res.json();
+        console.log("ответ с сервера result", result);
 
-        if (result && Array.isArray(result)) {
-          events = result;
-          console.log('search: структура result', events);
 
-        } else if (result.events && Array.isArray(result.events)) {
-          events = result.events;
-          console.log('search: структура result.events', events);
-        } else {
-          console.log('search: неизвестная структура данных')
-        }
+        events = Array.isArray(result) ? result :
+          Array.isArray(result.events) ? result.events :
+            [];
       } catch (error) {
-        console.log('search: ошибка', error);
-
+        console.error('Ошибка поиска:', error);
       }
     } else {
       const body = {
@@ -171,50 +159,45 @@ export default function Events() {
           'event_id', 'id', 'title', 'image', 'url', 'price', 'address',
           'from_date', 'full_text', 'place_id', 'main_category_id',
         ],
-        page: index,
-        limit: limit,
+        page: pageIndex,
+        limit,
       };
-      if (categories?.length > 0) body.category = categories;
+
+      if (selectedTagsId.length > 0) {
+        body.category = selectedTagsId;
+      }
       if (startDate) {
         body.date_from = dateRange.date_from;
         body.date_to = dateRange.date_to;
       }
 
       try {
-        console.log('body', body)
+        console.log('body', body);
+
         const res = await fetch(API_URL, {
           method: 'POST',
           headers: API_HEADERS,
-          body: JSON.stringify(body)
-          
+          body: JSON.stringify(body),
         });
+
+        console.log("ответ с сервера res", res);
+
         if (!res.ok) throw new Error('Ошибка загрузки данных');
 
         const result = await res.json();
+        console.log("ответ с сервера result", result);
 
-        if (result && Array.isArray(result)) {
-          events = result;
-          console.log('основной запрос: структура result', result);
-        } else if (result.result && Array.isArray(result.result)) {
-          events = result.result;
-          console.log('основной запрос: структура result.result', events)
-        } else if (result.events && Array.isArray(result.events)) {
-          events = result.events;
-          console.log('основной запрос: структура result.events', events)
-        } else if (result.result.events && Array.isArray(result.result.events)) {
-          events = result.result.events;
-          console.log('основной запрос: структура result.result.events', events)
-        } else {
-          console.log('основной запрос: неизвестная структура данных');
-        }
+
+        events = Array.isArray(result) ? result :
+          Array.isArray(result.result) ? result.result :
+            Array.isArray(result.events) ? result.events :
+              Array.isArray(result.result?.events) ? result.result.events :
+                [];
       } catch (error) {
-        console.log('основной запрос: ошибка', error);
+        console.error('Ошибка загрузки данных:', error);
       }
     }
-    console.log('основной запрос: events', events);
-    if (events.length < limit) {
-      setHasMore(false);
-    }
+
     return events;
   };
 
@@ -222,19 +205,41 @@ export default function Events() {
     data: dataEvents,
     error: errorEvents,
     isLoading: isLoadingEvents,
-  } = useSWR(
-    `/api/data?filter=${selectedTagsId.join(',')},${dateRange},${search}?page=${index}`,
-    () => fetchEvents(selectedTagsId, dateRange, search),
-  );
+    mutate,
+    size,
+    setSize,
+    isValidating,
+  } = useSWRInfinite(getKey, fetchEvents, {
+    revalidateFirstPage: false, // Отключает повторный запрос первой страницы при обновлении
+  });
+  console.log("Generated key:", getKey(size, dataEvents?.[size - 1]));
 
-  const [allEvents, setAllEvents] = useState([]);
-  const [filteredEvents, setfilteredEvents] = useState([]);
+  useEffect(() => {
+    if (dataEvents) {
+      setHasMore(dataEvents?.[dataEvents.length - 1]?.length === limit);
+
+      // Объединяем все страницы данных в один массив
+      const newEvents = dataEvents.flat();
+
+      // Фильтруем события, чтобы избежать дубликатов
+      const uniqueEvents = newEvents.filter(event => !loadedEventIdsRef.current.has(event.id));
+
+      // Добавляем новые события в allEvents
+      if (uniqueEvents.length > 0) {
+        setAllEvents(prevEvents => [...prevEvents, ...uniqueEvents]);
+
+        // Обновляем loadedEventIdsRef
+        uniqueEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
+      }
+    }
+  }, [dataEvents]);
+
+
 
   console.log('sortedEvents в самом начале', sortedEvents);
 
   const getCategoryIdByName = (name) => {
     const categoryObj = categoriesID.find((cat) => cat.category === name);
-    setIndex(0);
     return categoryObj ? categoryObj.id : null;
   };
 
@@ -250,26 +255,9 @@ export default function Events() {
   };
 
   useEffect(() => {
-    let eventsToSort = [...allEvents];
-
-    allEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
-
-    if (dataEvents && dataEvents.length > 0) {
-      console.log('Берем данные с сервера');
-
-      dataEvents.forEach(event => {
-        if (!loadedEventIdsRef.current.has(event.id)) {
-          loadedEventIdsRef.current.add(event.id);
-          eventsToSort.push(event);
-        }
-      });
-    }
-
-    if (eventsToSort.length > 0) {
-
-      setAllEvents(eventsToSort);
-
-      setfilteredEvents(eventsToSort.filter((event) => {
+    if (allEvents.length > 0) {
+      // Фильтрация событий
+      const filtered = allEvents.filter((event) => {
         const eventCategoryName = getCategoryNameById(event.main_category_id);
         const matchesCategory = !category || eventCategoryName === category;
 
@@ -282,32 +270,104 @@ export default function Events() {
             (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
             (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
             (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
-            (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
-            (event.place_id && event.place_id.toString().includes(search)) ||
-            (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
+            (event.from_date && (
+              dayjs(event.from_date).format('YYYY-MM-DD').includes(search) ||
+              dayjs(event.from_date).format('DD MMMM YYYY').toLowerCase().includes(search.toLowerCase()) ||
+              dayjs(event.from_date).format('MMMM DD, YYYY').toLowerCase().includes(search.toLowerCase()) ||
+              dayjs(event.from_date).format('MMMM').toLowerCase().includes(search.toLowerCase())
+            ) ||
+              (event.place_id && event.place_id.toString().includes(search)) ||
+              (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
+            )
           )
           : true;
 
         const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
 
         return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-      }))
+      });
 
-      console.log('filteredEvents', filteredEvents);
+      setfilteredEvents(filtered);
 
+      // Сортировка событий (если нужно)
+      const sorted = filtered.sort((a, b) => {
+        // Ваша логика сортировки
+        return new Date(a.from_date) - new Date(b.from_date);
+      });
 
-      if (filteredEvents.length < limit || filteredEvents.length % limit !== 0) {
+      setSortedEvents(sorted);
+
+      // Проверка, нужно ли загружать больше событий
+      if (filtered.length < limit || filtered.length % limit !== 0) {
         loadMoreEvents();
       }
+    }
+  }, [allEvents, category, search, startDate, endDate, selectedTags]);
 
-      console.log('index', index);
+  // useEffect(() => {
+  //   let eventsToSort = [...allEvents];
+
+  //   allEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
+
+  //   if (dataEvents && dataEvents.length > 0) {
+  //     console.log('Берем данные с сервера');
+
+  //     dataEvents.forEach(event => {
+  //       if (!loadedEventIdsRef.current.has(event.id)) {
+  //         loadedEventIdsRef.current.add(event.id);
+  //         eventsToSort.push(event);
+  //       }
+  //     });
+  //   }
+
+  //   if (eventsToSort.length > 0) {
+
+  //     setAllEvents(eventsToSort);
+
+  //     setfilteredEvents(eventsToSort.filter((event) => {
+  //       const eventCategoryName = getCategoryNameById(event.main_category_id);
+  //       const matchesCategory = !category || eventCategoryName === category;
+
+  //       const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
+  //       const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
+  //         (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
+
+  //       const matchesSearch = search
+  //         ? (
+  //           (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
+  //           (event.price?.toString().toLowerCase() && event.price?.toString().toLowerCase().includes(search)) ||
+  //           (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
+  //           (event.from_date && dayjs(event.from_date).format('YYYY-MM-DD').includes(search)) ||
+  //           (event.place_id && event.place_id.toString().includes(search)) ||
+  //           (event.main_category_id && getCategoryNameById(event.main_category_id)?.toLowerCase().includes(search.toLowerCase()))
+  //         )
+  //         : true;
+
+  //       const matchesTags = selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
+
+  //       return matchesCategory && isInDateRange && matchesSearch && matchesTags;
+  //     }))
+
+  //     console.log('filteredEvents', filteredEvents);
 
 
-      setSortedEvents(filteredEvents);
-      console.log('sortedEvents', sortedEvents);
-    };
+  //     if (filteredEvents.length < limit || filteredEvents.length % limit !== 0) {
+  //       loadMoreEvents();
+  //     }
 
-  }, [category, search, sortPrice, startDate, endDate, selectedTags, dataEvents, index]);
+  //     console.log('index', index);
+
+
+  //     setSortedEvents(filteredEvents);
+  //     console.log('sortedEvents', sortedEvents);
+  //   };
+
+  // }, [category, search, sortPrice, startDate, endDate, selectedTags, dataEvents, index]);
+
+  // useEffect(() => {
+  //   setIndex(0);
+  //   mutate();
+  // }, [setSelectedTags, setStartDate, setEndDate]);
 
   console.log('sortedEvents с основным запросом', sortedEvents)
 
@@ -315,130 +375,11 @@ export default function Events() {
   console.log("ошибка dataEvents", errorEvents);
   console.log("Загрузка dataEvents", isLoadingEvents);
 
-  // const fetcher = async () => {
-
-  //   try {
-  //     const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Authorization': 'Bearer zevgEv-vimned-ditva8',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         date_from: today,
-  //         date_to: nextSixMonth,
-  //         fields: [
-  //           'event_id',
-  //           'id',
-  //           'title',
-  //           'image',
-  //           'url',
-  //           'price',
-  //           'address',
-  //           'from_date',
-  //           'full_text',
-  //           'place_id',
-  //           'main_category_id',
-  //         ],
-  //         page: index,
-  //         limit: limit,
-  //       }),
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error('Ошибка получения task_id: ', res.statusText);
-  //     };
-
-  //     const result = await res.json();
-
-  //     console.log('result для пагинации', result);
-
-  //     let newEvents = [];
-
-  //     if (result.task_id) {
-  //       const taskId = result.task_id;
-
-  //       console.log('есть result.task_i')
-
-  //       const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-  //       try {
-  //         const statusResponse = await fetch(statusUrl, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Authorization': 'Bearer zevgEv-vimned-ditva8',
-  //             'Content-Type': 'application/json',
-  //           },
-  //         });
-
-  //         if (!statusResponse.ok) {
-  //           throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
-  //         }
-
-  //         const statusResult = await statusResponse.json();
-  //         console.log('statusResult', statusResult);
-
-  //         if (Array.isArray(statusResult)) {
-  //           newEvents = statusResult;
-  //         } else if (statusResult.events && Array.isArray(statusResult.events)) {
-  //           newEvents = statusResult.events;
-  //         } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-  //           newEvents = statusResult.result.events;
-  //         } else {
-  //           console.log('Неизвестная структура данных');
-  //         }
-
-  //         console.log('newEvents', newEvents);
-
-  //         if (newEvents.length < limit) {
-  //           setHasMore(false);
-  //         }
-
-  //         return newEvents;
-
-  //       } catch (error) {
-  //         console.log(`Ошибка запроса: `, error);
-  //       }
-  //     } else {
-  //       console.log('Возвращаем result без task_id', result)
-
-  //       if (Array.isArray(result)) {
-  //         newEvents = result;
-  //       } else if (result.result && Array.isArray(result.result)) {
-  //         newEvents = result.result;
-  //       } else if (result.result.events && Array.isArray(result.result.events)) {
-  //         newEvents = result.result.events;
-  //       } else {
-  //         console.log('Неизвестная структура данных');
-  //       }
-
-  //       console.log('newEvents', newEvents);
-
-  //       if (newEvents.length < limit) {
-  //         setHasMore(false);
-  //       }
-  //       return newEvents;
-  //     }
-  //   } catch (error) {
-  //     console.log('Ошибка создания задачи', error);
-  //   }
-  // };
-
-  // const {
-  //   data,
-  //   error,
-  //   isLoading,
-  // } = useSWR(`/api/data?page=${index}`,
-  //   fetcher);
-
-  // if (isLoading) console.log('ЗАГРУЗКА');
-  // if (error) console.log('ОШИБКА', error.info);
-  // console.log('Загруженные данные: ', data);
-
   const loadMoreEvents = () => {
     if (isLoadingEvents || !hasMore) return;
-    setIndex(prevIndex => prevIndex + 1);
+    if (hasMore) setSize(size + 1);
   };
+
 
   return (
     <>
@@ -464,10 +405,8 @@ export default function Events() {
           <Page
             dataEvents={dataEvents}
             isLoadingEvents={isLoadingEvents}
-            setIndex={setIndex}
             selectedTagsId={selectedTagsId}
             setSelectedTagsId={setSelectedTagsId}
-            index={index}
             cache={cache}
             limit={limit}
             loadMoreEvents={loadMoreEvents}
@@ -489,7 +428,7 @@ export default function Events() {
           />
 
           <div className='mx-auto flex justify-center gap-6 mt-10'>
-            {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button>}
+            {hasMore ? <button className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300' onClick={() => loadMoreEvents()}>{isValidating ? "Загрузка..." : "Загрузить еще"}</button> : <button className='px-4 py-2 bg-blue-200 text-white cursor-default rounded disabled:bg-gray-300' onClick={() => loadMoreEvents()}>Загрузить еще</button>}
           </div>
         </section>
       </div>

@@ -18,6 +18,7 @@ import Loader from './components/Loader';
 import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../context/SwrContext';
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../config';
 
 
 dayjs.extend(isoWeek);
@@ -51,18 +52,14 @@ export default function Home() {
   const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend, limit: 10 };
   const dateRangeForGame = { date_from: today, date_to: month, limit: 50 };
 
-
   const fetcher = async (dateRange) => {
     try {
       console.log('fetcher args', dateRange.date_from);
       console.log('fetcher args', dateRange.date_to);
 
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+      const res = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
+        headers: API_HEADERS,
         body: JSON.stringify({
           date_from: dateRange.date_from,
           date_to: dateRange.date_to,
@@ -93,60 +90,6 @@ export default function Home() {
 
       let eventsfromFetcher = [];
 
-      if (result.task_id) {
-        const taskId = result.task_id;
-        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-        setTimeout(async () => {
-          try {
-            const statusResponse = await fetch(statusUrl, {
-              method: 'GET',
-              headers: {
-                'Authorization': 'Bearer zevgEv-vimned-ditva8',
-                'Content-Type': 'application/json',
-              },
-            });
-
-            if (!statusResponse.ok) {
-              throw new Error(`Ошибка: ${statusResponse.statusText}`);
-            }
-
-            const statusResult = await statusResponse.json();
-            console.log('Status result: ', statusResult);
-
-            if (Array.isArray(statusResult)) {
-              eventsfromFetcher = statusResult;
-            } else if (statusResult.events && Array.iaArray(statusResult.events)) {
-              eventsfromFetcher = statusResult.events;
-            } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-              eventsfromFetcher = statusResult.result.events;
-            } else {
-              console.error('Неизвестная структура данных:', statusResult);
-              setStatus('Не удалось обработать данные');
-              return;
-            }
-
-            console.log('eventsfromFetcher', eventsfromFetcher)
-
-            if (dateRange.date_from === dateRange1.date_from && dateRange.date_to === dateRange1.date_to) {
-
-              setEventsTodayTomorrow(eventsfromFetcher);
-
-            } else if (dateRange.date_from === dateRange2.date_from && dateRange.date_to === dateRange2.date_to) {
-
-              setWeekendEvents(eventsfromFetcher);
-
-            } else if (dateRange.date_from === dateRangeForGame.date_from && dateRange.date_to === dateRangeForGame.date_to) {
-              setEventsForGame(eventsfromFetcher);
-            };
-
-            return eventsfromFetcher;
-
-          } catch (error) {
-            console.log('Ошибка при запросе', error);
-          }
-        }, 5000);
-      } else {
         console.log('result', result);
         if (result.result && Array.isArray(result.result)) {
           console.log('result.result', result.result.events)
@@ -163,7 +106,6 @@ export default function Home() {
         console.log('eventsfromFetcher', eventsfromFetcher)
 
         return eventsfromFetcher;
-      }
 
     } catch (error) {
       console.log('Ошибка при выполнении задачи', error);
@@ -498,31 +440,6 @@ export default function Home() {
           </div>
         }
       </section>
-
-
-    </>
-    // <div className="p-4 space-y-4">
-    //   <div className="h-6 w-1/3 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
-    //   <div className="h-4 w-2/3 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
-    //   <div className="h-4 w-1/2 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
-
-    //   <div className="grid grid-cols-2 gap-4 mt-4">
-    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
-    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
-    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
-    //     <div className="h-32 rounded bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"></div>
-    //   </div>
-
-    //   <style jsx>{`
-    //     @keyframes shimmer {
-    //       0% { background-position: 200% 0; }
-    //       100% { background-position: -200% 0; }
-    //     }
-    //     .animate-shimmer {
-    //       background-size: 200% 100%;
-    //       animation: shimmer 2s infinite linear;
-    //     }
-    //   `}</style>
-    // </div>
+    </>   
   );
 }

@@ -8,6 +8,8 @@ import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
 import { Suspense } from 'react';
 import Loading from './loading';
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+
 
 export default function Places() {
   const { cache, findDataById } = useEvents();
@@ -33,12 +35,9 @@ export default function Places() {
   const fetcherPlaces = async () => {
 
     try {
-      const res = await fetch('http://159.223.239.75:8005/api/get_places/', {
+      const res = await fetch( API_URL_PL, {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
+        headers: API_HEADERS,
         body: JSON.stringify({
           fields: [
             'id',
@@ -63,51 +62,6 @@ export default function Places() {
 
       let newEvents = [];
 
-      if (result.task_id) {
-        const taskId = result.task_id;
-
-        console.log('есть result.task_i')
-
-        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-        try {
-          const statusResponse = await fetch(statusUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': 'Bearer zevgEv-vimned-ditva8',
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (!statusResponse.ok) {
-            throw new Error('Ошибка запроса данных: ', statusResponse.statusText);
-          }
-
-          const statusResult = await statusResponse.json();
-          console.log('statusResult', statusResult);
-
-          if (Array.isArray(statusResult)) {
-            newEvents = statusResult;
-          } else if (statusResult.places && Array.isArray(statusResult.places)) {
-            newEvents = statusResult.places;
-          } else if (statusResult.result.places && Array.isArray(statusResult.result.places)) {
-            newEvents = statusResult.result.places;
-          } else {
-            console.log('Неизвестная структура данных');
-          }
-
-          console.log('newEvents', newEvents);
-
-          if (newEvents.length < limit) {
-            setHasMore(false);
-          }
-
-          return newEvents;
-
-        } catch (error) {
-          console.log(`Ошибка запроса: `, error);
-        }
-      } else {
         console.log('Возвращаем result без task_id', result)
 
         if (Array.isArray(result)) {
@@ -126,7 +80,6 @@ export default function Places() {
           setHasMore(false);
         }
         return newEvents;
-      }
     } catch (error) {
       console.log('Ошибка создания задачи', error);
     }

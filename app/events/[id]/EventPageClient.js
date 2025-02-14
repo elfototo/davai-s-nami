@@ -18,8 +18,8 @@ import { FaArrowRight } from "react-icons/fa6";
 import { BsCopy } from "react-icons/bs";
 import { useEvents } from '../../../context/SwrContext';
 import { debounce } from 'lodash';
-// import { Suspense } from 'react';
-// import Loading from './loading';
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../../config';
+
 
 
 dayjs.locale('ru');
@@ -55,12 +55,9 @@ export default function EventPageClient({ id }) {
 
   const fetchIdEvent = async (id) => {
     try {
-      const res = await fetch(`http://159.223.239.75:8005/api/get_valid_event/${id}`, {
+      const res = await fetch(`${API_URL }${id}`, {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
+        headers: API_HEADERS,
         body: JSON.stringify({
           fields: [
             'event_id',
@@ -86,52 +83,6 @@ export default function EventPageClient({ id }) {
 
       console.log('result на странице id', result);
 
-      if (result.task_id) {
-        try {
-          setTimeout(async () => {
-
-            const taskId = result.task_id;
-            const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-            const statusResponse = await fetch(statusUrl, {
-              method: 'GET',
-              headers: {
-                'Authorization': 'Bearer zevgEv-vimned-ditva8',
-                'Content-Type': 'application/json',
-              },
-            });
-
-            if (!statusResponse.ok) {
-              throw new Error(`Ошибка: ${statusResponse.statusText}`);
-            }
-
-            const statusResult = await statusResponse.json();
-
-            if (statusResult && Array.isArray(statusResult)) {
-              console.log('statusResult на странице id c taskId', statusResult.result);
-              return statusResult[0];
-            } else if (statusResult.result && Array.isArray(statusResult.result)) {
-
-              console.log('statusResult.result на странице id c taskId', statusResult.result);
-              return statusResult.result[0];
-            } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-
-              console.log('result.result.events на странице id c taskId', statusResult.result.events);
-              return statusResult.result.events[0];
-            } else if (statusResult.events && Array.isArray(statusResult.events)) {
-
-              console.log('result.events на странице id c taskId', statusResult.events);
-              return statusResult.events[0];
-            } else {
-              console.error('Неизвестная структура данных:', statusResult);
-            };
-          });
-
-        } catch (error) {
-          console.log('Ошибка при запросе', error);
-        }
-      } else {
-
         if (result && Array.isArray(result)) {
           console.log('result на странице id', result.result);
           return result[0];
@@ -146,7 +97,6 @@ export default function EventPageClient({ id }) {
         } else {
           console.error('Неизвестная структура данных:', result);
         }
-      }
     } catch (error) {
       console.log('Ошибка при запросе:', error);
       return null;

@@ -12,6 +12,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useSWR, { SWRConfig } from 'swr';
+import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -35,12 +36,9 @@ export default function About() {
 
       console.log('fetcher args', dateRange.date_from);
       console.log('fetcher args', dateRange.date_to);
-      const res = await fetch('http://159.223.239.75:8005/api/get_valid_events/', {
+      const res = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer zevgEv-vimned-ditva8',
-          'Content-Type': 'application/json',
-        },
+        headers: API_HEADERS,
         body: JSON.stringify({
           date_from: dateRange.date_from,
           date_to: dateRange.date_to,
@@ -70,50 +68,6 @@ export default function About() {
 
       let eventsfromFetcher = [];
 
-      if (result.task_id) {
-        const taskId = result.task_id;
-        const statusUrl = `http://159.223.239.75:8005/api/status/${taskId}`;
-
-        setTimeout(async () => {
-          try {
-            const statusResponse = await fetch(statusUrl, {
-              method: 'GET',
-              headers: {
-                'Authorization': 'Bearer zevgEv-vimned-ditva8',
-                'Content-Type': 'application/json',
-              },
-            });
-
-            if (!statusResponse.ok) {
-              throw new Error(`Ошибка: ${statusResponse.statusText}`);
-            }
-
-            const statusResult = await statusResponse.json();
-            console.log('Status result: ', statusResult);
-
-            if (Array.isArray(statusResult)) {
-              console.log('statusResult', statusResult)
-              eventsfromFetcher = statusResult;
-            } else if (statusResult.events && Array.iaArray(statusResult.events)) {
-              eventsfromFetcher = statusResult.events;
-            } else if (statusResult.result.events && Array.isArray(statusResult.result.events)) {
-              console.log('statusResult.result.events', statusResult.result.events)
-              eventsfromFetcher = statusResult.result.events;
-            } else {
-              console.error('Неизвестная структура данных:', statusResult);
-              setStatus('Не удалось обработать данные');
-              return;
-            }
-
-            console.log('eventsfromFetcher', eventsfromFetcher)
-
-            return eventsfromFetcher;
-
-          } catch (error) {
-            console.log('Ошибка при запросе', error);
-          }
-        }, 5000);
-      } else {
         console.log('result', result);
         if (result.result && Array.isArray(result.result)) {
           console.log('result.result', result.result.events)
@@ -129,7 +83,6 @@ export default function About() {
         console.log('eventsfromFetcher', eventsfromFetcher)
 
         return eventsfromFetcher;
-      }
 
     } catch (error) {
       console.log('Ошибка при выполнении задачи', error);
