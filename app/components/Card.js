@@ -17,7 +17,7 @@ dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const Card = ({ type, main_category_id, title, from_date, address, price, id, image }) => {
+const Card = ({ type, main_category_id, title, from_date, address, price, id, image, to_date }) => {
 
   const { convertImageUrlToJpeg } = useEvents();
   const [showFulltext, setShowFulltext] = useState(false);
@@ -38,6 +38,27 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
   const heightImage = {
     mini: 'object-cover object-center w-full h-[200px] transform transition duration-300 group-hover:scale-105 relative',
     max: 'object-cover object-center w-full h-auto transform transition duration-300 group-hover:scale-105 relative',
+  };
+
+  const formatDateRange = (from_date, to_date) => {
+    if (!from_date) return 'Скоро будет дата';
+  
+    const from = dayjs(from_date).utc().tz('Europe/Moscow');
+    const to = to_date ? dayjs(to_date).utc().tz('Europe/Moscow') : null;
+  
+    if (!to || from.isSame(to)) {
+      return from.format('D MMMM HH:mm'); // Если даты полностью совпадают, оставляем только начало
+    }
+  
+    if (from.isSame(to, 'day')) {
+      return `${from.format('D MMMM HH:mm')} - ${to.format('HH:mm')}`;
+    }
+  
+    if (to.hour() === 0 && to.minute() === 0) {
+      return `${from.format('D MMMM HH:mm')} - 00:00`;
+    }
+  
+    return `${from.format('D MMMM HH:mm')} - ${to.format('D MMMM HH:mm')}`;
   };
 
   return (
@@ -89,7 +110,12 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
                       <AiFillClockCircle className='text-[#777] h-3 w-3' />
                     </div>
 
-                    <p className="text-[#777] font-roboto">{from_date ? dayjs(from_date).utc().tz('Europe/Moscow').format('DD MMMM') : 'Скоро будет дата'}</p>
+                    <p className="text-[#777] font-roboto">
+                    {formatDateRange(from_date, to_date)}
+                    </p>
+                    <p>
+
+                    </p>
                   </div>
                   <div className='flex items-start'>
                     {address ?

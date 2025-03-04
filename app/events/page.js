@@ -23,7 +23,7 @@ dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-function Page({ sortedEvents, isLoadingEvents }) {
+function Page({ sortedEvents, isLoadingEvents, isValidating }) {
   // скелетон для cards
   if (isLoadingEvents) {
     return (
@@ -68,6 +68,7 @@ function Page({ sortedEvents, isLoadingEvents }) {
             sortedEvents.map((card) => (
               <Card
                 type="mini"
+                to_date={card.to_date}
                 category={card.category}
                 main_category_id={card.main_category_id}
                 price={card.price}
@@ -82,7 +83,15 @@ function Page({ sortedEvents, isLoadingEvents }) {
             ))
           ) : (
             <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
-              Нет доступных событий.
+              {isValidating ?
+                // (<div className=" inset-0 flex items-center justify-center z-50">
+                //   <div className="relative flex items-center justify-center">
+                //     <div className="w-16 h-16 border-4 border-violet-500 border-solid border-t-transparent rounded-full animate-spin"></div>
+                //     <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
+                //     <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
+                //   </div>
+                // </div>)
+                '' : 'Нет доступных событий.'}
             </div>
           )
         }
@@ -111,14 +120,17 @@ export default function Events() {
   const [hasMore, setHasMore] = useState(true);
   const [allEvents, setAllEvents] = useState([]);
   const [filteredEvents, setfilteredEvents] = useState([]);
-
-  const limit = 8;
+  const [isTryingToLoadMore, setIsTryingToLoadMore] = useState(false);
+  const [limit, setLimit] = useState(20);
+  const initialLimit = 8;
 
   const dateRange = {
     date_from: dayjs(startDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
     date_to: dayjs(endDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
   }
-  console.log('startDate', startDate)
+  console.log('startDate', startDate);
+  console.log('endDate', endDate);
+
 
 
   const getKey = (pageIndex, previousPageData) => {
@@ -157,7 +169,7 @@ export default function Events() {
       const body = {
         fields: [
           'event_id', 'id', 'title', 'image', 'url', 'price', 'address',
-          'from_date', 'full_text', 'place_id', 'main_category_id',
+          'from_date', 'to_date', 'full_text', 'place_id', 'main_category_id',
         ],
         page: pageIndex,
         limit,
@@ -213,10 +225,11 @@ export default function Events() {
     revalidateFirstPage: false, // Отключает повторный запрос первой страницы при обновлении
   });
 
-  console.log("Generated key:", getKey(size, dataEvents?.[size - 1]));
+  console.log('dataEvents', dataEvents);
 
   useEffect(() => {
     if (dataEvents) {
+
       setHasMore(dataEvents?.[dataEvents.length - 1]?.length === limit);
 
       // Объединяем все страницы данных в один массив
@@ -225,13 +238,26 @@ export default function Events() {
       // Фильтруем события, чтобы избежать дубликатов
       const uniqueEvents = newEvents.filter(event => !loadedEventIdsRef.current.has(event.id));
 
-      // Добавляем новые события в allEvents
+
       if (uniqueEvents.length > 0) {
         setAllEvents(prevEvents => [...prevEvents, ...uniqueEvents]);
 
         // Обновляем loadedEventIdsRef
         uniqueEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
       }
+      console.log('uniqueEvents', uniqueEvents, uniqueEvents.length);
+
+      // Проверяем, нужно ли догружать еще события
+      // if (uniqueEvents.length < limit && hasMore) {
+      //   const newLimit = limit + (limit - uniqueEvents.length);
+      //   console.log(`Увеличиваем лимит до: ${newLimit}`);
+      //   setLimit(newLimit);
+      //   loadMoreEvents();
+      // } else {
+      //   console.log(`Возвращаем лимит к начальному значению: ${initialLimit}`);
+      //   setLimit(initialLimit);
+      // }
+
     }
   }, [dataEvents]);
 
@@ -256,12 +282,24 @@ export default function Events() {
     if (allEvents.length > 0) {
       // Фильтрация событий
       const filtered = allEvents.filter((event) => {
+
         const eventCategoryName = getCategoryNameById(event.main_category_id);
         const matchesCategory = !category || eventCategoryName === category;
 
-        const eventDate = dayjs(event.from_date).utc().tz('Europe/Moscow').startOf('day');
-        const isInDateRange = (!startDate || eventDate.isSameOrAfter(startDate, 'day')) &&
-          (!endDate || eventDate.isSameOrBefore(endDate, 'day'));
+        const eventDateFrom = dayjs(event.from_date).utc().startOf('day').tz('Europe/Moscow');
+        let eventDateTo = event.to_date
+          ? dayjs(event.to_date).utc().startOf('day').tz('Europe/Moscow')
+          : eventDateFrom;
+
+        const startDateClean = startDate ? dayjs(startDate).startOf('day') : null;
+        const endDateClean = endDate ? dayjs(endDate).startOf('day') : startDate;
+
+
+        const isInDateRange =
+          (!startDateClean || eventDateTo.isSameOrAfter(startDateClean, 'day')) &&
+          (!endDateClean || eventDateFrom.isSameOrBefore(endDateClean, 'day'));
+
+        console.log("Is in date range:", isInDateRange);
 
         const matchesSearch = search
           ? (
@@ -295,31 +333,29 @@ export default function Events() {
 
       setSortedEvents(sorted);
 
+
       // Проверка, нужно ли загружать больше событий
-      if (filtered.length < limit || filtered.length % limit !== 0) {
+      if (filtered.length === 0 && hasMore && !isTryingToLoadMore) {
+        console.log("Нет удовлетворяющих событий - загружаем следующую страницу");
+        setIsTryingToLoadMore(true);
         loadMoreEvents();
+      } else {
+        setIsTryingToLoadMore(false);
       }
     }
-  }, [allEvents, category, search, startDate, endDate, selectedTags]);
-
-  console.log('sortedEvents с основным запросом', sortedEvents)
-
-  console.log("dataEvents", dataEvents);
-  console.log("ошибка dataEvents", errorEvents);
-  console.log("Загрузка dataEvents", isLoadingEvents);
+  }, [allEvents, category, search, startDate, endDate, selectedTags, isTryingToLoadMore]);
 
   const loadMoreEvents = () => {
     if (isLoadingEvents || !hasMore) return;
-    if (hasMore) setSize(size + 1);
+    setSize((prev) => prev + 1);
   };
-
 
   return (
     <>
-      <HeroSearch 
-      search={search} 
-      setSearch={setSearch}
-      value={'Найти мероприятие'}
+      <HeroSearch
+        search={search}
+        setSearch={setSearch}
+        value={'Найти мероприятие'}
       />
       <div className="mt-3 max-w-custom-container mx-auto px-4 lg:flex flex-cols justify-center">
         <aside className="lg:w-[20%] w-full mb-3 mr-3 relative">
@@ -340,6 +376,7 @@ export default function Events() {
         </aside>
         <section className={`lg:w-[80%] w-full ${isOpen ? 'hidden lg:block' : 'block'}`}>
           <Page
+            isValidating={isValidating}
             dataEvents={dataEvents}
             isLoadingEvents={isLoadingEvents}
             selectedTagsId={selectedTagsId}

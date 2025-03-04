@@ -63,11 +63,11 @@ const Navbar = () => {
         console.log('result.events', result.events)
         eventsfromFetcher = eventsfromFetcher.concat(result.events);
       }
-      
+
       if (result.places && Array.isArray(result.places)) {
         console.log('result.places', result.places)
         eventsfromFetcher = eventsfromFetcher.concat(result.places);
-      } 
+      }
 
       console.log('eventsfrom Search', eventsfromFetcher)
 
@@ -141,9 +141,9 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -175,6 +175,7 @@ const Navbar = () => {
                 </span>
 
                 <input
+                  ref={searchRef}
                   value={searchQuery}
                   onChange={handleSearchChange}
                   type="text"
@@ -182,7 +183,9 @@ const Navbar = () => {
                   placeholder="Search"
                 />
                 {searchQuery && (
-                  <div className="absolute left-0 right-0 mt-2 bg-white shadow-lg max-h-60 overflow-y-auto z-10">
+                  <div
+                    ref={dropdownRef}
+                    className="absolute left-0 right-0 mt-2 bg-white shadow-lg max-h-60 overflow-y-auto z-10">
                     <ul>
                       {filterSearch.length > 0 ? (
                         filterSearch.map((event) => (

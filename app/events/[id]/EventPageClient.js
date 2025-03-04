@@ -202,7 +202,7 @@ export default function EventPageClient({ id }) {
                 </div>
                 <div className="flex items-baseline my-3">
                   <p className="text-[#777]">Дата: </p>
-                  <p className="font-roboto text-[#333] ml-[36px]">{dayjs(event?.from_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
+                  <p className="font-roboto text-[#333] ml-[36px]">{dayjs(event?.from_date).utc().tz('Europe/Moscow').format('DD MMMM')} {event?.to_date ? 'по' : ''} {dayjs(event?.to_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
                 </div>
                 <div className="flex items-baseline my-3">
                   <p className="text-[#777]">Начало:</p>
