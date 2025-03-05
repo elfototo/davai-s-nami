@@ -22,7 +22,7 @@ dayjs.extend(timezone);
 dayjs.extend(isBetween);
 
 
-export default function eventPlace({ params }) {
+export default function EventPlace({ params }) {
 
     const { cache, findDataByIdPlace } = useEvents();
 
