@@ -45,20 +45,27 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
   
     const from = dayjs(from_date).utc().tz('Europe/Moscow');
     const to = to_date ? dayjs(to_date).utc().tz('Europe/Moscow') : null;
+
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+    const fromWeekday = capitalize(from.format('dd'));
+    const toWeekday = to ? capitalize(to.format('dd')) : '';
+
+    console.log('fromWeekday', fromWeekday)
   
     if (!to || from.isSame(to)) {
-      return from.format('D MMMM HH:mm'); // Если даты полностью совпадают, оставляем только начало
+      return `${fromWeekday}, ${from.format('D MMMM')}`;
     }
   
     if (from.isSame(to, 'day')) {
-      return `${from.format('D MMMM HH:mm')} - ${to.format('HH:mm')}`;
+      return `${fromWeekday}, ${from.format('D MMMM')}`;
     }
   
     if (to.hour() === 0 && to.minute() === 0) {
-      return `${from.format('D MMMM HH:mm')} - 00:00`;
+      return `${fromWeekday}, ${from.format('D MMMM')} - 00:00`;
     }
   
-    return `${from.format('D MMMM HH:mm')} - ${to.format('D MMMM HH:mm')}`;
+    return `${fromWeekday}, ${from.format('D MMMM')} - ${toWeekday}, ${to.format('D MMMM')}`;
   };
 
   return (

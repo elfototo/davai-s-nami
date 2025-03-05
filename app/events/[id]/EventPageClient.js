@@ -83,20 +83,20 @@ export default function EventPageClient({ id }) {
 
       console.log('result на странице id', result);
 
-        if (result && Array.isArray(result)) {
-          console.log('result на странице id', result.result);
-          return result[0];
-        } else if (result.result && Array.isArray(result.result)) {
+      if (result && Array.isArray(result)) {
+        console.log('result на странице id', result.result);
+        return result[0];
+      } else if (result.result && Array.isArray(result.result)) {
 
-          console.log('result.result на странице id', result.result);
-          return result.result[0];
-        } else if (result.result.events && Array.isArray(result.result.events)) {
+        console.log('result.result на странице id', result.result);
+        return result.result[0];
+      } else if (result.result.events && Array.isArray(result.result.events)) {
 
-          console.log('result.result.events на странице id', result.result.events);
-          return result.result.events[0];
-        } else {
-          console.error('Неизвестная структура данных:', result);
-        }
+        console.log('result.result.events на странице id', result.result.events);
+        return result.result.events[0];
+      } else {
+        console.error('Неизвестная структура данных:', result);
+      }
     } catch (error) {
       console.log('Ошибка при запросе:', error);
       return null;
@@ -133,6 +133,51 @@ export default function EventPageClient({ id }) {
     }
 
   }, [dataEvent, dataIsLoading, dataError, cache, idNumber, cachedEvent]);
+
+  const formatDateRange = (from_date, to_date) => {
+    if (!from_date) return 'Скоро будет дата';
+
+    const from = dayjs(from_date).utc().tz('Europe/Moscow');
+    const to = to_date ? dayjs(to_date).utc().tz('Europe/Moscow') : null;
+
+    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+    const fromWeekday = capitalize(from.format('dd'));
+    const toWeekday = to ? capitalize(to.format('dd')) : '';
+
+    if (!to || from.isSame(to)) {
+      return from.format('D MMMM'); // Если даты полностью совпадают, оставляем только начало
+    }
+
+    if (from.isSame(to, 'day')) {
+      return `${fromWeekday}, ${from.format('D MMMM')}`;
+    }
+
+    if (to.hour() === 0 && to.minute() === 0) {
+      return `${fromWeekday}, ${from.format('D MMMM')} - 00:00`;
+    }
+
+    return `${fromWeekday}, ${from.format('D MMMM')} - ${toWeekday}, ${to.format('D MMMM')}`;
+  };
+
+  const formatDateClock = (from_date, to_date) => {
+    const from = dayjs(from_date).utc().tz('Europe/Moscow');
+    const to = to_date ? dayjs(to_date).utc().tz('Europe/Moscow') : null;
+
+    if (!to || from.isSame(to)) {
+      return from.format('HH:mm'); // Если даты полностью совпадают, оставляем только начало
+    }
+
+    if (from.isSame(to, 'day')) {
+      return `${from.format('HH:mm')} - ${to.format('HH:mm')}`;
+    }
+
+    if (to.hour() === 0 && to.minute() === 0) {
+      return `${from.format('HH:mm')} - 00:00`;
+    }
+
+    return `${from.format('HH:mm')} - ${to.format('HH:mm')}`;
+  }
 
   console.log('event', event);
 
@@ -202,14 +247,18 @@ export default function EventPageClient({ id }) {
                 </div>
                 <div className="flex items-baseline my-3">
                   <p className="text-[#777]">Дата: </p>
-                  <p className="font-roboto text-[#333] ml-[36px]">{dayjs(event?.from_date).utc().tz('Europe/Moscow').format('DD MMMM')} {event?.to_date ? 'по' : ''} {dayjs(event?.to_date).utc().tz('Europe/Moscow').format('DD MMMM')}</p>
-                </div>
-                <div className="flex items-baseline my-3">
-                  <p className="text-[#777]">Начало:</p>
-                  <p className="font-roboto text-[#333] ml-4">
-                    {dayjs(event?.from_date).utc().tz('Europe/Moscow', true).format('HH:mm')}
+                  <p className="font-roboto text-[#333] ml-[38px]">
+                    {formatDateRange(event?.from_date, event?.to_date)}
                   </p>
                 </div>
+                <div className="flex items-baseline my-3">
+                  <p className="text-[#777]">Время:</p>
+                  <p className="font-roboto text-[#333] ml-[26px]">
+                    {formatDateClock(event?.from_date, event?.to_date)}
+                    
+                  </p>
+                </div>
+
                 <div className="flex items-baseline my-3">
                   <p className="text-[#777]">Место: </p>
                   {event?.place_id ? (

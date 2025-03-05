@@ -60,25 +60,46 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
     };
 
     const selectToday = () => {
-        const todayDate = dayjs().utc().tz('Europe/Moscow').startOf('day');
-        setStartDate(todayDate);
-        setEndDate(todayDate);
-        setSelectedButton('today');
+        if (selectedButton === 'today') {
+            setStartDate(null);
+            setEndDate(null);
+            setSelectedButton('');
+        } else {
+            const todayDate = dayjs().utc().tz('Europe/Moscow').startOf('day');
+            setStartDate(todayDate);
+            setEndDate(todayDate);
+            setSelectedButton('today');
+        }
+
     };
 
     const selectTomorrow = () => {
-        const tomorrowDate = dayjs().add(1, 'day').utc().tz('Europe/Moscow').startOf('day');
-        setStartDate(tomorrowDate);
-        setEndDate(tomorrowDate);
-        setSelectedButton('tomorrow');
+        if (selectedButton === 'tomorrow') {
+            setStartDate(null);
+            setEndDate(null);
+            setSelectedButton('');
+        } else {
+            const tomorrowDate = dayjs().add(1, 'day').utc().tz('Europe/Moscow').startOf('day');
+            setStartDate(tomorrowDate);
+            setEndDate(tomorrowDate);
+            setSelectedButton('tomorrow');
+        }
+
     };
 
     const selectWeekends = () => {
-        const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
-        const endOfWeekend = startOfWeekend.add(1, 'day');
-        setStartDate(startOfWeekend);
-        setEndDate(endOfWeekend);
-        setSelectedButton('weekend');
+        if (selectedButton === 'weekend') {
+            setStartDate(null);
+            setEndDate(null);
+            setSelectedButton('');
+        } else {
+            const startOfWeekend = dayjs().isoWeekday(6).utc().tz('Europe/Moscow').startOf('day');
+            const endOfWeekend = startOfWeekend.add(1, 'day');
+            setStartDate(startOfWeekend);
+            setEndDate(endOfWeekend);
+            setSelectedButton('weekend');
+        }
+
     };
 
     const clearSelection = () => {
@@ -105,7 +126,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                         </svg>
                     </button>
 
-                    
+
                     <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  hover:bg-gray-100'} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         Сегодня
                     </button>

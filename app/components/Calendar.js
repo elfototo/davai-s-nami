@@ -7,6 +7,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 import utc from 'dayjs/plugin/utc';
 import 'dayjs/locale/ru';
 import timezone from 'dayjs/plugin/timezone';
+import { IoMdClose } from "react-icons/io";
 
 
 dayjs.locale('ru');
@@ -157,8 +158,10 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                 </div>
             </div>
             {showCalendar && (
+
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white border border-gray-300 rounded shadow-md p-4 max-w-md w-full">
+
+                    <div className="relative bg-white border border-gray-300 rounded shadow-md p-4 max-w-md w-full">
                         <div className="flex justify-between mb-2">
                             <button
                                 onClick={() => changeMonth(-1)}
@@ -194,7 +197,11 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                         >
                             Применить
                         </button>
+                        <button onClick={toggleCalendar} className="md:absolute -top-8 -right-8">
+                            <IoMdClose className="text-[2rem] text-[#fff]" />
+                        </button>
                     </div>
+
                 </div>
             )}
         </div>

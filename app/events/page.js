@@ -247,17 +247,6 @@ export default function Events() {
       }
       console.log('uniqueEvents', uniqueEvents, uniqueEvents.length);
 
-      // Проверяем, нужно ли догружать еще события
-      // if (uniqueEvents.length < limit && hasMore) {
-      //   const newLimit = limit + (limit - uniqueEvents.length);
-      //   console.log(`Увеличиваем лимит до: ${newLimit}`);
-      //   setLimit(newLimit);
-      //   loadMoreEvents();
-      // } else {
-      //   console.log(`Возвращаем лимит к начальному значению: ${initialLimit}`);
-      //   setLimit(initialLimit);
-      // }
-
     }
   }, [dataEvents]);
 
