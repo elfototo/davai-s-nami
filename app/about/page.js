@@ -68,21 +68,21 @@ export default function About() {
 
       let eventsfromFetcher = [];
 
-        console.log('result', result);
-        if (result.result && Array.isArray(result.result)) {
-          console.log('result.result', result.result.events)
-          eventsfromFetcher = result.result;
-        } else if (result.result.events && Array.isArray(result.result.events)) {
-          console.log('result.result.events', result.result.events)
-          eventsfromFetcher = result.result.events;
-        } else {
-          console.log('Неизвестная структура данных');
-          return;
-        }
+      console.log('result', result);
+      if (result.result && Array.isArray(result.result)) {
+        console.log('result.result', result.result.events)
+        eventsfromFetcher = result.result;
+      } else if (result.result.events && Array.isArray(result.result.events)) {
+        console.log('result.result.events', result.result.events)
+        eventsfromFetcher = result.result.events;
+      } else {
+        console.log('Неизвестная структура данных');
+        return;
+      }
 
-        console.log('eventsfromFetcher', eventsfromFetcher)
+      console.log('eventsfromFetcher', eventsfromFetcher)
 
-        return eventsfromFetcher;
+      return eventsfromFetcher;
 
     } catch (error) {
       console.log('Ошибка при выполнении задачи', error);
@@ -142,8 +142,7 @@ export default function About() {
 
   return (
     <div className="max-w-custom-container mx-auto bg-gray-100 min-h-screen py-12">
-      <div className="container mx-auto  px-6">
-
+      <div className="container mx-auto px-6">
 
         <div className="mb-16">
           <div className='p-8 lg:flex items-center justify-between'>
@@ -181,79 +180,77 @@ export default function About() {
           </div>
         </div>
 
-        {/* Секция с типами мероприятий */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20">
-          {/* Культурные мероприятия */}
-          <div className="bg-teal-50 rounded-lg shadow-lg p-8">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">Культурные мероприятия</h3>
-            <p className="text-gray-700 mb-6">
-              Художественные выставки, театральные постановки и культурные события, которые позволяют погрузиться в атмосферу искусства.
-            </p>
-            <Link href={`/events?category=${encodeURIComponent("Культура")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
-          </div>
 
-          {/* Образовательные мероприятия */}
-          <div className="bg-teal-50 rounded-lg shadow-lg p-8">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">Образовательные мероприятия</h3>
-            <p className="text-gray-700 mb-6">
-              Лекции, мастер-классы, тренинги и семинары. Мы собираем для вас все образовательные мероприятия города.
-            </p>
-            <Link href={`/events?category=${encodeURIComponent("Лекции")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
-          </div>
-
-          {/* Музыкальные мероприятия */}
-          <div className="bg-teal-50 rounded-lg shadow-lg p-8">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">Музыкальные мероприятия</h3>
-            <p className="text-gray-700 mb-6">
-              Концерты, фестивали, уличные выступления и музыкальные вечеринки. Вся музыка города в одном месте.
-            </p>
-            <Link href={`/events?category=${encodeURIComponent("Музыка")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
-          </div>
+      </div>
+      {/* Секция с типами мероприятий */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20 max-w-custom-container mx-auto px-4">
+        {/* Культурные мероприятия */}
+        <div className="bg-teal-50 rounded-lg shadow-lg p-8">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Культурные мероприятия</h3>
+          <p className="text-gray-700 mb-6">
+            Художественные выставки, театральные постановки и культурные события, которые позволяют погрузиться в атмосферу искусства.
+          </p>
+          <Link href={`/events?category=${encodeURIComponent("Культура")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
         </div>
 
-        {/* Секция с мероприятиями по датам */}
-        <div className="p-8 mb-16">
-          <div className='flex justify-between items-baseline'>
-            <h1 className="font-bold mt-0 mb-6">
-              Мероприятия этого месяца
-            </h1>
-            <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
-              <p className="text-[#777]">Смотреть весь список</p>
-            </Link>
+        {/* Образовательные мероприятия */}
+        <div className="bg-teal-50 rounded-lg shadow-lg p-8">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Образовательные мероприятия</h3>
+          <p className="text-gray-700 mb-6">
+            Лекции, мастер-классы, тренинги и семинары. Мы собираем для вас все образовательные мероприятия города.
+          </p>
+          <Link href={`/events?category=${encodeURIComponent("Лекции")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
+        </div>
+
+        {/* Музыкальные мероприятия */}
+        <div className="bg-teal-50 rounded-lg shadow-lg p-8">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Музыкальные мероприятия</h3>
+          <p className="text-gray-700 mb-6">
+            Концерты, фестивали, уличные выступления и музыкальные вечеринки. Вся музыка города в одном месте.
+          </p>
+          <Link href={`/events?category=${encodeURIComponent("Музыка")}`} className="text-pink-500 font-semibold">Узнать больше →</Link>
+        </div>
+      </div>
+
+      {/* Секция с мероприятиями по датам */}
+      <div className="py-4 mb-16 max-w-custom-container mx-auto px-4">
+        <div className='flex flex-wrap justify-between items-baseline mb-6'>
+          <h1 className="font-roboto font-bold mt-0 mr-5">
+            Мероприятия этого месяца
+          </h1>
+          <Link href="/events" className='text-[#777] whitespace-nowrap underline'>
+            <p className="text-[#777]">Смотреть весь список</p>
+          </Link>
+        </div>
+
+
+        <div className='flex justify-center flex-wrap'>
+          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mt-5'>
+            {dataIsDateRangeMonth ?
+              loader :
+              (filterEventsMonth?.slice(0.4).map((card) => (
+                <Card
+                  type='mini'
+                  category={card.category}
+                  main_category_id={card.main_category_id}
+                  price={card.price}
+                  title={card.title}
+                  from_date={card.from_date}
+                  address={card.address}
+                  key={card.event_id}
+                  id={card.id}
+                  data={card}
+                  image={card.image} />
+              )))}
           </div>
-
-
-          <div className='flex justify-center flex-wrap'>
-            <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mt-5'>
-              {dataIsDateRangeMonth ?
-                loader :
-                (filterEventsMonth?.slice(0.4).map((card) => (
-                  <Card
-                    type='mini'
-                    category={card.category}
-                    main_category_id={card.main_category_id}
-                    price={card.price}
-                    title={card.title}
-                    from_date={card.from_date}
-                    address={card.address}
-                    key={card.event_id}
-                    id={card.id}
-                    data={card}
-                    image={card.image} />
-                )))}
-            </div>
-          </div>
-
         </div>
       </div>
 
       {/* Контакты */}
-      <div className="group relative bg-white rounded-lg shadow-lg p-8 mx-8 overflow-hidden ">
+      <div className="group relative bg-white rounded-lg shadow-lg p-8 overflow-hidden mx-4">
 
         <div className={`absolute top-[110%] left-0 -translate-x-1/2 -translate-y-1/2 h-[150px] w-[150px] group-hover:bg-sky-400 rounded-full group-hover:h-[2500px] group-hover:w-[2500px] transform transition-all duration-500`}></div>
 
-        {/* <div className="w-full absolute left-0 top-5 h-full bg-cover bg-no-repeat lg:bg-[url('/img/telegram.png')]">
-        </div> */}
         <div className='absolute bottom-0 left-0 w-[50%]'>
           <Image
             src={'/img/telegram_sky-400.png'}

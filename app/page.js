@@ -306,13 +306,13 @@ export default function Home() {
       </section>
 
       <section className='max-w-custom-container mx-auto px-4'>
-        <div className='flex justify-between items-baseline'>
-          <h1 className='font-roboto font-bold'>Горячие новинки месяца</h1>
-          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
+        <div className='flex flex-wrap justify-between items-baseline mb-6'>
+          <h1 className='font-roboto font-bold mb-3 mr-5'>Горячие новинки месяца</h1>
+          <Link href="/events" className='text-[#777] whitespace-nowrap underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
-        <div className='flex justify-center flex-wrap'>
+        <div className='flex justify-center items-center flex-wrap'>
           <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
 
             {dataIsDateRangeMonth ? (
@@ -339,14 +339,14 @@ export default function Home() {
       </section>
 
       <section className='max-w-custom-container mx-auto px-4'>
-        <div className='flex justify-between items-baseline'>
-          <h1 className='font-roboto font-bold'>Куда сходить сегодня и завтра</h1>
-          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
+        <div className='flex flex-wrap justify-between items-baseline mb-6'>
+          <h1 className='font-roboto font-bold mb-3 mr-5'>Куда сходить сегодня и завтра</h1>
+          <Link href="/events" className='text-[#777] whitespace-nowrap underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
             {dataIsDateRange1 ?
               loader :
               (eventsTodayTomorrow?.slice(0, 4).map((card) => (
@@ -367,15 +367,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <section className='max-w-custom-container mx-auto px-4'>
-        <div className='flex justify-between items-baseline'>
-          <h1 className='font-roboto font-bold'>Куда сходить в выходные</h1>
-          <Link href="/events" className='text-[#777] whitespace-nowrap ml-5 underline'>
+        <div className='flex flex-wrap justify-between items-baseline mb-6'>
+          <h1 className='font-roboto font-bold mb-3 mr-5'>Куда сходить в выходные</h1>
+          <Link href="/events" className='text-[#777] whitespace-nowrap underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mb-10'>
+          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
             {dataIsDateRange2 ?
               loader :
               (weekendEvents?.slice(0, 4).map((card) => (
