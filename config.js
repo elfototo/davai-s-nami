@@ -13,4 +13,5 @@ export const SEARCH_URL = 'https://www.dsn-api.magusch.ru/api/search/';
 export const API_HEADERS = {
     'Authorization': 'Bearer zevgEv-vimned-ditva8',
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
 };
