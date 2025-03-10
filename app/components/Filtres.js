@@ -127,16 +127,16 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                     </button>
 
 
-                    <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  hover:bg-gray-100'} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
+                    <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  '} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         Сегодня
                     </button>
-                    <button onClick={selectTomorrow} className={`${selectedButton === 'tomorrow' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  hover:bg-gray-100'} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
+                    <button onClick={selectTomorrow} className={`${selectedButton === 'tomorrow' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  '} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         Завтра
                     </button>
-                    <button onClick={selectWeekends} className={`${selectedButton === 'weekend' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  hover:bg-gray-100'} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
+                    <button onClick={selectWeekends} className={`${selectedButton === 'weekend' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  '} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         Выходные
                     </button>
-                    <button onClick={clearSelection} className={`bg-[#fff]  hover:bg-gray-100 mx-3 text-[1rem] items-center justify-center py-1 px-2 rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
+                    <button onClick={clearSelection} className={`bg-[#fff]   mx-3 text-[1rem] items-center justify-center py-1 px-2 rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         Сбросить фильтр
                     </button>
                 </div>
