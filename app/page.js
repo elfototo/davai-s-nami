@@ -268,7 +268,7 @@ export default function Home() {
   };
 
   const loader = (
-    <div className=" absolute flex items-center justify-cente mx-auto">
+    <div className="absolute flex items-center justify-cente mx-auto t-5">
       <div className="relative flex items-center justify-center">
         <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
         <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
