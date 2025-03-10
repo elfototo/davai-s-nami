@@ -268,7 +268,7 @@ export default function Home() {
   };
 
   const loader = (
-    <div className="absolute flex items-center justify-cente mx-auto t-5">
+    <div className="absolute flex items-center justify-cente mx-auto">
       <div className="relative flex items-center justify-center">
         <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
         <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
@@ -313,7 +313,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mt-5'>
 
             {dataIsDateRangeMonth ? (
               loader
@@ -346,7 +346,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mt-5'>
             {dataIsDateRange1 ?
               loader :
               (eventsTodayTomorrow?.slice(0, 4).map((card) => (
@@ -376,7 +376,7 @@ export default function Home() {
           </Link>
         </div>
         <div className='flex justify-center items-center flex-wrap'>
-          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
+          <div className='relative grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto mt-5'>
             {dataIsDateRange2 ?
               loader :
               (weekendEvents?.slice(0, 4).map((card) => (
