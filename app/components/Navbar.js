@@ -383,7 +383,7 @@ const MobileNavBar = () => {
   const isActive = (path) => pathname === path;
 
   return (
-     <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white p-6 border-t border-gray-300 shadow-md lg:hidden">
+     <div className="fixed bottom-1 left-1 right-1 rounded-full z-50 flex justify-around bg-white p-6 border-t border-gray-300 shadow-md lg:hidden">
       <Link href="/" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-blue-500 active:scale-110 ${isActive("/") ? "active" : ""}`}>
         <FaHome size={25} />
         {/* <span className="text-sm font-roboto">Главная</span> */}
