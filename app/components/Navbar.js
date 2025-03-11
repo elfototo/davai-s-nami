@@ -6,6 +6,7 @@ import { MdAccountCircle } from "react-icons/md";
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+import { FaHome, FaMapMarkerAlt, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
 
 
 const pages = [
@@ -302,13 +303,13 @@ const Navbar = () => {
                 </svg>
               </button>
 
-              <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
+              {/* <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
                 <div className="w-8 h-8 overflow-hidden rounded-full">
                   <MdAccountCircle className='w-8 h-8 text-[#333]' />
 
                 </div>
                 <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Войти</h3>
-              </button>
+              </button> */}
             </div>
             <div className="my-4 lg:hidden">
               <div className="relative">
@@ -329,14 +330,41 @@ const Navbar = () => {
                 </span>
 
                 <input
+                  ref={searchRef}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                   type="text"
                   className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
                   placeholder="Search"
                 />
+                {searchQuery && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute left-0 right-0 mt-2 bg-white shadow-lg max-h-60 overflow-y-auto z-10">
+                    <ul>
+                      {filterSearch.length > 0 ? (
+                        filterSearch.map((event) => (
+                          <li
+                            key={event.path}
+                            onClick={handleItemClick}
+                            className="px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                          >
+                            <Link href={event.path}>
+                              <div className="block">{event.title || event.place_name}</div>
+                            </Link>
+                          </li>
+                        ))
+                      ) : (
+                        <li className="px-4 py-2 text-gray-500">No results found</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
 
           </div>
+          <MobileNavBar />
         </div>
       </div>
     </nav >
@@ -344,3 +372,26 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+const MobileNavBar = () => {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white dark:bg-gray-800 p-2 border-t border-gray-300 dark:border-gray-700 shadow-md lg:hidden">
+      <Link href="/home" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
+        <FaHome size={24} />
+        <span className="text-xs">Главная</span>
+      </Link>
+      <Link href="/events" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
+        <FaCalendarAlt size={24} />
+        <span className="text-xs">События</span>
+      </Link>
+      <Link href="/places" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
+        <FaMapMarkerAlt size={24} />
+        <span className="text-xs">Места</span>
+      </Link>
+      <Link href="/about" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
+        <FaInfoCircle size={24} />
+        <span className="text-xs">О нас</span>
+      </Link>
+    </div>
+  );
+};
