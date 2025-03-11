@@ -375,7 +375,7 @@ export default Navbar;
 
 const MobileNavBar = () => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white dark:bg-gray-800 p-2 border-t border-gray-300 dark:border-gray-700 shadow-md lg:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white p-3 border-t border-gray-300 shadow-md lg:hidden">
       <Link href="/" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
         <FaHome size={24} />
         <span className="text-xs">Главная</span>
