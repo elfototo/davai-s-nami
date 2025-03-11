@@ -29,6 +29,11 @@ export default function Navbar({ search, setSearch, value }) {
                             <input
                                 type="text"
                                 onChange={(e) => setSearch(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.target.blur(); // Убираем фокус
+                                    }
+                                  }}
                                 className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:outline-none focus:ring focus:ring-opacity-40 
                                  focus:ring-blue-300"
                                 placeholder={value}
