@@ -306,8 +306,8 @@ export default function Home() {
       </section>
 
       <section className='max-w-custom-container mx-auto px-4'>
-        <div className='flex flex-wrap justify-between items-baseline mb-6'>
-          <h1 className='font-roboto font-bold mb-3 mr-5'>Горячие новинки месяца</h1>
+        <div className='flex flex-wrap justify-between items-baseline mb-6 mt-12'>
+          <h1 className='font-roboto font-bold mb-3 mr-5 mt-0'>Горячие новинки месяца</h1>
           <Link href="/events" className='text-[#777] whitespace-nowrap underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
@@ -339,8 +339,8 @@ export default function Home() {
       </section>
 
       <section className='max-w-custom-container mx-auto px-4'>
-        <div className='flex flex-wrap justify-between items-baseline mb-6'>
-          <h1 className='font-roboto font-bold mb-3 mr-5'>Куда сходить сегодня и завтра</h1>
+        <div className='flex flex-wrap justify-between items-baseline mb-6 mt-12'>
+          <h1 className='font-roboto font-bold mb-3 mr-5 mt-0'>Куда сходить сегодня и завтра</h1>
           <Link href="/events" className='text-[#777] whitespace-nowrap underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
@@ -369,8 +369,8 @@ export default function Home() {
       </section>
 
       <section className='max-w-custom-container mx-auto px-4'>
-        <div className='flex flex-wrap justify-between items-baseline mb-6'>
-          <h1 className='font-roboto font-bold mb-3 mr-5'>Куда сходить в выходные</h1>
+        <div className='flex flex-wrap justify-between items-baseline mb-6 mt-12'>
+          <h1 className='font-roboto font-bold mb-3 mr-5 mt-0'>Куда сходить в выходные</h1>
           <Link href="/events" className='text-[#777] whitespace-nowrap underline'>
             <p className="text-[#777]">Смотреть весь список</p>
           </Link>
