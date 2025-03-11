@@ -89,11 +89,13 @@ module.exports = {
 
 			},
 			screens: {
+				ssm: '385px',
 				sm: '480px',
+				smd: '540px',
 				md: '768px',
 				lg: '976px',
 				xl: '1440px',
-				special: '1110px', // for hover effect categories
+				special: '1110px' // for hover effect categories
 			},
 			maxWidth: {
 				'custom-container': '77.5rem'

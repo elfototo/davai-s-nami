@@ -90,22 +90,22 @@ export default function Home() {
 
       let eventsfromFetcher = [];
 
-        console.log('result', result);
-        if (result.result && Array.isArray(result.result)) {
-          console.log('result.result', result.result.events)
-          eventsfromFetcher = result.result;
-        } else if (result.result.events && Array.isArray(result.result.events)) {
-          console.log('result.result.events', result.result.events)
-          eventsfromFetcher = result.result.events;
-        } else {
-          console.log('Неизвестная структура данных');
-          setStatus('Не удалось обработать данные');
-          return;
-        }
+      console.log('result', result);
+      if (result.result && Array.isArray(result.result)) {
+        console.log('result.result', result.result.events)
+        eventsfromFetcher = result.result;
+      } else if (result.result.events && Array.isArray(result.result.events)) {
+        console.log('result.result.events', result.result.events)
+        eventsfromFetcher = result.result.events;
+      } else {
+        console.log('Неизвестная структура данных');
+        setStatus('Не удалось обработать данные');
+        return;
+      }
 
-        console.log('eventsfromFetcher', eventsfromFetcher)
+      console.log('eventsfromFetcher', eventsfromFetcher)
 
-        return eventsfromFetcher;
+      return eventsfromFetcher;
 
     } catch (error) {
       console.log('Ошибка при выполнении задачи', error);
@@ -279,19 +279,31 @@ export default function Home() {
   return (
     <>
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
-        <div className="flex justify-center md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden px-4 md:pl-10 md:pr-0">
-          <div className='flex items-center md:items-start justify-center flex-col md:max-w-[50%]'>
-            <h4 className='font-roboto font-bold text-secondary text-6xl mb-5  whitespace-nowrap'>Играй с нами!</h4>
-            <p className='font-roboto text-center md:text-start font-regular text-secondary mb-5'>Нажми на кнопку чтобы найти случайное <br /> мероприятие на свой уикенд в Санкт - Петербурге</p>
+        <div className="flex justify-center flex-col smd:flex-row md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden px-4 smd:pl-10 smd:pr-0">
+          <div className='flex items-start sm:ml-5 smd:ml-0 md:justify-center mt-16 md:mt-0 flex-col smd:max-w-[40%] md:max-w-[50%]'>
+            <span className='font-roboto font-bold text-[2.6rem] md:text-6xl mb-3 text-secondary whitespace-nowrap'>Играй с нами!</span>
+            <p className='font-roboto text-start font-light text-secondary mb-6'>
+              <span className='bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Нажми на кнопку</span> чтобы найти <br className='smd:hidden'/> случайное мероприятие <br className='hidden sm:block smd:hidden md:block'/> на свой уикенд <br className='smd:hidden'/> в <span className='whitespace-nowrap bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Санкт - Петербурге</span></p>
             <button
               onClick={getRandomEvent}
-              className={`font-roboto  w-3/4 py-4 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
+              className={`font-roboto  md:w-3/4 py-2  md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
               transform transition-transform duration-300 hover:scale-105
               `}>Мне повезет</button>
           </div>
+
+          <div className='h-full smd:hidden'>
+            <Image
+              src={'/img/1-sm-banner.png'}
+              width={1000}
+              height={1000}
+              className="object-cover object-center absolute md:hidden -bottom-3 -right-6 h-[32vh] w-auto sm:h-[40vh]"
+              alt="avatar"
+            />
+          </div>
+
           {/* md-screen */}
-          <div className='h-full w-[60%] relative hidden md:block'>
-            <div className="w-full absolute left-0 top-5 h-full bg-cover bg-no-repeat md:bg-[url('/img/sm-banner.png')] lg:bg-[url('/img/banner.png')]">
+          <div className='h-full w-[60%] relative hidden smd:block'>
+            <div className="w-full absolute left-0 top-5 h-full bg-cover bg-no-repeat smd:bg-[url('/img/sm-banner.png')] lg:bg-[url('/img/banner.png')]">
             </div>
           </div>
         </div>
@@ -441,6 +453,6 @@ export default function Home() {
           </div>
         }
       </section>
-    </>   
+    </>
   );
 }
