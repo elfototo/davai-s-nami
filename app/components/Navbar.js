@@ -386,7 +386,7 @@ const MobileNavBar = () => {
     <div className='relative'>
       <div className="fixed bottom-1 left-1 right-1 rounded-full z-50 flex justify-around bg-white p-6 border-t border-gray-300 shadow-md lg:hidden">
         
-        <Link href="/" className={`flex flex-col items-center text-gray-700 transition-all duration-300 ${isActive("/") ? "active text-blue-500 scale-[150%] bg-white rounded-full" : ""}`}>
+        <Link href="/" className={`flex flex-col items-center text-gray-700 transition-all duration-300 ${isActive("/") ? "active text-sky-500 scale-[150%] bg-white rounded-full" : ""}`}>
           <FaHome size={22} />
           {/* <span className="text-sm font-roboto">События</span> */}
         </Link>
