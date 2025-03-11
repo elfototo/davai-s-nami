@@ -5,9 +5,10 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { EventsProvider } from '../context/SwrContext';
 import '../utils/dayjsSetup';
+import { useSwipeBack } from '../hooks/useSwipeBack'
 
 export default function RootLayout({ children }) {
-
+  useSwipeBack();
   return (
     <html lang="ru">
       <body>
