@@ -383,23 +383,23 @@ const MobileNavBar = () => {
   const isActive = (path) => pathname === path;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white p-4 border-t border-gray-300 shadow-md lg:hidden">
-    <Link href="/" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-blue-500 active:scale-110 ${isActive("/") ? "active" : ""}`}>
-      <FaHome size={28} />
-      <span className="text-sm">Главная</span>
-    </Link>
-    <Link href="/events" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-green-500 active:scale-110 ${isActive("/events") ? "active" : ""}`}>
-      <FaCalendarAlt size={28} />
-      <span className="text-sm">События</span>
-    </Link>
-    <Link href="/places" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-red-500 active:scale-110 ${isActive("/places") ? "active" : ""}`}>
-      <FaMapMarkerAlt size={28} />
-      <span className="text-sm">Места</span>
-    </Link>
-    <Link href="/about" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-purple-500 active:scale-110 ${isActive("/about") ? "active" : ""}`}>
-      <FaInfoCircle size={28} />
-      <span className="text-sm">О нас</span>
-    </Link>
-  </div>
+     <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white p-6 border-t border-gray-300 shadow-md lg:hidden">
+      <Link href="/" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-blue-500 active:scale-110 ${isActive("/") ? "active" : ""}`}>
+        <FaHome size={25} />
+        {/* <span className="text-sm font-roboto">Главная</span> */}
+      </Link>
+      <Link href="/events" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-green-500 active:scale-110 ${isActive("/events") ? "active" : ""}`}>
+        <FaCalendarAlt size={25} />
+        {/* <span className="text-sm font-roboto">События</span> */}
+      </Link>
+      <Link href="/places" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-red-500 active:scale-110 ${isActive("/places") ? "active" : ""}`}>
+        <FaMapMarkerAlt size={25} />
+        {/* <span className="text-sm font-roboto">Места</span> */}
+      </Link>
+      <Link href="/about" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-purple-500 active:scale-110 ${isActive("/about") ? "active" : ""}`}>
+        <FaInfoCircle size={25} />
+        {/* <span className="text-sm font-roboto">О нас</span> */}
+      </Link>
+    </div>
   );
 };
