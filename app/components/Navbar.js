@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router'; 
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { MdAccountCircle } from "react-icons/md";
 import useSWR, { SWRConfig } from 'swr';
@@ -374,24 +376,30 @@ const Navbar = () => {
 export default Navbar;
 
 const MobileNavBar = () => {
+
+  const pathname = usePathname();
+
+  // Функция для проверки, является ли ссылка текущей
+  const isActive = (path) => pathname === path;
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white p-3 border-t border-gray-300 shadow-md lg:hidden">
-      <Link href="/" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
-        <FaHome size={24} />
-        <span className="text-xs">Главная</span>
-      </Link>
-      <Link href="/events" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
-        <FaCalendarAlt size={24} />
-        <span className="text-xs">События</span>
-      </Link>
-      <Link href="/places" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
-        <FaMapMarkerAlt size={24} />
-        <span className="text-xs">Места</span>
-      </Link>
-      <Link href="/about" className="flex flex-col items-center text-gray-700 dark:text-gray-200">
-        <FaInfoCircle size={24} />
-        <span className="text-xs">О нас</span>
-      </Link>
-    </div>
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white p-4 border-t border-gray-300 shadow-md lg:hidden">
+    <Link href="/" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-blue-500 active:scale-110 ${isActive("/") ? "active" : ""}`}>
+      <FaHome size={28} />
+      <span className="text-sm">Главная</span>
+    </Link>
+    <Link href="/events" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-green-500 active:scale-110 ${isActive("/events") ? "active" : ""}`}>
+      <FaCalendarAlt size={28} />
+      <span className="text-sm">События</span>
+    </Link>
+    <Link href="/places" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-red-500 active:scale-110 ${isActive("/places") ? "active" : ""}`}>
+      <FaMapMarkerAlt size={28} />
+      <span className="text-sm">Места</span>
+    </Link>
+    <Link href="/about" className={`flex flex-col items-center text-gray-700 dark:text-gray-200 transition-all duration-300 hover:text-purple-500 active:scale-110 ${isActive("/about") ? "active" : ""}`}>
+      <FaInfoCircle size={28} />
+      <span className="text-sm">О нас</span>
+    </Link>
+  </div>
   );
 };
