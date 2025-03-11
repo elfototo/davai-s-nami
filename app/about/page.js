@@ -141,11 +141,11 @@ export default function About() {
   )
 
   return (
-    <div className="max-w-custom-container mx-auto bg-gray-100 min-h-screen py-12">
+    <div className="max-w-custom-container mx-auto bg-gray-100 min-h-screen py-8">
       <div className="container mx-auto px-6">
 
         <div className="mb-16">
-          <div className='p-8 lg:flex items-center justify-between'>
+          <div className='p-2 md:p-4 lg:flex items-center justify-between'>
 
             <div className='lg:max-w-[50%]'>
               <h1 className="text-4xl font-bold text-gray-700 text-start mb-12 mt-0">
@@ -185,7 +185,7 @@ export default function About() {
       {/* Секция с типами мероприятий */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20 max-w-custom-container mx-auto px-4">
         {/* Культурные мероприятия */}
-        <div className="bg-teal-50 rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-lg shadow-lg p-8">
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Культурные мероприятия</h3>
           <p className="text-gray-700 mb-6">
             Художественные выставки, театральные постановки и культурные события, которые позволяют погрузиться в атмосферу искусства.
@@ -194,7 +194,7 @@ export default function About() {
         </div>
 
         {/* Образовательные мероприятия */}
-        <div className="bg-teal-50 rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-lg shadow-lg p-8">
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Образовательные мероприятия</h3>
           <p className="text-gray-700 mb-6">
             Лекции, мастер-классы, тренинги и семинары. Мы собираем для вас все образовательные мероприятия города.
@@ -203,7 +203,7 @@ export default function About() {
         </div>
 
         {/* Музыкальные мероприятия */}
-        <div className="bg-teal-50 rounded-lg shadow-lg p-8">
+        <div className="bg-white rounded-lg shadow-lg p-8">
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Музыкальные мероприятия</h3>
           <p className="text-gray-700 mb-6">
             Концерты, фестивали, уличные выступления и музыкальные вечеринки. Вся музыка города в одном месте.
