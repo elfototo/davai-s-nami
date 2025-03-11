@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router'; 
+import { useRouter } from 'next/router';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { MdAccountCircle } from "react-icons/md";
@@ -383,23 +383,26 @@ const MobileNavBar = () => {
   const isActive = (path) => pathname === path;
 
   return (
-     <div className="fixed bottom-1 left-1 right-1 rounded-full z-50 flex justify-around bg-white p-6 border-t border-gray-300 shadow-md lg:hidden">
-      <Link href="/" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-blue-500 active:scale-110 ${isActive("/") ? "active" : ""}`}>
-        <FaHome size={25} />
-        {/* <span className="text-sm font-roboto">Главная</span> */}
-      </Link>
-      <Link href="/events" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-green-500 active:scale-110 ${isActive("/events") ? "active" : ""}`}>
-        <FaCalendarAlt size={25} />
-        {/* <span className="text-sm font-roboto">События</span> */}
-      </Link>
-      <Link href="/places" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-red-500 active:scale-110 ${isActive("/places") ? "active" : ""}`}>
-        <FaMapMarkerAlt size={25} />
-        {/* <span className="text-sm font-roboto">Места</span> */}
-      </Link>
-      <Link href="/about" className={`flex flex-col items-center text-gray-700 transition-all duration-300 hover:text-purple-500 active:scale-110 ${isActive("/about") ? "active" : ""}`}>
-        <FaInfoCircle size={25} />
-        {/* <span className="text-sm font-roboto">О нас</span> */}
-      </Link>
+    <div className='relative'>
+      <div className="fixed bottom-1 left-1 right-1 rounded-full z-50 flex justify-around bg-white p-6 border-t border-gray-300 shadow-md lg:hidden">
+        
+        <Link href="/" className={`flex flex-col items-center text-gray-700 transition-all duration-300 ${isActive("/") ? "active text-blue-500 scale-[150%] bg-white rounded-full" : ""}`}>
+          <FaHome size={22} />
+          {/* <span className="text-sm font-roboto">События</span> */}
+        </Link>
+        <Link href="/events" className={`flex flex-col items-center text-gray-700 transition-all duration-300 ${isActive("/events") ? "active text-green-500 scale-[150%] bg-white rounded-full" : ""}`}>
+          <FaCalendarAlt size={22} />
+          {/* <span className="text-sm font-roboto">События</span> */}
+        </Link>
+        <Link href="/places" className={`flex flex-col items-center text-gray-700 transition-all duration-300 ${isActive("/places") ? "active scale-[150%] bg-white rounded-full text-red-500" : ""}`}>
+          <FaMapMarkerAlt size={22} />
+          {/* <span className="text-sm font-roboto">Места</span> */}
+        </Link>
+        <Link href="/about" className={`flex flex-col items-center text-gray-700 transition-all duration-300 ${isActive("/about") ? "active text-purple-500 scale-[150%] bg-white rounded-full" : ""}`}>
+          <FaInfoCircle size={22} />
+          {/* <span className="text-sm font-roboto">О нас</span> */}
+        </Link>
+      </div>
     </div>
   );
 };
