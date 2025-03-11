@@ -283,7 +283,7 @@ export default function Home() {
           <div className='flex items-start sm:ml-5 smd:ml-0 md:justify-center mt-16 md:mt-0 flex-col smd:max-w-[40%] md:max-w-[50%]'>
             <span className='font-roboto font-bold text-[2.6rem] md:text-6xl mb-3 text-secondary whitespace-nowrap'>Играй с нами!</span>
             <p className='font-roboto text-start font-light text-secondary mb-6'>
-              <span className='bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Нажми на кнопку</span> чтобы найти <br className='smd:hidden'/> случайное мероприятие <br className='hidden sm:block smd:hidden md:block'/> на свой уикенд <br className='smd:hidden'/> в <span className='whitespace-nowrap bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Санкт - Петербурге</span></p>
+              <span className='bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Нажми на кнопку</span> чтобы найти <br className='smd:hidden md:block'/> случайное мероприятие <br className='hidden sm:block smd:hidden'/> на свой уикенд <br className='smd:hidden'/> в <span className='whitespace-nowrap bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Санкт - Петербурге</span></p>
             <button
               onClick={getRandomEvent}
               className={`font-roboto  md:w-3/4 py-2  md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
