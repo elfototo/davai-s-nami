@@ -284,7 +284,7 @@ const Navbar = () => {
               </Link>
             </div>
 
-            <div className="flex items-center mt-4 lg:mt-0">
+            {/* <div className="flex items-center mt-4 lg:mt-0">
               <button
                 className="hidden mx-4 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none"
                 aria-label="show notifications"
@@ -305,14 +305,14 @@ const Navbar = () => {
                 </svg>
               </button>
 
-              {/* <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
+              <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
                 <div className="w-8 h-8 overflow-hidden rounded-full">
                   <MdAccountCircle className='w-8 h-8 text-[#333]' />
 
                 </div>
                 <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Войти</h3>
-              </button> */}
-            </div>
+              </button>
+            </div> */}
             <div className="my-4 lg:hidden">
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
