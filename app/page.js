@@ -286,18 +286,18 @@ export default function Home() {
               <span className='bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Нажми на кнопку</span> чтобы найти <br className='smd:hidden md:block' /> случайное мероприятие <br className='hidden sm:block smd:hidden' />  <br className='ssm:block sm:hidden' />на свой уикенд в <br className=' smd:hidden' />  <span className='whitespace-nowrap bg-yellow-300 text-[#333] px-1 font-regular md:bg-transparent md:text-secondary md:px-0 md:font-light'>Санкт - Петербурге</span></p>
             <button
               onClick={getRandomEvent}
-              className={`z-50 font-roboto md:w-3/4 py-2  md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
+              className={`font-roboto md:w-3/4 py-2  md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
               transform transition-transform duration-300 hover:scale-105
               `}>Мне повезет
             </button>
           </div>
 
-          <div className='h-full smd:hidden'>
+          <div className=' h-full smd:hidden'>
             <Image
               src={'/img/1-sm-banner.png'}
               width={1000}
               height={1000}
-              className="object-cover object-center absolute md:hidden -bottom-3 -right-6 h-[35vh] w-auto sm:h-[40vh]"
+              className="pointer-events-none object-cover object-center absolute md:hidden -bottom-3 -right-6 h-[35vh] w-auto sm:h-[40vh]"
               alt="avatar"
             />
           </div>
