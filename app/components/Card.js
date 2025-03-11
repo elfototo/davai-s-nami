@@ -42,7 +42,7 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
 
   const formatDateRange = (from_date, to_date) => {
     if (!from_date) return 'Скоро будет дата';
-  
+
     const from = dayjs(from_date).utc().tz('Europe/Moscow');
     const to = to_date ? dayjs(to_date).utc().tz('Europe/Moscow') : null;
 
@@ -52,19 +52,19 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
     const toWeekday = to ? capitalize(to.format('dd')) : '';
 
     console.log('fromWeekday', fromWeekday)
-  
+
     if (!to || from.isSame(to)) {
       return `${fromWeekday}, ${from.format('D MMMM')}`;
     }
-  
+
     if (from.isSame(to, 'day')) {
       return `${fromWeekday}, ${from.format('D MMMM')}`;
     }
-  
+
     if (to.hour() === 0 && to.minute() === 0) {
       return `${fromWeekday}, ${from.format('D MMMM')} - 00:00`;
     }
-  
+
     return `${fromWeekday}, ${from.format('D MMMM')} - ${toWeekday}, ${to.format('D MMMM')}`;
   };
 
@@ -73,22 +73,23 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
       <div className="flex flex-col justify-between w-full h-auto min-h-full max-w-sm overflow-hidden bg-white rounded-lg border border-[#D9D9D9] group-hover:border-pink-400">
         {/* Header card */}
         <div>
+
           <div className='relative overflow-hidden border-b border-[#D9D9D9]'>
+            <Link href={`/events/${id}`}>
+              <Image className={heightImage[type]}
+                src={processedImageUrl}
+                width={500}
+                height={500}
+                alt="avatar" />
 
-            <Image className={heightImage[type]}
-              src={processedImageUrl}
-              width={500}
-              height={500}
-              alt="avatar" />
+              <div className='flex items-baseline absolute top-3 left-3 rounded-full px-3 py-1 border border-[#D9D9D9] bg-[#fff]'>
+                <p className='text-[#444] mr-1 font-roboto font-bold'></p>
+                <p className="text-[#444] font-roboto font-bold dark:text-white">{price ? `${price}` : 'Без цены'}</p>
+              </div>
 
-            <div className='flex items-baseline absolute top-3 left-3 rounded-full px-3 py-1 border border-[#D9D9D9] bg-[#fff]'>
-              <p className='text-[#444] mr-1 font-roboto font-bold'></p>
-              <p className="text-[#444] font-roboto font-bold dark:text-white">{price ? `${price}` : 'Без цены'}</p>
-            </div>
-
-            {/* Category template */}
-            <Tag main_category_id={main_category_id ? main_category_id : 'Без категории'} />
-
+              {/* Category template */}
+              <Tag main_category_id={main_category_id ? main_category_id : 'Без категории'} />
+            </Link>
           </div>
 
           {/* Card content */}
@@ -118,7 +119,7 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
                     </div>
 
                     <p className="text-[#777] font-roboto">
-                    {formatDateRange(from_date, to_date)}
+                      {formatDateRange(from_date, to_date)}
                     </p>
                     <p>
 
