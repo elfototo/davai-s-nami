@@ -384,22 +384,22 @@ const MobileNavBar = () => {
 
   return (
     <div className='relative'>
-      <div className="fixed bottom-2 left-2 right-2 rounded-full z-50 flex justify-around bg-white border-t border-gray-300 shadow-md lg:hidden">
+      <div className="fixed bottom-3 left-3 right-3 rounded-full z-50 flex justify-around bg-white border-t border-gray-300 shadow-lg lg:hidden">
         
-        <Link href="/" className={`flex flex-col items-center text-gray-700 transition-all duration-300 py-6 px-7 ${isActive("/") ? "active text-sky-500 scale-[150%] rounded-full" : ""}`}>
-          <FaHome size={22} />
+        <Link href="/" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/") ? "active text-sky-500 rounded-full" : ""}`}>
+          <FaHome size={25} />
           {/* <span className="text-sm font-roboto">События</span> */}
         </Link>
-        <Link href="/events" className={`flex flex-col items-center text-gray-700 transition-all duration-300 py-6 px-7 ${isActive("/events") ? " active text-green-500 scale-[150%] rounded-full" : ""}`}>
-          <FaCalendarAlt size={22} />
+        <Link href="/events" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/events") ? " active text-green-500 rounded-full" : ""}`}>
+          <FaCalendarAlt size={25} />
           {/* <span className="text-sm font-roboto">События</span> */}
         </Link>
-        <Link href="/places" className={`flex flex-col items-center text-gray-700 transition-all duration-300 py-6 px-7 ${isActive("/places") ? " active scale-[150%] rounded-full text-red-500" : ""}`}>
-          <FaMapMarkerAlt size={22} />
+        <Link href="/places" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/places") ? " active rounded-full text-red-500" : ""}`}>
+          <FaMapMarkerAlt size={25} />
           {/* <span className="text-sm font-roboto">Места</span> */}
         </Link>
-        <Link href="/about" className={`flex flex-col items-center text-gray-700 transition-all duration-300 py-6 px-7 ${isActive("/about") ? " active text-purple-500 scale-[150%] rounded-full" : ""}`}>
-          <FaInfoCircle size={22} />
+        <Link href="/about" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/about") ? " active text-purple-500 rounded-full" : ""}`}>
+          <FaInfoCircle size={25} />
           {/* <span className="text-sm font-roboto">О нас</span> */}
         </Link>
       </div>
