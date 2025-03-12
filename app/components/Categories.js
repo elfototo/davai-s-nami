@@ -60,7 +60,7 @@ function Category({ value, circle, circleOut, circleHover, circleOutHover, cardB
                         </div>
                     </div>
 
-                    <h2 className='text-[1.2rem] md:text-[1rem] mt-5 text-[#333]  transform transition-all duration-300'>
+                    <h2 className='font-roboto text-[1rem] sm:text-[1.2rem] md:text-[1.6rem] mt-5 text-[#333] font-bold  transform transition-all duration-300'>
                         {value}
                     </h2>
                 </div>
