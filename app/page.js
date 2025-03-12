@@ -297,7 +297,7 @@ export default function Home() {
               src={'/img/1-sm-banner.png'}
               width={1000}
               height={1000}
-              className="pointer-events-none object-cover object-center absolute md:hidden -bottom-3 -right-6 h-[35vh] w-auto sm:h-[40vh]"
+              className="pointer-events-none object-contain object-center absolute md:hidden -bottom-5 ssm:-bottom-3 -right-6 h-[35vh] w-full sm:h-[40vh]"
               alt="avatar"
             />
           </div>
