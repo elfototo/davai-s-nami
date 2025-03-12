@@ -167,7 +167,7 @@ const Navbar = () => {
               <>
                 <div className='flex'>
                   <button onClick={() => router.back()} className=" lg:mr-6 rounded-full transition">
-                    <IoMdArrowBack className="text-[#777]" size={28} />
+                    <IoMdArrowBack className="text-gray-500" size={28} />
                   </button>
                 </div>
                 <div className='mx-auto'>
