@@ -299,6 +299,7 @@ export default function Home() {
               height={1000}
               className="pointer-events-none object-contain object-center absolute md:hidden -bottom-5 ssm:-bottom-3 -right-6 h-[35vh] w-full sm:h-[40vh]"
               alt="avatar"
+              priority
             />
           </div>
 

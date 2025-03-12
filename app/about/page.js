@@ -167,6 +167,7 @@ export default function About() {
                 className="object-contain object-center w-full mx-auto hidden lg:block"
                 style={{ height: '55vh', width: 'auto' }}
                 alt="avatar"
+                priority
               />
               <Image
                 src={'/img/hobbies_sm.png'}
@@ -175,6 +176,7 @@ export default function About() {
                 className="object-contain object-center w-full mx-auto lg:hidden mt-16"
                 style={{ height: 'auto', width: 'full' }}
                 alt="avatar"
+                priority
               />
             </div>
           </div>
