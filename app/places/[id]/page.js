@@ -216,7 +216,7 @@ export default function EventPlace({ params }) {
     return (
 
         <div className='max-w-custom-container mx-auto relative'>
-            <BackButton className='lg:hidden'/>
+            {/* <BackButton className='lg:hidden'/> */}
 
             <div className='flex relative'>
 

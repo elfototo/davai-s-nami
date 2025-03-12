@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { MdAccountCircle } from "react-icons/md";
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
 import { FaHome, FaMapMarkerAlt, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
+import { usePathname, useRouter } from 'next/navigation';
+import { IoMdArrowBack } from "react-icons/io";
 
 
 const pages = [
@@ -38,6 +38,12 @@ const Navbar = () => {
   const searchRef = useRef(null);
   const dropdownRef = useRef(null);
   const limit = 10;
+
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // Проверяем, что находимся на странице /events/[id] или /places/[id]
+  const isDynamicPage = /^\/(events|places)\/[^/]+$/.test(pathname);
 
   console.log('filterSearch', filterSearch);
 
@@ -153,11 +159,30 @@ const Navbar = () => {
   return (
     <nav className="z-20 relative bg-white shadow dark:bg-gray-800 ">
       <div className="container px-6 py-4 mx-auto max-w-custom-container">
-        <div className="lg:flex lg:items-center lg:justify-between">
+        <div className="lg:flex lg:w-full lg:items-center lg:justify-between">
+
           <div className="flex items-center justify-between">
-            <Link href="/" className='mr-5 text-[1.8rem] font-roboto font-bold text-[#444]'>
-              Давай с нами!
-            </Link>
+            {isDynamicPage ? (
+              // Если на динамической странице, показываем кнопку "Назад"
+              <>
+                <div className='flex'>
+                  <button onClick={() => router.back()} className=" lg:mr-6 rounded-full transition">
+                    <IoMdArrowBack className="text-[#777]" size={28} />
+                  </button>
+                </div>
+                <div className='mx-auto'>
+                  <Link href="/" className='text-[1.8rem] font-roboto font-bold text-[#444] lg:mr-6'>
+                    Давай с нами!
+                  </Link>
+                </div>
+              </>
+            ) : (
+              // В остальных случаях показываем логотип
+              <Link href="/" className='mr-5 text-[1.8rem] font-roboto font-bold text-[#444]'>
+                Давай с нами!
+              </Link>
+            )}
+
 
             <div className="hidden mx-3 lg:block">
               <div className="relative">
@@ -256,10 +281,11 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           <div
-            className={`absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center ${isOpen ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'
-              }`}
+            className={`absolute inset-x-0 z-20 w-full px-6 lg:pr-0 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 
+            lg:mt-0 lg:p-0 lg:top-0 lg:right-0  lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center 
+            ${isOpen ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'}`}
           >
-            <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
+            <div className="flex flex-col -mx-5 lg:flex-row lg:items-center lg:justify-end lg:ml-auto">
 
               <Link
                 onClick={toggleMenu}
@@ -313,6 +339,7 @@ const Navbar = () => {
                 <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Войти</h3>
               </button>
             </div> */}
+            
             <div className="my-4 lg:hidden">
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -383,9 +410,9 @@ const MobileNavBar = () => {
   const isActive = (path) => pathname === path;
 
   return (
-    <div className='relative'>
+    <div className='relative lg:hidden'>
       <div className="fixed bottom-3 left-3 right-3 rounded-full z-50 flex justify-around bg-white border-t border-gray-300 shadow-lg lg:hidden">
-        
+
         <Link href="/" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/") ? "active text-sky-500 rounded-full" : ""}`}>
           <FaHome size={25} />
           {/* <span className="text-sm font-roboto">События</span> */}

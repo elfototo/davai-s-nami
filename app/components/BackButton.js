@@ -15,7 +15,7 @@ const BackButton = () => {
   return (
     <button 
       onClick={() => router.back()} 
-      className="fixed z-20 top-[15%] left-4 xl:left-[5%]  bg-pink-500 p-4 rounded-full shadow-md hover:bg-pink-200 transition"
+      className="fixed z-20 top-20 left-4 bg-gray-300 p-4 rounded-full shadow-md hover:bg-pink-200 transition"
     >
       <FaArrowLeft className="text-white dark:text-white" size={20} />
     </button>

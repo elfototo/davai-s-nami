@@ -202,7 +202,7 @@ export default function EventPageClient({ id }) {
     <>
       {/* <Suspense fallback={<Loading />}> */}
       <div className="relative max-w-custom-container mx-auto">
-        <BackButton />
+        {/* <BackButton /> */}
         <div className="flex flex-col w-full min-h-screen px-6 py-5 md:py-10 mx-auto lg:inset-x-0">
           <div className="lg:flex lg:items-center bg-[#fff] rounded-xl p-10">
             {showPhoto && (
