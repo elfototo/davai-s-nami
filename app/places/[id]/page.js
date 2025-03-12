@@ -224,7 +224,7 @@ export default function EventPlace({ params }) {
 
                     <div className='lg:flex lg:items-center bg-[#fff] rounded-xl p-10'>
 
-                        <div className='overflow-hidden rounded-xl shadow-xl h-96'>
+                        <div className='overflow-hidden rounded-xl shadow-xl h-60 md:h-96'>
                             <Image className='object-cover object-center w-full lg:w-[32rem] h-60 md:h-96  cursor-pointer 
                              hover:scale-105 transform transition-all duration-300'
                                 src={place?.place_image || '/img/cat.png'}
