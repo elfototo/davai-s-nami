@@ -19,7 +19,7 @@ import { BsCopy } from "react-icons/bs";
 import { useEvents } from '../../../context/SwrContext';
 import { debounce } from 'lodash';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS, API_URL_BY_ID } from '../../../config';
-
+import BackButton from '../../components/BackButton';
 
 
 dayjs.locale('ru');
@@ -201,24 +201,24 @@ export default function EventPageClient({ id }) {
   return (
     <>
       {/* <Suspense fallback={<Loading />}> */}
-
       <div className="relative max-w-custom-container mx-auto">
-        <div className="flex flex-col justify-center w-full min-h-screen px-6 py-5 md:py-10 mx-auto lg:inset-x-0">
+        <BackButton />
+        <div className="flex flex-col w-full min-h-screen px-6 py-5 md:py-10 mx-auto lg:inset-x-0">
           <div className="lg:flex lg:items-center bg-[#fff] rounded-xl p-10">
             {showPhoto && (
               <div
                 className="z-10 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
                 onClick={togglePhoto}
               >
-                <div className="relative">
+                <div className="relative ">
 
                   <Image
                     src={processedImageUrl}
                     width={1000}
                     height={1000}
-                    className="object-cover object-center rounded-lg shadow-xl"
-                    style={{ height: '60vh', width: 'auto' }}
+                    className="object-cover object-center rounded-lg shadow-xl  md:h-[60vh] w-auto"
                     alt="avatar"
+                    priority
                   />
                   <button onClick={togglePhoto} className="absolute -top-8 -right-8">
                     <IoMdClose className="text-[2rem] text-[#fff]" />
@@ -227,13 +227,13 @@ export default function EventPageClient({ id }) {
               </div>
             )}
 
-            <div className="overflow-hidden shadow-xl rounded-lg lg:w-full h-96 lg:h-full lg:max-w-[40%]">
+            <div className="overflow-hidden shadow-xl rounded-lg lg:w-full h-60 md:h-96 lg:h-full lg:max-w-[40%]">
               <Image
                 src={processedImageUrl}
                 width={500}
                 height={500}
                 alt="avatar"
-                className="object-cover object-center w-full rounded-lg h-96 cursor-pointer hover:scale-105 transform transition-all duration-300"
+                className="object-cover object-center w-full rounded-lg h-60 md:h-96 cursor-pointer hover:scale-105 transform transition-all duration-300"
                 onClick={togglePhoto}
               />
             </div>
@@ -255,7 +255,7 @@ export default function EventPageClient({ id }) {
                   <p className="text-[#777]">Время:</p>
                   <p className="font-roboto text-[#333] ml-[26px]">
                     {formatDateClock(event?.from_date, event?.to_date)}
-                    
+
                   </p>
                 </div>
 

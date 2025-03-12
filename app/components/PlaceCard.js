@@ -40,22 +40,22 @@ const PlaceCard = ({ place_name, place_address, place_metro, place_city, id, ima
         <div>
           {/* Header card */}
           <div className='relative overflow-hidden border-b border-[#D9D9D9]'>
+            <Link href={`/places/${id}`}>
+              <Image
+                className='object-cover object-center w-full h-[200px] transform transition duration-300 group-hover:scale-105 relative'
+                src={image ? image : '/img/cat.png'}
+                width={500}
+                height={500}
+                alt="avatar" />
 
-            <Image
-              className='object-cover object-center w-full h-[200px] transform transition duration-300 group-hover:scale-105 relative'
-              src={image ? image : '/img/cat.png'}
-              width={500}
-              height={500}
-              alt="avatar" />
-
-            {/* <div className='flex items-baseline absolute top-3 left-3 rounded-full px-3 py-1 border border-[#D9D9D9] bg-[#fff]'>
+              {/* <div className='flex items-baseline absolute top-3 left-3 rounded-full px-3 py-1 border border-[#D9D9D9] bg-[#fff]'>
             <p className='text-[#444] mr-1 font-roboto font-bold'></p>
             <p className="text-[#444] font-roboto font-bold dark:text-white">{price ? `${price}` : 'Без цены'}</p>
           </div> */}
 
-            {/* Category template */}
-            {/* <Tag category={category ? category : 'Без категории'} /> */}
-
+              {/* Category template */}
+              {/* <Tag category={category ? category : 'Без категории'} /> */}
+            </Link>
           </div>
 
           {/* Card content */}

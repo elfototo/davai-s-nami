@@ -13,6 +13,7 @@ import timezone from 'dayjs/plugin/timezone';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS, API_URL_PL_BY_ID } from '../../../config';
+import BackButton from '../../components/BackButton';
 
 
 dayjs.extend(isoWeek);
@@ -214,7 +215,9 @@ export default function EventPlace({ params }) {
 
     return (
 
-        <div className='max-w-custom-container mx-auto'>
+        <div className='max-w-custom-container mx-auto relative'>
+            <BackButton className='lg:hidden'/>
+
             <div className='flex relative'>
 
                 <div className='flex flex-col justify-center w-full min-h-scree px-6 py-5 md:py-10 mx-auto lg:inset-x-0 '>
@@ -222,12 +225,13 @@ export default function EventPlace({ params }) {
                     <div className='lg:flex lg:items-center bg-[#fff] rounded-xl p-10'>
 
                         <div className='overflow-hidden rounded-xl shadow-xl h-96'>
-                            <Image className='object-cover object-center w-full lg:w-[32rem] h-96 cursor-pointer 
+                            <Image className='object-cover object-center w-full lg:w-[32rem] h-60 md:h-96  cursor-pointer 
                              hover:scale-105 transform transition-all duration-300'
                                 src={place?.place_image || '/img/cat.png'}
                                 width={1000}
                                 height={1000}
                                 alt="avatar"
+                                priority
                             />
                         </div>
 
