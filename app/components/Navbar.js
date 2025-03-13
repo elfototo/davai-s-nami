@@ -171,11 +171,11 @@ const Navbar = () => {
                     <IoMdArrowBack className="text-gray-500" size={28} />
                   </button>
                 </div>
-                <div className='mx-auto'>
-                  <Link href="/" className='text-[1.8rem] font-roboto font-bold text-[#444] lg:mr-6'>
+                <div className='mx-auto h-full lg:mr-6'>
+                  <Link href="/" className=''>
                     {/* Давай с нами! */}
-                    <div className=' h-full'>
-                      <Image
+                    
+                    <Image
                         src={'/img/logo_main.png'}
                         width={1000}
                         height={1000}
@@ -183,13 +183,13 @@ const Navbar = () => {
                         alt="avatar"
                         priority
                       />
-                    </div>
+                    
                   </Link>
                 </div>
               </>
             ) : (
               // В остальных случаях показываем логотип
-              <Link href="/" className='mr-5 text-[1.8rem] font-roboto font-bold text-[#444]'>
+              <Link href="/" className='mr-5'>
                 {/* Давай с нами! */}
                 <div className=' h-full'>
                   <Image

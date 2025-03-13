@@ -40,6 +40,7 @@ export const EventsProvider = ({ children }) => {
         }
         return null;
     };
+    
 
     const findDataByIdPlace = (place_id) => {
         const keys = Array.from(cache.keys());
