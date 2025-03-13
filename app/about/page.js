@@ -142,7 +142,7 @@ export default function About() {
 
   return (
     <div className="max-w-custom-container mx-auto bg-gray-100 min-h-screen py-8">
-      <div className="mx-auto">
+      <div className="mx-auto px-4">
 
         <div className="mb-16">
           <div className='p-2 md:p-4 lg:flex items-center justify-between'>
