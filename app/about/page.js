@@ -142,13 +142,13 @@ export default function About() {
 
   return (
     <div className="max-w-custom-container mx-auto bg-gray-100 min-h-screen py-8">
-      <div className="container mx-auto px-6">
+      <div className="mx-auto">
 
         <div className="mb-16">
           <div className='p-2 md:p-4 lg:flex items-center justify-between'>
 
             <div className='lg:max-w-[50%]'>
-              <h1 className="text-4xl font-bold text-gray-700 text-start mb-12 mt-0">
+              <h1 className="text-4xl font-bold text-gray-700 text-start mb-10 mt-0">
                 О нашем проекте
               </h1>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
