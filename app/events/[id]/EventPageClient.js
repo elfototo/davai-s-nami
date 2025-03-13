@@ -239,7 +239,7 @@ export default function EventPageClient({ id }) {
             </div>
 
             <div className="mt-8 lg:px-10 lg:mt-0">
-              <h1 className="text-2xl font-bold text-[#333] lg:text-3xl font-roboto mb-5 lg:mt-0 mx-1">{event?.title}</h1>
+              <h1 className="text-2xl mt-0 font-bold text-[#333] lg:text-3xl font-roboto mb-5 lg:mt-0 mx-1">{event?.title}</h1>
               <div className="p-5 bg-[#f4f4f9] rounded-2xl w-full lg:min-w-[300px]">
                 <div className="flex mb-3">
                   <p className="text-[#777]">Цена: </p>
