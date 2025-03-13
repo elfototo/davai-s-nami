@@ -2,6 +2,8 @@ import '../globals.css';
 // components/Loader.js
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
+import Image from 'next/image';
+
 
 const Loader = () => {
     useEffect(() => {
@@ -192,7 +194,18 @@ const Loader = () => {
                                 </g>
                             </svg>
                         </div>
-                        <div className="logoani"></div>
+                        <div className="logoani">
+                            <div className=' h-full'>
+                                <Image
+                                    src={'/img/logo_main.png'}
+                                    width={1000}
+                                    height={1000}
+                                    className="w-[15vh]"
+                                    alt="avatar"
+                                    priority
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

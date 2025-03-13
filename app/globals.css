@@ -154,12 +154,12 @@ body {
   opacity: 1;
 }
 .wrapper-no7 .logoani {
-  color: #111;
-  border-radius: 20px;
+  /* color: #111; */
+  border-radius: 10px;
   align-self: flex-end;
-  margin-left: -25px;
-  padding: 20px;
-  background-color: #111;
+  margin-left: -50px;
+  /* padding: 20px;
+  background-color: #111; */
   /* font-size: 30px; */
   /* font-weight: bold; */
   /* line-height: 100%; */
