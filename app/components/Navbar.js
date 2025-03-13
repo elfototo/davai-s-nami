@@ -9,6 +9,7 @@ import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
 import { FaHome, FaMapMarkerAlt, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
 import { usePathname, useRouter } from 'next/navigation';
 import { IoMdArrowBack } from "react-icons/io";
+import Image from 'next/image';
 
 
 const pages = [
@@ -172,14 +173,34 @@ const Navbar = () => {
                 </div>
                 <div className='mx-auto'>
                   <Link href="/" className='text-[1.8rem] font-roboto font-bold text-[#444] lg:mr-6'>
-                    Давай с нами!
+                    {/* Давай с нами! */}
+                    <div className=' h-full'>
+                      <Image
+                        src={'/img/logo_main.png'}
+                        width={1000}
+                        height={1000}
+                        className=" w-[20vh]"
+                        alt="avatar"
+                        priority
+                      />
+                    </div>
                   </Link>
                 </div>
               </>
             ) : (
               // В остальных случаях показываем логотип
               <Link href="/" className='mr-5 text-[1.8rem] font-roboto font-bold text-[#444]'>
-                Давай с нами!
+                {/* Давай с нами! */}
+                <div className=' h-full'>
+                  <Image
+                    src={'/img/logo_main.png'}
+                    width={1000}
+                    height={1000}
+                    className="w-[20vh]"
+                    alt="avatar"
+                    priority
+                  />
+                </div>
               </Link>
             )}
 
@@ -339,7 +360,7 @@ const Navbar = () => {
                 <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Войти</h3>
               </button>
             </div> */}
-            
+
             <div className="my-4 lg:hidden">
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">

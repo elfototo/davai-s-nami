@@ -158,10 +158,13 @@ body {
   border-radius: 20px;
   align-self: flex-end;
   margin-left: -25px;
-  font-size: 30px;
-  font-weight: bold;
-  line-height: 100%;
+  padding: 20px;
+  background-color: #111;
+  /* font-size: 30px; */
+  /* font-weight: bold; */
+  /* line-height: 100%; */
 }
+
 .wrapper-no7 .logo {
   font-size: 55px;
   opacity: 0;

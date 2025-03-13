@@ -4,7 +4,7 @@ import { categories } from '../data/events';
 import { useState } from 'react';
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaVk } from "react-icons/fa";
-
+import Image from 'next/image';
 import Link from 'next/link';
 
 
@@ -17,7 +17,16 @@ const Footer = () => {
 
             <div className='flex flex-col'>
                 <Link href="/" className='text-[1.8rem] font-medium text-white'>
-                    Давай с нами!
+                    <div className=' h-full'>
+                        <Image
+                            src={'/img/logo_footer.png'}
+                            width={1000}
+                            height={1000}
+                            className="w-[20vh]"
+                            alt="avatar"
+                            priority
+                        />
+                    </div>
                 </Link>
             </div>
             <div className='flex flex-col md:flex-row md:justify-between mt-8'>

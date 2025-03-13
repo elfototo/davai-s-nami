@@ -143,11 +143,11 @@ export default function Home() {
       img.onload = () => {
 
         setTimeout(() => {
-          setRandomEv(randomEvent); // Устанавливаем мероприятие
-          setIsLoadingGame(false); // Скрываем лоадер
-          setShowGame(true); // Показываем окно мероприятия
+          setRandomEv(randomEvent); 
+          setIsLoadingGame(false);
+          setShowGame(true);
           console.log(randomEvent.title);
-        }, 6000); // Сохраняем задержку, если она нужна
+        }, 6000); 
       };
 
       img.onerror = () => {
@@ -428,8 +428,9 @@ export default function Home() {
                   src={randomEv.image === "" ? "/img/cat.png" : randomEv.image}
                   width={1000}
                   height={1000}
-
-                  alt="avatar" />
+                  alt="avatar"
+                  priority
+                   />
                 : ''}
 
               <div className='flex justify-center items-center'>

@@ -192,7 +192,7 @@ const Loader = () => {
                                 </g>
                             </svg>
                         </div>
-                        <div className="logoani">Давай с нами!</div>
+                        <div className="logoani"></div>
                     </div>
                 </div>
             </div>
