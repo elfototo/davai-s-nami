@@ -265,7 +265,7 @@ export default function EventPlace({ params }) {
                     {eventsInPlace?.length > 0 ?
                         <h1 className='font-roboto font-bold'>Мероприятия в этом месте</h1>
                         :
-                        <h1 className='font-roboto font-bold'>Мероприятий в блийшее время нет</h1>
+                        <h1 className='font-roboto font-bold'>Мероприятий в ближайшее время нет</h1>
                     }
 
                     <div className='grid gap-3 grid-cols-2 md:grid-cols-4 items-stretch grid-rows-auto'>
