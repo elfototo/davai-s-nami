@@ -114,8 +114,8 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
             setSelectedButton('');
         } else if (startDate && endDate) {
             // Форматируем дату
-            const rangeStartDate = startDate.utc().tz('Europe/Moscow').startOf('day').format('DD.MM');
-            const rangeEndDate = endDate.utc().tz('Europe/Moscow').startOf('day').format('DD.MM');
+            const rangeStartDate = startDate.utc().tz('Europe/Moscow').startOf('day').format('DD MMM');
+            const rangeEndDate = endDate.utc().tz('Europe/Moscow').startOf('day').format('DD MMM');
 
             const dateRange = rangeStartDate === rangeEndDate ? rangeStartDate : `${rangeStartDate} - ${rangeEndDate}`;
 
@@ -134,8 +134,8 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
 
     useEffect(() => {
         if (startDate && endDate) {
-            const rangeStartDate = startDate.utc().tz("Europe/Moscow").startOf("day").format("DD.MM");
-            const rangeEndDate = endDate.utc().tz("Europe/Moscow").startOf("day").format("DD.MM");
+            const rangeStartDate = startDate.utc().tz("Europe/Moscow").startOf("day").format("DD MMM");
+            const rangeEndDate = endDate.utc().tz("Europe/Moscow").startOf("day").format("DD MMM");
 
             const dateLabel = rangeStartDate === rangeEndDate ? rangeStartDate : `${rangeStartDate} - ${rangeEndDate}`;
 
