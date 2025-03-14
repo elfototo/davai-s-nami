@@ -11,6 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import timezone from 'dayjs/plugin/timezone';
 import { categoriesID } from '../data/events';
 import { IoClose } from "react-icons/io5";
+import { IoIosCloseCircle } from "react-icons/io";
 
 
 dayjs.extend(isoWeek);
@@ -145,59 +146,40 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
     return (
         <div className={`${isOpen ? 'bg-white' : 'bg-[#f4f4f9]'} relative rounded-lg lg:bg-white lg:border lg:border-[#D9D9D9] lg:shadow-lg`}>
             <div className={`${isOpen ? 'absolute' : 'block'}`}>
-                <div className='lg:hidden px-2 py-2 flex justify-start -mx-3 overflow-y-auto whitespace-nowrap scroll-hidden'>
-                    <button onClick={toggleFilter} className={` flex mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${selectedButton.length > 0 || selectedTags.length > 0 || endDate || startDate ? "bg-pink-400 text-white " : "bg-[#fff]"
-                        } ${!isOpen ? 'block' : 'hidden'}`}>
+                <div className='flex flex-col items-start lg:hidden'>
+                    <div className='lg:hidden px-2 py-2 flex justify-start -mx-2 overflow-y-auto whitespace-nowrap scroll-hidden'>
+                        <button onClick={toggleFilter} className={`flex mr-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${selectedButton.length > 0 || selectedTags.length > 0 || endDate || startDate ? "bg-pink-400 text-white " : "bg-[#fff]"
+                            } ${!isOpen ? 'block' : 'hidden'}`}>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
-                            <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
-                        </svg>
-                    </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+                                <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
+                            </svg>
+                        </button>
 
-                    {/* {selectedButton ?
+                        {sortedButtons.map((button) => (
+                            <button
+                                key={button.id}
+                                onClick={button.onClick}
+                                className={`mx-3 text-[1rem] items-center justify-center py-1 px-2 rounded-md flex ${selectedButton === button.id || selectedTags.includes(button.label) ? "bg-pink-400 text-white " : "bg-[#fff]"
+                                    } ${!isOpen ? 'block' : 'hidden'}`}
+                            >
+                                {button.label}
+                                {selectedButton === button.id || selectedTags.includes(button.label) ? <IoClose size={18} className='mt-[3px] ml-2' />
+                                    : ''}
+
+                            </button>
+                        ))}
+
+                    </div>
+                    {selectedButton ?
                         <button onClick={clearSelection} className={`mr-3 font-medium text-[1rem] text-red-500 items-center justify-center py-1 flex rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
-                            <IoClose size={16} className='mt-[1px] mr-1' />
-                            Сбросить все
+                            <IoIosCloseCircle size={16} className='mt-[2px] mr-1' />
+                            Сбросить фильтры
                         </button>
                         : ''
-                    } */}
-
-
-                    {sortedButtons.map((button) => (
-                        <button
-                            key={button.id}
-                            onClick={button.onClick}
-                            className={`mx-3 text-[1rem] items-center justify-center py-1 px-2 rounded-md flex ${selectedButton === button.id || selectedTags.includes(button.label) ? "bg-pink-400 text-white " : "bg-[#fff]"
-                                } ${!isOpen ? 'block' : 'hidden'}`}
-                        >
-                            {button.label}
-                            {selectedButton === button.id || selectedTags.includes(button.label) ? <IoClose size={18} className='mt-[3px] ml-2' />
-                                : ''}
-
-                        </button>
-                    ))}
-
-                    {/* {categoriesID.map((tag) => (
-                        <button
-                            key={tag.id}
-                            onClick={() => toggleTag(tag.category)}
-                            className={`mx-1 my-1 py-1 px-4 text-left rounded-full ${selectedTags.includes(tag.category) ? 'bg-pink-400 text-white' : 'bg-gray-100 hover:bg-gray-200'} ${!isOpen ? 'block' : 'hidden'}`}
-                        >
-                            {tag.category}
-                        </button>
-                    ))} */}
-
-                    {/* <button onClick={selectToday} className={`${selectedButton === 'today' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  '} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
-                        Сегодня
-                    </button>
-                    <button onClick={selectTomorrow} className={`${selectedButton === 'tomorrow' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  '} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
-                        Завтра
-                    </button>
-                    <button onClick={selectWeekends} className={`${selectedButton === 'weekend' ? 'bg-pink-400 text-white transform transition-colors duration-200' : 'bg-[#fff]  '} mx-3 text-[1rem] items-center justify-center py-1 px-2 bg-[#fff] rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
-                        Выходные
-                    </button> */}
-
+                    }
                 </div>
+
             </div>
 
             <div className={`${isOpen ? 'block' : 'hidden'} lg:block w-full p-4 relative`}>
