@@ -171,7 +171,8 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                     ))}
 
                 </div>
-                {selectedButton || selectedTags ?
+
+                {selectedButton.length > 0 || selectedTags.length > 0 || endDate || startDate ?
                     <button onClick={clearSelection} className={`mr-3 font-medium text-[1rem] text-red-500 items-center justify-center py-1 flex rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
                         <IoIosCloseCircle size={16} className='mt-[2px] mr-1' />
                         Сбросить фильтры
