@@ -111,14 +111,14 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
     ];
 
     const allButtons = [
-        ...buttons,
         ...categoriesID.map((category) => ({
             id: category.id,
             label: category.category,
             icon: category.icon,
             color: category.color,
             onClick: () => toggleTag(category.category),
-        }))
+        })),
+        ...buttons,
     ];
 
 
