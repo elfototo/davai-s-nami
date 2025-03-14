@@ -73,6 +73,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
             setStartDate(todayDate);
             setEndDate(todayDate);
             setSelectedButton('today');
+            setSelectedDate('');
         }
 
     };
@@ -87,6 +88,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
             setStartDate(tomorrowDate);
             setEndDate(tomorrowDate);
             setSelectedButton('tomorrow');
+            setSelectedDate('');
         }
 
     };
@@ -102,6 +104,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
             setStartDate(startOfWeekend);
             setEndDate(endOfWeekend);
             setSelectedButton('weekend');
+            setSelectedDate('');
         }
     };
 
@@ -112,7 +115,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
             setEndDate(null);
             setSelectedDate('');
             setSelectedButton('');
-        } else if (startDate && endDate) {
+        } else if (startDate && endDate && selectedButton !== 'today' && selectedButton !== 'tomorrow' && selectedButton !== 'weekend') {
             // Форматируем дату
             const rangeStartDate = startDate.utc().tz('Europe/Moscow').startOf('day').format('DD MMM');
             const rangeEndDate = endDate.utc().tz('Europe/Moscow').startOf('day').format('DD MMM');
@@ -133,7 +136,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
     ];
 
     useEffect(() => {
-        if (startDate && endDate) {
+        if (startDate && endDate && selectedButton !== 'today' && selectedButton !== 'tomorrow' && selectedButton !== 'weekend') {
             const rangeStartDate = startDate.utc().tz("Europe/Moscow").startOf("day").format("DD MMM");
             const rangeEndDate = endDate.utc().tz("Europe/Moscow").startOf("day").format("DD MMM");
 
@@ -144,7 +147,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
         }
     }, [startDate, endDate]);
 
-    if (startDate && endDate) {
+    if (startDate && endDate && selectedDate) {
         buttons.push({ id: "date", label: selectedDate, onClick: selectDate });
     }
 
@@ -202,7 +205,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                                 } ${!isOpen ? 'block' : 'hidden'}`}
                         >
                             {button.label}
-                            {selectedButton === button.id || selectedTags.includes(button.label) || (button.id === "date") ? <IoClose size={18} className='mt-[3px] ml-2' />
+                            {(selectedButton === button.id || selectedTags.includes(button.label) || (button.id === "date")) && button.label ? <IoClose size={18} className='mt-[3px] ml-2' />
                                 : ''}
 
                         </button>
@@ -244,6 +247,7 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                                 setStartDate={setStartDate}
                                 endDate={endDate}
                                 setEndDate={setEndDate}
+                                setSelectedButton={setSelectedButton}
                             />
                         </div>
                     </div>

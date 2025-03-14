@@ -18,7 +18,7 @@ dayjs.extend(timezone);
 
 const daysInWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
+const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate, setSelectedButton }) => {
 
     const [currentDate, setCurrentDate] = useState(dayjs().utc().tz('Europe/Moscow').startOf('day'));
     const [showCalendar, setShowCalendar] = useState(false);
@@ -29,6 +29,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
         setShowCalendar(!showCalendar);
         if (!startDate) {
             setStartDate(today);
+            setSelectedButton('')
         }
     };
 
@@ -37,22 +38,33 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
         if (!startDate) {
             setStartDate(dayJsDate);
             setEndDate(null);
+            setSelectedButton('');
         } else if (!endDate) {
             if (dayJsDate.isBefore(startDate)) {
                 setEndDate(startDate);
                 setStartDate(dayJsDate);
+                setSelectedButton('');
+
             } else {
                 setEndDate(dayJsDate);
+                setSelectedButton('');
+
             }
         } else {
             if (dayJsDate.isBefore(startDate)) {
                 setStartDate(dayJsDate);
                 setEndDate(null);
+                setSelectedButton('');
+
             } else if (dayJsDate.isAfter(endDate)) {
                 setEndDate(dayJsDate);
+                setSelectedButton('');
+
             } else {
                 setStartDate(dayJsDate);
                 setEndDate(null);
+                setSelectedButton('');
+
             }
         };
         // console.log(startDate);
