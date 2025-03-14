@@ -97,9 +97,9 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                 : 'rounded-full';
 
             days.push(
-                <div key={`day-${day}`} className={`${isInRangeClass} my-1 flex items-center justify-center grid-item `}>
+                <div key={`day-${day}`} className={`${isInRangeClass} w-[3rem] h-[3rem] flex items-center justify-center grid-item `}>
                     <div
-                        className={`w-[3.6rem] h-[3.6rem] rounded-full leading-normal text-[1rem] flex items-center justify-center text-center cursor-pointer duration-200 transform transition-colors duration-[250ms] ease-[cubic-bezier(0.4, 0, 0.2, 1)]
+                        className={`w-[3rem] h-[3rem] rounded-full leading-normal text-[1rem] flex items-center justify-center text-center cursor-pointer duration-200 transform transition-colors duration-[250ms] ease-[cubic-bezier(0.4, 0, 0.2, 1)]
                             ${isTodayClass} ${isSelectedClass} hover:border-pink-400 hover:border-[1px] ${textColor}`}
                         onClick={() => handleDateClick(date)}
                     >
@@ -161,7 +161,7 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
 
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
 
-                    <div className="relative bg-white border border-gray-300 rounded shadow-md p-4 max-w-md w-full">
+                    <div className="relative bg-white border border-gray-300 rounded shadow-md p-4 max-w-[90%] sm:max-w-full">
                         <div className="flex justify-between mb-2">
                             <button
                                 onClick={() => changeMonth(-1)}
@@ -197,8 +197,8 @@ const CalendarModal = ({ startDate, setStartDate, endDate, setEndDate }) => {
                         >
                             Применить
                         </button>
-                        <button onClick={toggleCalendar} className="md:absolute -top-8 -right-8">
-                            <IoMdClose className="text-[2rem] text-[#fff]" />
+                        <button onClick={toggleCalendar} className="absolute top-[105%] smd:-top-8 right-1/2 smd:-right-8 translate-x-1/2  smd:translate-x-0 p-3 smd:p-0 smd:bg-transparent text-[1.8rem] smd:text-[2rem] text-[#333] rounded-full bg-white border smd:border-none smd:text-[#fff]">
+                            <IoMdClose />
                         </button>
                     </div>
 
