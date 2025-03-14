@@ -22,6 +22,8 @@ dayjs.extend(timezone);
 
 const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStartDate, endDate, setEndDate, isOpen, setIsOpen, }) => {
     const [selectedButton, setSelectedButton] = useState('');
+    const [selectedDate, setSelectedDate] = useState('');
+
 
     const searchParams = useSearchParams();
     const category = searchParams.get('category') || '';
@@ -101,14 +103,50 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
             setEndDate(endOfWeekend);
             setSelectedButton('weekend');
         }
-
     };
+
+    const selectDate = () => {
+        if (selectedButton === 'date') {
+            // Сброс даты, если нажали на кнопку
+            setStartDate(null);
+            setEndDate(null);
+            setSelectedDate('');
+            setSelectedButton('');
+        } else if (startDate && endDate) {
+            // Форматируем дату
+            const rangeStartDate = startDate.utc().tz('Europe/Moscow').startOf('day').format('DD.MM');
+            const rangeEndDate = endDate.utc().tz('Europe/Moscow').startOf('day').format('DD.MM');
+
+            const dateRange = rangeStartDate === rangeEndDate ? rangeStartDate : `${rangeStartDate} - ${rangeEndDate}`;
+
+            // Устанавливаем новую дату
+            setSelectedDate(dateRange);
+            setSelectedButton('date');
+        }
+    };
+
+
     const buttons = [
         { id: "today", label: "Сегодня", onClick: selectToday },
         { id: "tomorrow", label: "Завтра", onClick: selectTomorrow },
         { id: "weekend", label: "Выходные", onClick: selectWeekends },
-
     ];
+
+    useEffect(() => {
+        if (startDate && endDate) {
+            const rangeStartDate = startDate.utc().tz("Europe/Moscow").startOf("day").format("DD.MM");
+            const rangeEndDate = endDate.utc().tz("Europe/Moscow").startOf("day").format("DD.MM");
+
+            const dateLabel = rangeStartDate === rangeEndDate ? rangeStartDate : `${rangeStartDate} - ${rangeEndDate}`;
+
+            setSelectedDate(dateLabel);
+            setSelectedButton("date"); // Устанавливаем активную кнопку без бесконечного ререндера
+        }
+    }, [startDate, endDate]);
+
+    if (startDate && endDate) {
+        buttons.push({ id: "date", label: selectedDate, onClick: selectDate });
+    }
 
     const allButtons = [
         ...categoriesID.map((category) => ({
@@ -160,11 +198,11 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                         <button
                             key={button.id}
                             onClick={button.onClick}
-                            className={`mx-3 text-[1rem] items-center justify-center py-1 px-2 rounded-md flex ${selectedButton === button.id || selectedTags.includes(button.label) ? "bg-pink-400 text-white " : "bg-[#fff]"
+                            className={`mx-3 text-[1rem] items-center justify-center py-1 px-2 rounded-md flex ${selectedButton === button.id || selectedTags.includes(button.label) || (button.id === "date") ? "bg-pink-400 text-white " : "bg-[#fff]"
                                 } ${!isOpen ? 'block' : 'hidden'}`}
                         >
                             {button.label}
-                            {selectedButton === button.id || selectedTags.includes(button.label) ? <IoClose size={18} className='mt-[3px] ml-2' />
+                            {selectedButton === button.id || selectedTags.includes(button.label) || (button.id === "date") ? <IoClose size={18} className='mt-[3px] ml-2' />
                                 : ''}
 
                         </button>
@@ -173,8 +211,8 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
                 </div>
 
                 {selectedButton.length > 0 || selectedTags.length > 0 || endDate || startDate ?
-                    <button onClick={clearSelection} className={`mr-3 font-medium text-[1rem] text-red-500 items-center justify-center py-1 flex rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
-                        <IoIosCloseCircle size={16} className='mt-[2px] mr-1' />
+                    <button onClick={clearSelection} className={`mr-3 lg:hidden font-medium text-[1rem] text-red-500 items-center justify-center py-1 flex rounded-md ${!isOpen ? 'block' : 'hidden'}`}>
+                        <IoIosCloseCircle size={16} className=' mt-[2px] mr-1' />
                         Сбросить фильтры
                     </button>
                     : ''
