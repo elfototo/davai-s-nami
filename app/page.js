@@ -171,13 +171,16 @@ export default function Home() {
     setIsLoadingGame(true);
     if (eventsForGame.length === 0) {
 
-      console.log("Данные ещё загружаются...");
-      const checkDataInterval = setInterval(() => {
-        if (eventsForGame.length > 0) {
-          clearInterval(checkDataInterval); // Очищаем интервал после загрузки
-          getRandomEvent(); // Запускаем игру
-        }
+      setTimeout(() => {
+        window.location.reload();  // Принудительная перезагрузка страницы
       }, 500);
+      // console.log("Данные ещё загружаются...");
+      // const checkDataInterval = setInterval(() => {
+      //   if (eventsForGame.length > 0) {
+      //     clearInterval(checkDataInterval); // Очищаем интервал после загрузки
+      //     getRandomEvent(); // Запускаем игру
+      //   }
+      // }, 500);
     } else {
       getRandomEvent();
 
