@@ -1,5 +1,4 @@
 import '../globals.css';
-// components/Loader.js
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import Image from 'next/image';

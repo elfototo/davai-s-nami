@@ -50,7 +50,7 @@ export default function Home() {
   const dateRange1 = { date_from: today, date_to: tomorrow, limit: 10 };
   const dateRangemonth = { date_from: today, date_to: month, limit: 10 };
   const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend, limit: 10 };
-  const dateRangeForGame = { date_from: today, date_to: month, limit: 50 };
+  const dateRangeForGame = { date_from: today, date_to: month, limit: 20 };
 
   const fetcher = async (dateRange) => {
     try {
@@ -128,7 +128,10 @@ export default function Home() {
         return eventDate.isAfter(today) && eventDate.isBefore(end);
       });
 
-      if (filterEvents.length === 0) return null;
+      if (filterEvents.length === 0) {
+        setIsLoadingGame(false);
+        return;
+      };
 
       for (let i = filterEvents.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -143,11 +146,11 @@ export default function Home() {
       img.onload = () => {
 
         setTimeout(() => {
-          setRandomEv(randomEvent); 
+          setRandomEv(randomEvent);
           setIsLoadingGame(false);
           setShowGame(true);
           console.log(randomEvent.title);
-        }, 6000); 
+        }, 6000);
       };
 
       img.onerror = () => {
@@ -160,6 +163,23 @@ export default function Home() {
       };
     }
   }
+
+  const startGame = () => {
+    setIsLoadingGame(true);
+    if (eventsForGame.length === 0) {
+      
+      console.log("Данные ещё загружаются...");
+      const checkDataInterval = setInterval(() => {
+        if (eventsForGame.length > 0) {
+          clearInterval(checkDataInterval); // Очищаем интервал после загрузки
+          getRandomEvent(); // Запускаем игру
+        }
+      }, 500);
+    } else {
+      getRandomEvent();
+
+    }
+  };
 
   const {
     data: dataEventDateRange1,
@@ -176,9 +196,10 @@ export default function Home() {
     error: dataErrorDateRangeForGame,
     isLoading: dataIsDateRangeForGame
   } = useSWR(
-    dateRangeForGame ? `/api/data?dateRange=${dateRangeForGame.date_from, dateRangeForGame.date_to}` : null,
+    dateRangeForGame ? `/api/data?dateRange=${JSON.stringify(dateRangeForGame)}` : null,
     () => fetcher(dateRangeForGame),
   );
+
   console.log("dataEventDateRangeForGame", dataEventDateRangeForGame);
 
 
@@ -253,10 +274,10 @@ export default function Home() {
       setMonthEvents(randomEvents);
     }
 
-    if (dataEventDateRangeForGame) {
+    if (dataEventDateRangeForGame && !dataIsDateRangeForGame) {
       setEventsForGame(dataEventDateRangeForGame);
     }
-  }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeForGame, cacheDataRange1, cacheDataRange2, cacheDataEventDateRangeMonth])
+  }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeForGame, dataIsDateRangeForGame, cacheDataRange1, cacheDataRange2, cacheDataEventDateRangeMonth])
 
   const getRandomEvents = (array, count) => {
     const shuffled = array.slice();
@@ -285,7 +306,7 @@ export default function Home() {
             <p className='font-roboto text-start font-light text-secondary mb-6'>
               <span className=''>Нажми на кнопку</span> чтобы найти <br className='smd:hidden md:block' /> случайное мероприятие <br className='hidden sm:block smd:hidden' />  <br className='ssm:block sm:hidden' />на свой уикенд в <br className=' smd:hidden' />  <span className='whitespace-nowrap'>Санкт - Петербурге</span></p>
             <button
-              onClick={getRandomEvent}
+              onClick={startGame}
               className={`font-roboto md:w-3/4 py-2  md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
               transform transition-transform duration-300 hover:scale-105
               `}>Мне повезет
@@ -430,7 +451,7 @@ export default function Home() {
                   height={1000}
                   alt="avatar"
                   priority
-                   />
+                />
                 : ''}
 
               <div className='flex justify-center items-center'>
