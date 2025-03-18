@@ -241,6 +241,11 @@ export default function Home() {
 
 
   useEffect(() => {
+
+    if (dataEventDateRangeForGame) {
+      setEventsForGame(dataEventDateRangeForGame);
+    }
+
     if (cacheDataRange1) {
       const randomEvents = getRandomEvents(cacheDataRange1, 4);
       console.log('берем данные из кэша для cacheDataRange1', randomEvents);
@@ -279,9 +284,7 @@ export default function Home() {
       setMonthEvents(randomEvents);
     }
 
-    if (dataEventDateRangeForGame && !dataIsDateRangeForGame) {
-      setEventsForGame(dataEventDateRangeForGame);
-    }
+
   }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeForGame, dataIsDateRangeForGame, cacheDataRange1, cacheDataRange2, cacheDataEventDateRangeMonth])
 
   const getRandomEvents = (array, count) => {
