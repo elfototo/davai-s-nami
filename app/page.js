@@ -173,7 +173,7 @@ export default function Home() {
 
       setTimeout(() => {
         window.location.reload();  // Принудительная перезагрузка страницы
-      }, 500);
+      }, 2000);
       // console.log("Данные ещё загружаются...");
       // const checkDataInterval = setInterval(() => {
       //   if (eventsForGame.length > 0) {
