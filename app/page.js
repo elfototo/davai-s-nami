@@ -196,16 +196,16 @@ export default function Home() {
   );
   console.log("dataEventDateRange1", dataEventDateRange1);
 
-  const {
-    data: dataEventDateRangeForGame,
-    error: dataErrorDateRangeForGame,
-    isLoading: dataIsDateRangeForGame
-  } = useSWR(
-    dateRangeForGame ? `/api/data?dateRange=${JSON.stringify(dateRangeForGame)}` : null,
-    () => fetcher(dateRangeForGame),
-  );
+  // const {
+  //   data: dataEventDateRangeForGame,
+  //   error: dataErrorDateRangeForGame,
+  //   isLoading: dataIsDateRangeForGame
+  // } = useSWR(
+  //   dateRangeForGame ? `/api/data?dateRange=${JSON.stringify(dateRangeForGame)}` : null,
+  //   () => fetcher(dateRangeForGame),
+  // );
 
-  console.log("dataEventDateRangeForGame", dataEventDateRangeForGame);
+  // console.log("dataEventDateRangeForGame", dataEventDateRangeForGame);
 
 
   const {
@@ -242,8 +242,8 @@ export default function Home() {
 
   useEffect(() => {
 
-    if (dataEventDateRangeForGame) {
-      setEventsForGame(dataEventDateRangeForGame);
+    if (dataEventDateRangeMonth) {
+      setEventsForGame(dataEventDateRangeMonth);
     }
 
     if (cacheDataRange1) {
@@ -285,7 +285,7 @@ export default function Home() {
     }
 
 
-  }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeForGame, dataIsDateRangeForGame, cacheDataRange1, cacheDataRange2, cacheDataEventDateRangeMonth])
+  }, [dataEventDateRange1, dataEventDateRange2, cacheDataRange1, cacheDataRange2, cacheDataEventDateRangeMonth])
 
   const getRandomEvents = (array, count) => {
     const shuffled = array.slice();
