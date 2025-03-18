@@ -451,14 +451,14 @@ export default function Home() {
         </div>
 
 
-        {/* {isLoadingGame && (
+        {isLoadingGame && (
           <div className='fade-in'>
             загрузка...
             <Loader />
           </div>
-        )} */}
+        )}
 
-        {isLoadingGame && (
+        {/* {isLoadingGame && (
           <div>
             {loadingTime < 10 ? ( // 🔹 Если прошло <10 секунд, показываем Loader
               <div className="fade-in">
@@ -470,7 +470,7 @@ export default function Home() {
               { loader }
             )}
           </div>
-        )}
+        )} */}
 
         {showGame &&
           <div className='fade-in z-30 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 transform transition-all duration-300'
