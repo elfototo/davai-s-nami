@@ -21,6 +21,7 @@ import { useEvents } from '../context/SwrContext';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../config';
 
 
+
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -37,6 +38,8 @@ export default function Home() {
   const [eventsTodayTomorrow, setEventsTodayTomorrow] = useState([]);
   const [eventsForGame, setEventsForGame] = useState([]);
   const { cache, findDataById } = useEvents();
+  const [loadingTime, setLoadingTime] = useState(0);
+
 
   const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
   const today = todayforcount.format('YYYY-MM-DD');
@@ -167,7 +170,7 @@ export default function Home() {
   const startGame = () => {
     setIsLoadingGame(true);
     if (eventsForGame.length === 0) {
-      
+
       console.log("Данные ещё загружаются...");
       const checkDataInterval = setInterval(() => {
         if (eventsForGame.length > 0) {
@@ -287,6 +290,21 @@ export default function Home() {
     }
     return shuffled.slice(0, count);
   };
+
+  useEffect(() => {
+    let interval;
+
+    if (isLoadingGame) {
+      setLoadingTime(0);
+      interval = setInterval(() => {
+        setLoadingTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isLoadingGame]);
 
   const loader = (
     <div className="absolute flex items-center justify-cente mx-auto">
@@ -433,10 +451,25 @@ export default function Home() {
         </div>
 
 
-        {isLoadingGame && (
+        {/* {isLoadingGame && (
           <div className='fade-in'>
             загрузка...
             <Loader />
+            {loader}
+          </div>
+        )} */}
+
+        {isLoadingGame && (
+          <div className="fade-in">
+            {loadingTime < 10 ? ( // 🔹 Если прошло <10 секунд, показываем Loader
+              <>
+                <Loader />
+              </>
+            ) : ( // 🔹 После 10 секунд — показываем другой лоадер
+              <>
+                {loader}
+              </>
+            )}
           </div>
         )}
 
