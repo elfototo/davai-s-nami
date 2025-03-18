@@ -73,6 +73,8 @@ export const EventsProvider = ({ children }) => {
         return url;
     };
 
+    
+
     return (
         <EventsContext.Provider
             value={{

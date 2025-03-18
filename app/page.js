@@ -167,20 +167,19 @@ export default function Home() {
     }
   }
 
+
   const startGame = () => {
     setIsLoadingGame(true);
+
     if (eventsForGame.length === 0) {
 
-      setTimeout(() => {
-        window.location.reload();  // Принудительная перезагрузка страницы
-      }, 2000);
-      // console.log("Данные ещё загружаются...");
-      // const checkDataInterval = setInterval(() => {
-      //   if (eventsForGame.length > 0) {
-      //     clearInterval(checkDataInterval); // Очищаем интервал после загрузки
-      //     getRandomEvent(); // Запускаем игру
-      //   }
-      // }, 500);
+      console.log("Данные ещё загружаются...");
+      const checkDataInterval = setInterval(() => {
+        if (eventsForGame.length > 0) {
+          clearInterval(checkDataInterval); // Очищаем интервал после загрузки
+          getRandomEvent(); // Запускаем игру
+        }
+      }, 500);
     } else {
       getRandomEvent();
 
