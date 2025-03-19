@@ -57,8 +57,6 @@ export default function Home() {
 
   const fetcher = async (dateRange) => {
     try {
-      console.log('fetcher args', dateRange.date_from);
-      console.log('fetcher args', dateRange.date_to);
 
       const res = await fetch(API_URL, {
         method: 'POST',
@@ -89,24 +87,18 @@ export default function Home() {
 
 
       const result = await res.json();
-      console.log('Task created с диапазоном дат: ', result);
 
       let eventsfromFetcher = [];
 
-      console.log('result', result);
       if (result.result && Array.isArray(result.result)) {
-        console.log('result.result', result.result.events)
         eventsfromFetcher = result.result;
       } else if (result.result.events && Array.isArray(result.result.events)) {
-        console.log('result.result.events', result.result.events)
         eventsfromFetcher = result.result.events;
       } else {
-        console.log('Неизвестная структура данных');
         setStatus('Не удалось обработать данные');
         return;
       }
 
-      console.log('eventsfromFetcher', eventsfromFetcher)
 
       return eventsfromFetcher;
 
@@ -152,12 +144,10 @@ export default function Home() {
           setRandomEv(randomEvent);
           setIsLoadingGame(false);
           setShowGame(true);
-          console.log(randomEvent.title);
         }, 6000);
       };
 
       img.onerror = () => {
-        console.error("Ошибка загрузки изображения");
         setTimeout(() => {
           setRandomEv(randomEvent);
           setIsLoadingGame(false);
@@ -167,24 +157,6 @@ export default function Home() {
     }
   }
 
-
-  // const startGame = () => {
-  //   setIsLoadingGame(true);
-
-  //   if (eventsForGame.length === 0) {
-
-  //     console.log("Данные ещё загружаются...");
-  //     const checkDataInterval = setInterval(() => {
-  //       if (eventsForGame.length > 0) {
-  //         clearInterval(checkDataInterval); // Очищаем интервал после загрузки
-  //         getRandomEvent(); // Запускаем игру
-  //       }
-  //     }, 500);
-  //   } else {
-  //     getRandomEvent();
-  //   }
-  // };
-
   const {
     data: dataEventDateRange1,
     error: dataErrorDateRange1,
@@ -193,7 +165,6 @@ export default function Home() {
     dateRange1 ? `/api/data?dateRange=${dateRange1.date_from, dateRange1.date_to}` : null,
     () => fetcher(dateRange1),
   );
-  console.log("dataEventDateRange1", dataEventDateRange1);
 
   // const {
   //   data: dataEventDateRangeForGame,
@@ -215,7 +186,6 @@ export default function Home() {
     dateRange2 ? `/api/data?dateRange=${dateRange2.date_from, dateRange2.date_to}` : null,
     () => fetcher(dateRange2)
   );
-  console.log("dataEventDateRange2", dataEventDateRange2);
 
 
   const {
@@ -226,17 +196,13 @@ export default function Home() {
     dateRangemonth ? `/api/data?dateRange=${dateRangemonth.date_from, dateRangemonth.date_to}` : null,
     () => fetcher(dateRangemonth)
   );
-  console.log("dataEventDateRangeMonth", dataEventDateRangeMonth);
 
 
   const cacheDataRange1 = cache?.get(`/api/data?dateRange=${dateRange1.date_from, dateRange1.date_to}`)?.data;
-  console.log('cacheDataRange1', cacheDataRange1);
 
   const cacheDataRange2 = cache?.get(`/api/data?dateRange=${dateRange2.date_from, dateRange2.date_to}`)?.data;
-  console.log('cacheDataRange2', cacheDataRange2);
 
   const cacheDataEventDateRangeMonth = cache?.get(`/api/data?dateRange=${dateRangemonth.date_from, dateRangemonth.date_to}`)?.data;
-  console.log('cacheDataEventDateRangeMonth', cacheDataEventDateRangeMonth);
 
 
   useEffect(() => {
@@ -247,38 +213,31 @@ export default function Home() {
 
     if (cacheDataRange1) {
       const randomEvents = getRandomEvents(cacheDataRange1, 4);
-      console.log('берем данные из кэша для cacheDataRange1', randomEvents);
 
       setEventsTodayTomorrow(randomEvents);
-      console.log('eventsTodayTomorrow', eventsTodayTomorrow);
 
     } else if (dataEventDateRange1) {
       const randomEvents = getRandomEvents(dataEventDateRange1, 4);
-      console.log('берем данные с сервера для dataEventDateRange1', randomEvents);
       setEventsTodayTomorrow(randomEvents);
 
     }
 
     if (cacheDataRange2) {
       const randomEvents = getRandomEvents(cacheDataRange2, 4);
-      console.log('берем данные из кэша для cacheDataRange2', randomEvents);
 
       setWeekendEvents(randomEvents);
     } else if (dataEventDateRange2) {
       const randomEvents = getRandomEvents(dataEventDateRange2, 4);
-      console.log('берем данные с сервера для dataEventDateRange2', randomEvents);
 
       setWeekendEvents(randomEvents);
     }
 
     if (cacheDataEventDateRangeMonth) {
       const randomEvents = getRandomEvents(cacheDataEventDateRangeMonth, 4);
-      console.log('берем данные из кэша для cacheDataEventDateRangeMonth', randomEvents);
 
       setMonthEvents(randomEvents);
     } else if (dataEventDateRangeMonth) {
       const randomEvents = getRandomEvents(dataEventDateRangeMonth, 4);
-      console.log('берем данные с сервера для dataEventDateRangeMonth', randomEvents);
 
       setMonthEvents(randomEvents);
     }
@@ -316,7 +275,7 @@ export default function Home() {
 
             {dataIsDateRangeMonth ?
               <div
-                
+
                 className={`disabled flex items-center justify-center font-roboto md:w-3/4 py-2 md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
                 transform transition-transform duration-300`}
               >
