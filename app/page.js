@@ -321,7 +321,7 @@ export default function Home() {
                 transform transition-transform duration-300 hover:scale-105`}
               >
 
-                <span className='w-[90px] flex items-center justify-center'>
+                <span className='w-[100px] flex items-center justify-center'>
                   <div className='loader-dots-sequence'>
                     <div></div>
                     <div></div>
