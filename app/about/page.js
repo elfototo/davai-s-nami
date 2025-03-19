@@ -34,8 +34,6 @@ export default function About() {
   const fetcher = async (dateRange) => {
     try {
 
-      console.log('fetcher args', dateRange.date_from);
-      console.log('fetcher args', dateRange.date_to);
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: API_HEADERS,
@@ -64,23 +62,17 @@ export default function About() {
       }
 
       const result = await res.json();
-      console.log('Task created с диапазоном дат: ', result);
 
       let eventsfromFetcher = [];
 
-      console.log('result', result);
       if (result.result && Array.isArray(result.result)) {
-        console.log('result.result', result.result.events)
         eventsfromFetcher = result.result;
       } else if (result.result.events && Array.isArray(result.result.events)) {
-        console.log('result.result.events', result.result.events)
         eventsfromFetcher = result.result.events;
       } else {
-        console.log('Неизвестная структура данных');
         return;
       }
 
-      console.log('eventsfromFetcher', eventsfromFetcher)
 
       return eventsfromFetcher;
 
@@ -98,12 +90,10 @@ export default function About() {
     () => fetcher(dateRangemonth)
   );
 
-  console.log('dataEventDateRangeMonth', dataEventDateRangeMonth)
 
 
   const cacheData = cache?.get(`/api/data?dateRange=${dateRangemonth.date_from, dateRangemonth.date_to}`)?.data;
 
-  console.log('cacheData', cacheData);
 
 
   useEffect(() => {
@@ -111,17 +101,14 @@ export default function About() {
     if (cacheData && Array.isArray(cacheData)) {
       const randomEvents = getRandomEvents(cacheData, 4);
       setFilterEventsMonth(randomEvents);
-      console.log('берем данные из кэша', randomEvents);
     } else if (dataEventDateRangeMonth) {
       const randomEvents = getRandomEvents(dataEventDateRangeMonth, 4);
 
       setFilterEventsMonth(randomEvents);
-      console.log('берем данные с сервера', filterEventsMonth);
     }
 
   }, [dataEventDateRangeMonth, cacheData])
 
-  console.log('filterEventsMonth', filterEventsMonth)
   const getRandomEvents = (array, count) => {
     const shuffled = array.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
