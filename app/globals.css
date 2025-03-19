@@ -397,3 +397,35 @@ body {
     background-color: #d8b4fe;
   }
 }
+
+.loader-sceleton {
+  margin:5px;
+  border-radius:4px;
+  background: linear-gradient(
+    135deg,
+    rgb(192, 192, 192),
+    #fafafa,
+    rgb(192, 192, 192));
+  background-size: 400% 400%;
+  animation: gradient 2s ease infinite;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.link{
+  color: white;
+}

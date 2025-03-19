@@ -315,10 +315,10 @@ export default function Home() {
               <span className=''>Нажми на кнопку</span> чтобы найти <br className='smd:hidden md:block' /> случайное мероприятие <br className='hidden sm:block smd:hidden' />  <br className='ssm:block sm:hidden' />на свой уикенд в <br className=' smd:hidden' />  <span className='whitespace-nowrap'>Санкт - Петербурге</span></p>
 
             {dataIsDateRangeMonth ?
-              <button
-                onClick={getRandomEvent}
-                className={`flex items-center justify-center font-roboto md:w-3/4 py-2 md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg  
-                transform transition-transform duration-300 hover:scale-105`}
+              <div
+                
+                className={`disabled flex items-center justify-center font-roboto md:w-3/4 py-2 md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
+                transform transition-transform duration-300`}
               >
 
                 <span className='w-[100px] flex items-center justify-center'>
@@ -331,7 +331,7 @@ export default function Home() {
 
                 </span>
 
-              </button>
+              </div>
               :
               <button
                 onClick={getRandomEvent}
