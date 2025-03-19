@@ -168,23 +168,22 @@ export default function Home() {
   }
 
 
-  const startGame = () => {
-    setIsLoadingGame(true);
+  // const startGame = () => {
+  //   setIsLoadingGame(true);
 
-    if (eventsForGame.length === 0) {
+  //   if (eventsForGame.length === 0) {
 
-      console.log("Данные ещё загружаются...");
-      const checkDataInterval = setInterval(() => {
-        if (eventsForGame.length > 0) {
-          clearInterval(checkDataInterval); // Очищаем интервал после загрузки
-          getRandomEvent(); // Запускаем игру
-        }
-      }, 500);
-    } else {
-      getRandomEvent();
-
-    }
-  };
+  //     console.log("Данные ещё загружаются...");
+  //     const checkDataInterval = setInterval(() => {
+  //       if (eventsForGame.length > 0) {
+  //         clearInterval(checkDataInterval); // Очищаем интервал после загрузки
+  //         getRandomEvent(); // Запускаем игру
+  //       }
+  //     }, 500);
+  //   } else {
+  //     getRandomEvent();
+  //   }
+  // };
 
   const {
     data: dataEventDateRange1,
@@ -296,21 +295,6 @@ export default function Home() {
     return shuffled.slice(0, count);
   };
 
-  useEffect(() => {
-    let interval;
-
-    if (isLoadingGame) {
-      setLoadingTime(0);
-      interval = setInterval(() => {
-        setLoadingTime((prev) => prev + 1);
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
-
-    return () => clearInterval(interval);
-  }, [isLoadingGame]);
-
   const loader = (
     <div className="absolute flex items-center justify-cente mx-auto">
       <div className="relative flex items-center justify-center">
@@ -325,15 +309,42 @@ export default function Home() {
       <section className='bg-accent-gradient h-[26rem] relative overflow-hidden'>
         <div className="flex justify-center flex-col smd:flex-row md:justify-between h-[inherit] m-0 mx-auto max-w-custom-container overflow-hidden px-4 smd:pl-10 smd:pr-0">
           <div className='flex items-start ml-2 sm:ml-5 smd:ml-0 md:justify-center mt-16 md:mt-0 flex-col smd:max-w-[40%] md:max-w-[50%]'>
+
             <span className='font-roboto font-bold text-[2.6rem] md:text-6xl mb-3 text-secondary whitespace-nowrap'>Играй с нами!</span>
             <p className='font-roboto text-start font-light text-secondary mb-6'>
               <span className=''>Нажми на кнопку</span> чтобы найти <br className='smd:hidden md:block' /> случайное мероприятие <br className='hidden sm:block smd:hidden' />  <br className='ssm:block sm:hidden' />на свой уикенд в <br className=' smd:hidden' />  <span className='whitespace-nowrap'>Санкт - Петербурге</span></p>
-            <button
-              onClick={startGame}
-              className={`font-roboto md:w-3/4 py-2  md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg 
-              transform transition-transform duration-300 hover:scale-105
-              `}>Мне повезет
-            </button>
+
+            {dataIsDateRangeMonth ?
+              <button
+                onClick={getRandomEvent}
+                className={`flex items-center justify-center font-roboto md:w-3/4 py-2 md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg  
+                transform transition-transform duration-300 hover:scale-105`}
+              >
+
+                <span className='w-[90px] flex items-center justify-center'>
+                  <div className='loader-dots-sequence'>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+
+
+                </span>
+
+              </button>
+              :
+              <button
+                onClick={getRandomEvent}
+                className={`flex items-center justify-center font-roboto md:w-3/4 py-2 md:py-4 px-4 md:px-0 text-[1rem] font-medium bg-white text-[#333] rounded-lg shadow-lg  
+                transform transition-transform duration-300 hover:scale-105`}
+              >
+
+                <span>Мне повезет</span>
+
+              </button>
+
+            }
+
           </div>
 
           <div className=' h-full smd:hidden'>
