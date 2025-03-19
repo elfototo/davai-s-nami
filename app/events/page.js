@@ -84,13 +84,6 @@ function Page({ sortedEvents, isLoadingEvents, isValidating }) {
           ) : (
             <div className="col-span-full text-center text-gray-600 text-lg font-semibold">
               {isValidating ?
-                // (<div className=" inset-0 flex items-center justify-center z-50">
-                //   <div className="relative flex items-center justify-center">
-                //     <div className="w-16 h-16 border-4 border-violet-500 border-solid border-t-transparent rounded-full animate-spin"></div>
-                //     <div className="absolute w-12 h-12 border-4 border-pink-300 border-solid border-r-transparent rounded-full animate-spin"></div>
-                //     <div className="absolute w-8 h-8 border-4 border-indigo-200 border-solid border-l-transparent rounded-full animate-spin"></div>
-                //   </div>
-                // </div>)
                 '' : 'Нет доступных событий.'}
             </div>
           )
@@ -128,10 +121,6 @@ export default function Events() {
     date_from: dayjs(startDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
     date_to: dayjs(endDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
   }
-  console.log('startDate', startDate);
-  console.log('endDate', endDate);
-
-
 
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && previousPageData.length < limit) return null;
@@ -152,11 +141,9 @@ export default function Events() {
           method: 'GET',
           headers: API_HEADERS,
         });
-        console.log("ответ с сервера res", res);
 
         if (!res.ok) throw new Error('Ошибка поиска');
         const result = await res.json();
-        console.log("ответ с сервера result", result);
 
 
         events = Array.isArray(result) ? result :
@@ -184,7 +171,6 @@ export default function Events() {
       }
 
       try {
-        console.log('body', body);
 
         const res = await fetch(API_URL, {
           method: 'POST',
@@ -192,12 +178,10 @@ export default function Events() {
           body: JSON.stringify(body),
         });
 
-        console.log("ответ с сервера res", res);
 
         if (!res.ok) throw new Error('Ошибка загрузки данных');
 
         const result = await res.json();
-        console.log("ответ с сервера result", result);
 
 
         events = Array.isArray(result) ? result :
@@ -225,7 +209,6 @@ export default function Events() {
     revalidateFirstPage: false, // Отключает повторный запрос первой страницы при обновлении
   });
 
-  console.log('dataEvents', dataEvents);
 
   useEffect(() => {
     if (dataEvents) {
@@ -245,7 +228,6 @@ export default function Events() {
         // Обновляем loadedEventIdsRef
         uniqueEvents.forEach(event => loadedEventIdsRef.current.add(event.id));
       }
-      console.log('uniqueEvents', uniqueEvents, uniqueEvents.length);
 
     }
   }, [dataEvents]);
@@ -258,7 +240,6 @@ export default function Events() {
 
   useEffect(() => {
     setSelectedTagsId(selectedTags.map((tag) => getCategoryIdByName(tag) || null));
-    console.log('selectedTags to tags id');
 
   }, [selectedTags]);
 
@@ -288,7 +269,6 @@ export default function Events() {
           (!startDateClean || eventDateTo.isSameOrAfter(startDateClean, 'day')) &&
           (!endDateClean || eventDateFrom.isSameOrBefore(endDateClean, 'day'));
 
-        console.log("Is in date range:", isInDateRange);
 
         const matchesSearch = search
           ? (
@@ -325,7 +305,6 @@ export default function Events() {
 
       // Проверка, нужно ли загружать больше событий
       if (filtered.length === 0 && hasMore && !isTryingToLoadMore) {
-        console.log("Нет удовлетворяющих событий - загружаем следующую страницу");
         setIsTryingToLoadMore(true);
         loadMoreEvents();
       } else {

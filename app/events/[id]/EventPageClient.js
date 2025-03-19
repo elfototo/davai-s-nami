@@ -43,10 +43,7 @@ export default function EventPageClient({ id }) {
     navigator.clipboard.writeText(window.location.href).then(() => setCopied(true));
   };
 
-  console.log('id из пропсов id.id', id.id);
-  console.log('id из пропсов id', id);
   const idNumber = parseInt(id.id);
-  console.log('idNumber', idNumber);
 
 
 
@@ -81,18 +78,14 @@ export default function EventPageClient({ id }) {
 
       const result = await res.json();
 
-      console.log('result на странице id', result);
 
       if (result && Array.isArray(result)) {
-        console.log('result на странице id', result.result);
         return result[0];
       } else if (result.result && Array.isArray(result.result)) {
 
-        console.log('result.result на странице id', result.result);
         return result.result[0];
       } else if (result.result.events && Array.isArray(result.result.events)) {
 
-        console.log('result.result.events на странице id', result.result.events);
         return result.result.events[0];
       } else {
         console.error('Неизвестная структура данных:', result);
@@ -115,12 +108,10 @@ export default function EventPageClient({ id }) {
   }
   );
 
-  console.log('findDataById id.id', findDataById(idNumber));
   const cachedEvent = findDataById(idNumber);
 
   useEffect(() => {
     if (dataEvent) {
-      console.log('Берем данные с сервера');
       setEvent(dataEvent);
     } else if (!dataIsLoading && !dataError && cache?.size > 0 && cachedEvent) {
 
@@ -129,7 +120,6 @@ export default function EventPageClient({ id }) {
       } else {
         setEvent(cachedEvent);
       }
-      console.log('Берем данные из кэша');
     }
 
   }, [dataEvent, dataIsLoading, dataError, cache, idNumber, cachedEvent]);
@@ -179,7 +169,6 @@ export default function EventPageClient({ id }) {
     return `${from.format('HH:mm')} - ${to.format('HH:mm')}`;
   }
 
-  console.log('event', event);
 
 
   if (dataIsLoading) {
