@@ -83,7 +83,6 @@ export default function Places() {
 
   const limit = 8;
 
-  console.log("cache", cache)
 
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && previousPageData.length < limit) return null;
@@ -105,11 +104,9 @@ export default function Places() {
           method: 'GET',
           headers: API_HEADERS,
         });
-        console.log("ответ с сервера res", res);
 
         if (!res.ok) throw new Error('Ошибка поиска');
         const result = await res.json();
-        console.log("ответ с сервера result", result);
 
 
         places = Array.isArray(result) ? result :
@@ -143,11 +140,9 @@ export default function Places() {
 
         const result = await res.json();
 
-        console.log('result для пагинации', result);
 
         let newEvents = [];
 
-        console.log('Возвращаем result без task_id', result)
 
         if (Array.isArray(result)) {
           newEvents = result;
@@ -158,7 +153,6 @@ export default function Places() {
         } else {
           console.log('Неизвестная структура данных');
         }
-        console.log('newEvents', newEvents);
 
         return newEvents || [];
       } catch (error) {
@@ -181,9 +175,6 @@ export default function Places() {
     // revalidateFirstPage: false, // Отключает повторный запрос первой страницы при обновлении
   });
 
-  console.log("Generated key:", getKey(size, dataPlaces?.[size - 1]));
-
-  console.log('dataPlaces', dataPlaces);
 
   useEffect(() => {
     if (dataPlaces) {

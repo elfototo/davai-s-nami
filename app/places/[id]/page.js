@@ -31,7 +31,6 @@ export default function EventPlace({ params }) {
     const [place, setPlace] = useState(null);
 
     const { id } = params;
-    console.log('id', typeof parseInt(id));
 
     const idNumber = parseInt(id);
 
@@ -58,30 +57,24 @@ export default function EventPlace({ params }) {
 
             const result = await res.json();
 
-            console.log('result на странице id', result);
 
             if (result && Array.isArray(result)) {
-                console.log('result на странице id', result);
                 return result[0];
 
             } else if (result.result && Array.isArray(result.result)) {
-                console.log('result.result на странице id', result.result);
                 return result.result[0];
 
             } else if (result.result.places && Array.isArray(result.result.places)) {
-                console.log('result.result на странице id', result.result.places);
                 // setPlace(result.result.places[0]);
                 return result.result.places[0];
 
             } else if (result.places && Array.isArray(result.places)) {
-                console.log('result.result.places на странице id', result.places);
                 // setPlace(result.places[0]);
                 return result.places[0];
             } else {
                 console.error('Неизвестная структура данных:', result);
             }
         } catch (error) {
-            console.log('Ошибка при запросе:', error);
             return null;
         }
     };
@@ -127,27 +120,21 @@ export default function EventPlace({ params }) {
 
             const result = await res.json();
 
-            console.log('result на странице place id  для events', result);
 
 
             if (result && Array.isArray(result)) {
-                console.log('result на странице id для events', result);
                 return result;
             } else if (result.result && Array.isArray(result.result)) {
-                console.log('result.result на странице id для events', result.result);
                 return result.result;
             } else if (result.result.events && Array.isArray(result.result.events)) {
-                console.log('result.result.events на странице id для events', result.result.events);
                 return result.result.events;
             } else if (result.events && Array.isArray(result.events)) {
-                console.log('result.result.events на странице id для events', result.events);
                 return result.events;
             } else {
                 console.error('Неизвестная структура данных для events:', result);
             }
 
         } catch (error) {
-            console.log('Ошибка при запросе для events:', error);
             return null;
         }
     };
@@ -166,14 +153,12 @@ export default function EventPlace({ params }) {
     );
 
     const cacheEvents = findDataByIdPlace(idNumber);
-    console.log('cacheEvents', cacheEvents);
 
     useEffect(() => {
         let result = [];
 
         if (dataPlaceById && !isLoadingById) {
             setPlace(dataPlaceById);
-            console.log('place в useEffect', place);
         }
 
         if (cacheEvents) {
@@ -183,7 +168,6 @@ export default function EventPlace({ params }) {
             );
 
             setEventsInPlace(uniqueCacheEvents);
-            console.log('Берем мероприятия из кэша', uniqueCacheEvents.length);
         }
 
         if (!isLoadingEventsPlaceId && dataEventsByPlaceId && cacheEvents?.length < 4) {
@@ -194,7 +178,6 @@ export default function EventPlace({ params }) {
                 );
 
             setEventsInPlace(result);
-            console.log('делаем запрос мероприятий на сервер', result);
         }
 
     }, [dataPlaceById, isLoadingById, dataEventsByPlaceId, isLoadingEventsPlaceId, place]);
