@@ -1,36 +1,27 @@
-name: Build and Push Docker Image
-
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Клонирование репозитория
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Установка Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Логин в Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Сборка и пуш Docker-образа
       - name: Build and push Docker image
-        run: |
-          docker build -t elfototo/davai-s-nami:latest -t elfototo/davai-s-nami:${{ github.sha }} .
-          docker push elfototo/davai-s-nami:latest
-          docker push elfototo/davai-s-nami:${{ github.sha }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            elfototo/davai-s-nami:latest
+            elfototo/davai-s-nami:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
