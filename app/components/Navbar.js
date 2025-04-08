@@ -173,7 +173,7 @@ const Navbar = () => {
                 </div>
                 <div className='mx-auto h-full lg:mr-6'>
                   <Link href="/" className=''>
-                    {/* Давай с нами! */}
+                    {/* Давай с нами!*/}
                     
                     <Image
                         src={'/img/logo_main.png'}
