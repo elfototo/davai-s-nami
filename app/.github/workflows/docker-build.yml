@@ -31,5 +31,5 @@ jobs:
       # Сборка и пуш Docker-образа
       - name: Build and push Docker image
         run: |
-          docker build -t your-docker-username/my-nextjs-app:latest .
-          docker push your-docker-username/my-nextjs-app:latest
+          docker build -t elfototo/davai-s-nami:latest .
+          docker push elfototo/davai-s-nami:latest
