@@ -24,6 +24,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2",
+    "dotenv": "^16.4.7",
     "gsap": "^3.12.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.447.0",

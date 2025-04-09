@@ -26,7 +26,6 @@ export const categoriesID = [
     "category": 'Другое',
     "color": 'bg-black',
     "icon": <IoStar size={16} color='white' className='mr-1 mb-[0.2rem]' />
-
   },
   {
     "id": 3,
