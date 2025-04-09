@@ -39,7 +39,7 @@
 
 Пример содержимого файла .env:
 
-    ```
+    ```ini
     NEXT_PUBLIC_API_URL=https://your-api-url.com
     NEXT_PUBLIC_API_KEY=your-api-key
     NEXT_PUBLIC_API_HEADERS={ 'Authorization': 'Bearer your-token', 'Content-Type': 'application/json' }
