@@ -23,7 +23,7 @@
 
 ### Теги образов:
 - **latest** — последняя стабильная версия.
-- **[ID образа]** — старые версии, используемые для тестирования.
+- **[1fa8c6e3d311e5474c06c1d8791db84865186487]** — старые версии, используемые для тестирования.
 
 ## Инструкция по установке
 
@@ -35,4 +35,12 @@
    git clone https://github.com/elfototo/davai-s-nami.git
    cd davai-s-nami
 
-2. **Клонируйте репозиторий:** 
+2. **Создайте файл .env для хранения переменных окружения.** 
+
+Пример содержимого файла .env:
+
+    ```.env
+    NEXT_PUBLIC_API_URL=https://your-api-url.com
+    NEXT_PUBLIC_API_KEY=your-api-key
+    NEXT_PUBLIC_API_HEADERS={ 'Authorization': 'Bearer your-token', 'Content-Type': 'application/json' }```
+
