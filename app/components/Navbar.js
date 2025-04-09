@@ -139,6 +139,7 @@ const Navbar = () => {
 
   const handleItemClick = () => {
     setSearchQuery('');
+    setIsOpen(!isOpen);
   };
 
   const handleClickOutside = (e) => {
