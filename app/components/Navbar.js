@@ -46,11 +46,8 @@ const Navbar = () => {
   // Проверяем, что находимся на странице /events/[id] или /places/[id]
   const isDynamicPage = /^\/(events|places)\/[^/]+$/.test(pathname);
 
-  console.log('filterSearch', filterSearch);
-
   const fetcher = async (target) => {
     try {
-      console.log('fetcher target', target);
 
       const res = await fetch(`${SEARCH_URL}?query=${target}&limit=${limit}`, {
         method: 'GET',
@@ -63,23 +60,17 @@ const Navbar = () => {
 
 
       const result = await res.json();
-      console.log('Task created с глобального поиска: ', result);
 
       let eventsfromFetcher = [];
 
-      console.log('result', result);
-
       if (result.events && Array.isArray(result.events)) {
-        console.log('result.events', result.events)
         eventsfromFetcher = eventsfromFetcher.concat(result.events);
       }
 
       if (result.places && Array.isArray(result.places)) {
-        console.log('result.places', result.places)
         eventsfromFetcher = eventsfromFetcher.concat(result.places);
       }
 
-      console.log('eventsfrom Search', eventsfromFetcher)
 
       return eventsfromFetcher;
 
@@ -97,7 +88,6 @@ const Navbar = () => {
     () => fetcher(searchQuery),
   );
 
-  console.log('dataEventSearchQuery', dataEventSearchQuery);
 
   useEffect(() => {
     if (!searchQuery) {
@@ -105,7 +95,6 @@ const Navbar = () => {
       return;
     }
     let eventsToSort = [...pages];
-    console.log('searchQuery', searchQuery)
 
     if (dataEventSearchQuery && dataEventSearchQuery.length > 0) {
       dataEventSearchQuery.forEach(event => {
@@ -165,7 +154,7 @@ const Navbar = () => {
 
           <div className="flex items-center justify-between">
             {isDynamicPage ? (
-              // Если на динамической странице, показываем кнопку "Назад"
+              
               <>
                 <div className='flex'>
                   <button onClick={() => router.back()} className=" lg:mr-6 rounded-full transition">

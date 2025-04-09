@@ -166,17 +166,6 @@ export default function Home() {
     () => fetcher(dateRange1),
   );
 
-  // const {
-  //   data: dataEventDateRangeForGame,
-  //   error: dataErrorDateRangeForGame,
-  //   isLoading: dataIsDateRangeForGame
-  // } = useSWR(
-  //   dateRangeForGame ? `/api/data?dateRange=${JSON.stringify(dateRangeForGame)}` : null,
-  //   () => fetcher(dateRangeForGame),
-  // );
-
-  // console.log("dataEventDateRangeForGame", dataEventDateRangeForGame);
-
 
   const {
     data: dataEventDateRange2,
