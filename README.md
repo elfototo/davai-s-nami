@@ -1,4 +1,4 @@
-# 🎉 Project "Join Us" — Find Events in Saint Petersburg
+# 🎉 Project "Davai s nami" — Find Events in Saint Petersburg
 
 ![Homepage Screenshot](./screen_main_page.png)  
 *Replace this placeholder with an actual screenshot of the homepage.*
@@ -15,7 +15,7 @@
 > **A modern web app to explore events in Saint Petersburg — search by date, category, or get lucky! Built with Next.js, integrated with Telegram, and deployed on Vercel.**
 
 ## 📚 Table of Contents
-- [🎉 Project "Join Us" — Find Events in Saint Petersburg](#-project-join-us--find-events-in-saint-petersburg)
+- [🎉 Project "Davai s nami" — Find Events in Saint Petersburg](#-project-davai-s-nami--find-events-in-saint-petersburg)
   - [📚 Table of Contents](#-table-of-contents)
   - [🎯 General Project Description](#-general-project-description)
   - [🖥 System Requirements](#-system-requirements)
