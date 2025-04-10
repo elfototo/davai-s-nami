@@ -1,82 +1,82 @@
-# Проект "Давай с нами"
+# Project "Davai s nami"
 
-## Общее описание проекта
+## General project description
 
-Проект представляет собой фронтенд-сайт, разработанный с использованием **Next.js**. Он позволяет пользователям искать мероприятия в Санкт-Петербурге по категориям, датам и популярным местам. Все мероприятия собираются на стороне бэкенда и отображаются на сайте. Сайт работает как веб-приложение и доступен через Telegram-бота.
+The project is a frontend website built using **Next.js**. It allows users to search for events in Saint Petersburg by category, date, and popular locations. All events are aggregated on the backend and displayed on the site. The website functions as a web application and is also accessible via a Telegram bot.
 
-Основные возможности проекта:
-- Поиск мероприятий по категориям и датам.
-- Кнопка "Мне повезет", которая случайным образом выбирает одно мероприятие и отображает его.
-- Страница с популярными местами города, где проходят мероприятия, с возможностью увидеть ближайшие события в этих местах.
-- Сайт также используется в **Telegram** как приложение, доступное через бота.
-- Сайт размещен на **Vercel** и доступен по [ссылке](https://davai-s-nami.vercel.app/).
+Key features of the project:
+- Search for events by category and date.
+- A **Мне повезет** button that randomly selects and displays a single event.
+- A page showcasing popular venues in the city, with the ability to see upcoming events at those locations.
+- The site is also available in **Telegram** as an app via a bot.
+- The site is hosted on **Vercel** and available at [this link](https://davai-s-nami.vercel.app/).
 
-## Системные требования
+## System Requirements
 
-- **Docker** версии 28.0.4 или выше.
-- **Node.js** версии 18.x или выше (если не используется Docker).
-- **npm** (для установки зависимостей).
+- **Docker** version 28.0.4 or higher.
+- **Node.js** version 18.x or higher (if Docker is not used).
+- **npm** (for installing dependencies).
 
-## Репозиторий Docker Hub
+## Docker Hub Repository
 
-Образ доступен на Docker Hub: [elfototo/davai-s-nami](https://hub.docker.com/repository/docker/elfototo/davai-s-nami).
+The image is available on Docker Hub: [elfototo/davai-s-nami](https://hub.docker.com/repository/docker/elfototo/davai-s-nami).
 
-### Теги образов:
-- **latest** — последняя стабильная версия.
-- **1fa8c6e3d311e5474c06c1d8791db84865186487** — старые версии, используемые для тестирования.
+### Image Tags:
 
-## Инструкция по установке
+- **latest** — the latest stable version..
+- **1fa8c6e3d311e5474c06c1d8791db84865186487** — older versions used for testing.
 
-### Установка и запуск через Docker
+## Installation Guide
 
-1. **Клонируйте репозиторий:**
+### Installation and Launch via Docker
 
-   ```bash
-   git clone https://github.com/elfototo/davai-s-nami.git
-   cd davai-s-nami
+1. **Clone the repository:**
 
-2. **Создайте файл .env для хранения переменных окружения.** 
+    ```bash
+    git clone https://github.com/elfototo/davai-s-nami.git
+    cd davai-s-nami
+    ```
 
-Пример содержимого файла .env:
+2. **Create a `.env` file to store environment variables.**
 
-    ```java script
+    Example content of the `.env` file:
+
+    ```javascript
     NEXT_PUBLIC_API_URL=https://your-api-url.com
     NEXT_PUBLIC_API_KEY=your-api-key
     NEXT_PUBLIC_API_HEADERS={ 'Authorization': 'Bearer your-token', 'Content-Type': 'application/json' }
     ```
 
+3. **Build and run the Docker container:**
 
-3. **Соберите и запустите контейнер Docker:**
-
-В корне проекта выполните команду для сборки образа:
+    In the project root, build the image:
 
     ```bash
     docker build -t elfototo/davai-s-nami .
     ```
 
-Затем запустите контейнер:
+    Then run the container:
 
     ```bash
     docker run -p 3000:3000 --env-file .env elfototo/davai-s-nami
     ```
 
-4. **Откройте браузер и перейдите по адресу** `http://localhost:3000`, чтобы увидеть работающий проект.
+4. **Open your browser and go to** `http://localhost:3000` **to see the running project.**
 
-**Примечания по безопасности**
+## Security Notes
 
-Скрытие API-ключей: Никогда не храните API-ключи или другие чувствительные данные в публичных репозиториях. Используйте переменные окружения (например, .env).
+- **Hiding API keys:** Never store API keys or other sensitive data in public repositories. Use environment variables (e.g., `.env`).
+- Make sure your `.env` file is listed in `.gitignore` so that it is not committed to the repository.
 
-Убедитесь, что файл .env добавлен в .gitignore, чтобы он не попал в репозиторий.
+## Deployment on Vercel
 
-**Развертывание на Vercel**
+1. Go to [Vercel](https://vercel.com) and create a new project.
+2. Link your GitHub repository.
+3. Add all environment variables from `.env` to Vercel's environment settings.
+4. Vercel will automatically deploy your application after each push to the repository.
 
-1. Перейдите на Vercel и создайте новый проект.
-2. Свяжите свой репозиторий с GitHub.
-3. Добавьте все переменные окружения из .env в настройки Vercel.
-4. Vercel автоматически развернет ваше приложение после каждого пуша в репозиторий.
+## Usage
 
-**Использование**
-
-1. Поиск мероприятий: На главной странице пользователи могут выбирать мероприятия по категориям и датам. На странице мероприятий доступен удобный фильтр.
-2. Кнопка "Мне повезет": Эта кнопка случайным образом выбирает одно мероприятие и отображает его в модальном окне.
-3. Популярные места: Вкладка "Места" отображает самые популярные локации в городе, где проходят мероприятия. На странице каждого места можно увидеть ближайшие события, которые там проходят.
+1. **Event Search:** On the homepage, users can filter events by category and date. A convenient filter is available on the events page.
+2. **"Мне повезет" Button:** This button randomly selects a single event and displays it in a modal window.
+3. **Popular Places:** The **"Places"** tab displays the most popular venues in the city. On each place's page, users can see upcoming events held there.
