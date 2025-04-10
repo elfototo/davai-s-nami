@@ -1,6 +1,6 @@
 # 🎉 Project "Join Us" — Find Events in Saint Petersburg
 
-![Homepage Screenshot](./path-to-your-screenshot.png)  
+![Homepage Screenshot](./screen_main_page.png)  
 *Replace this placeholder with an actual screenshot of the homepage.*
 
 <p align="center">
@@ -27,6 +27,7 @@
   - [🚀 Deployment on Vercel](#-deployment-on-vercel)
   - [💡 Usage](#-usage)
   - [⚙️ Tech Stack](#️-tech-stack)
+  - [📸 Screenshots](#-screenshots)
 
 ---
 
@@ -131,3 +132,9 @@ The image is available on Docker Hub: [elfototo/davai-s-nami](https://hub.docker
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Telegram Bot](https://img.shields.io/badge/Telegram%20Bot-0088CC?style=for-the-badge&logo=telegram&logoColor=white)
+
+## 📸 Screenshots
+
+| Home Page | Event Modal | Popular Places |
+|-----------|-------------|----------------|
+| ![Home](./screen_main_page.png) | ![Events](./screen_events_page.png) | ![Places](./screen_places_page.png) |
