@@ -1,7 +1,6 @@
 # 🎉 Project "Davai s nami" — Find Events in Saint Petersburg
 
 ![Homepage Screenshot](./screen_main_page.png)  
-*Replace this placeholder with an actual screenshot of the homepage.*
 
 <p align="center">
   <a href="https://davai-s-nami.vercel.app/" target="_blank">
