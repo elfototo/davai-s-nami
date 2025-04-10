@@ -1,6 +1,6 @@
 # 🎉 Project "Davai s nami" — Find Events in Saint Petersburg
 
-![Homepage Screenshot](./screen_main_page.png)  
+![Homepage Screenshot](./essets/screen_main_page.png)  
 
 <p align="center">
   <a href="https://davai-s-nami.vercel.app/" target="_blank">
@@ -136,4 +136,4 @@ The image is available on Docker Hub: [elfototo/davai-s-nami](https://hub.docker
 
 | Home Page | Event Modal | Popular Places |
 |-----------|-------------|----------------|
-| ![Home](./screen_main_page.png) | ![Events](./screen_events_page.png) | ![Places](./screen_places_page.png) |
+| ![Home](./essets/screen_main_page.png) | ![Events](./essets/screen_events_page.png) | ![Places](./essets/screen_places_page.png) |
