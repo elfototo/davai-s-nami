@@ -70,6 +70,7 @@ export default function Home() {
   const dateRangeForGame = { date_from: today, date_to: month, limit: 20 };
 
   useEffect(() => {
+    alert(window.location.pathname);
     const tg = window.Telegram?.WebApp;
     alert(tg);
     if (!tg) {
