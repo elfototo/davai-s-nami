@@ -19,7 +19,7 @@ import { useSWRConfig } from 'swr';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../context/SwrContext';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../config';
-
+import { useRouter } from 'next/navigation';
 
 
 dayjs.extend(isoWeek);
@@ -55,6 +55,16 @@ export default function Home() {
   const dateRange2 = { date_from: startOfWeekend, date_to: endOfWeekend, limit: 10 };
   const dateRangeForGame = { date_from: today, date_to: month, limit: 20 };
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initDataUnsafe) {
+      const param = window.Telegram.WebApp.initDataUnsafe.start_param;
+      if (param?.startsWith('event_')) {
+        const id = param.replace('event_', '');
+        router.replace(`/events/${id}`);
+      }
+    }
+  }, []);
+  
   const fetcher = async (dateRange) => {
     try {
 
