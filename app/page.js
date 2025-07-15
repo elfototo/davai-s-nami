@@ -28,6 +28,7 @@ dayjs.extend(timezone);
 dayjs.extend(isBetween);
 
 export default function Home() {
+  const router = useRouter();
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoadingGame, setIsLoadingGame] = useState(false);
@@ -74,12 +75,12 @@ export default function Home() {
       window.Telegram?.WebApp?.initDataUnsafe
     ) {
       const param = window.Telegram.WebApp.initDataUnsafe.start_param;
-      alert('param', param);
+      alert('param' + param);
 
       if (param?.startsWith('event_')) {
         const id = param.replace('event_', '');
         router.replace(`/events/${id}`);
-        alert('id', id);
+        alert('id' + id);
       }
     }
   }, []);
