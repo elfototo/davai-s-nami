@@ -75,13 +75,13 @@ export default function Home() {
       
       const tg = window.Telegram?.WebApp;
 
+      // Telegram WebApp может быть не готов сразу — поэтому вызываем .ready()
+      tg.ready();
+
       if (!tg) {
         alert('❌ Telegram WebApp не инициализирован');
         return;
       }
-
-      // Telegram WebApp может быть не готов сразу — поэтому вызываем .ready()
-      tg.ready();
 
       // Показываем отладочную информацию
       tg.showPopup({
