@@ -71,6 +71,8 @@ export default function Home() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
+      alert(window.location.pathname);
+      
       const tg = window.Telegram?.WebApp;
 
       if (!tg) {
