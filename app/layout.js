@@ -16,7 +16,6 @@ export default function RootLayout({ children }) {
 
   useEffect(() => {
     const handleTelegramInit = () => {
-      alert(window.location.pathname);
       const tg = window.Telegram?.WebApp;
       
 
