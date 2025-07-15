@@ -68,55 +68,94 @@ export default function Home() {
     limit: 10,
   };
   const dateRangeForGame = { date_from: today, date_to: month, limit: 20 };
-
   useEffect(() => {
-    alert(window.location.pathname);
-    const tg = window.Telegram?.WebApp;
-    alert(tg);
-    if (!tg) {
-      alert('❌ Telegram WebApp не инициализирован');
-      return;
-    }
-    tg.showPopup({
-      title: 'Debug',
-      message:
-        '✅ Telegram WebApp запущен\ninitDataUnsafe: ' +
-        JSON.stringify(tg.initDataUnsafe),
-    });
+    setTimeout(() => {
+      alert(window.location.pathname);
 
-    const param = tg.initDataUnsafe?.start_param;
+      const tg = window.Telegram?.WebApp;
+      alert(tg);
 
-    if (param) {
-      tg.showPopup({
-        title: 'Param',
-        message: 'start_param: ' + param,
-      });
-
-      if (param.startsWith('event_')) {
-        const id = param.replace('event_', '');
-        router.replace(`/events/${id}`);
+      if (!tg) {
+        alert('❌ Telegram WebApp не инициализирован');
+        return;
       }
-    } else {
+
       tg.showPopup({
-        title: 'Info',
-        message: 'Нет start_param',
+        title: 'Debug',
+        message:
+          '✅ Telegram WebApp запущен\ninitDataUnsafe: ' +
+          JSON.stringify(tg.initDataUnsafe),
       });
-    }
 
-    // if (
-    //   typeof window !== 'undefined' &&
-    //   window.Telegram?.WebApp?.initDataUnsafe
-    // ) {
-    //   const param = window.Telegram.WebApp.initDataUnsafe.start_param;
-    //   alert('param' + param);
+      const param = tg.initDataUnsafe?.start_param;
 
-    //   if (param?.startsWith('event_')) {
-    //     const id = param.replace('event_', '');
-    //     router.replace(`/events/${id}`);
-    //     alert('id' + id);
-    //   }
-    // }
+      if (param) {
+        tg.showPopup({
+          title: 'Param',
+          message: 'start_param: ' + param,
+        });
+
+        if (param.startsWith('event_')) {
+          const id = param.replace('event_', '');
+          router.replace(`/events/${id}`);
+        }
+      } else {
+        tg.showPopup({
+          title: 'Info',
+          message: 'Нет start_param',
+        });
+      }
+    }, 3000);
   }, []);
+
+  // useEffect(() => {
+  //   alert(window.location.pathname);
+  //   const tg = window.Telegram?.WebApp;
+  //   alert(tg);
+  //   if (!tg) {
+  //     alert('❌ Telegram WebApp не инициализирован');
+  //     return;
+  //   }
+  //   tg.showPopup({
+  //     title: 'Debug',
+  //     message:
+  //       '✅ Telegram WebApp запущен\ninitDataUnsafe: ' +
+  //       JSON.stringify(tg.initDataUnsafe),
+  //   });
+
+  //   const param = tg.initDataUnsafe?.start_param;
+
+  //   if (param) {
+  //     tg.showPopup({
+  //       title: 'Param',
+  //       message: 'start_param: ' + param,
+  //     });
+
+  //     if (param.startsWith('event_')) {
+  //       const id = param.replace('event_', '');
+  //       router.replace(`/events/${id}`);
+  //     }
+  //   } else {
+  //     tg.showPopup({
+  //       title: 'Info',
+  //       message: 'Нет start_param',
+  //     });
+  //   }
+
+  //   // if (
+  //   //   typeof window !== 'undefined' &&
+  //   //   window.Telegram?.WebApp?.initDataUnsafe
+  //   // ) {
+  //   //   const param = window.Telegram.WebApp.initDataUnsafe.start_param;
+  //   //   alert('param' + param);
+
+  //   //   if (param?.startsWith('event_')) {
+  //   //     const id = param.replace('event_', '');
+  //   //     router.replace(`/events/${id}`);
+  //   //     alert('id' + id);
+  //   //   }
+  //   // }
+  // }, []);
 
   const fetcher = async (dateRange) => {
     try {
