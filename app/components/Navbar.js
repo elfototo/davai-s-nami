@@ -151,7 +151,7 @@ const Navbar = () => {
     if (window.history.length > 2) {
       router.back();
     } else {
-      router.push('/');
+      router.push('/events');
     }
   };
 
