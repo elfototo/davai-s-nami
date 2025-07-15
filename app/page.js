@@ -68,45 +68,97 @@ export default function Home() {
     limit: 10,
   };
   const dateRangeForGame = { date_from: today, date_to: month, limit: 20 };
-  useEffect(() => {
-    setTimeout(() => {
-      alert(window.location.pathname);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
       const tg = window.Telegram?.WebApp;
-      alert(tg);
 
       if (!tg) {
         alert('❌ Telegram WebApp не инициализирован');
         return;
       }
 
+      // Telegram WebApp может быть не готов сразу — поэтому вызываем .ready()
+      tg.ready();
+
+      // Показываем отладочную информацию
       tg.showPopup({
         title: 'Debug',
         message:
-          '✅ Telegram WebApp запущен\ninitDataUnsafe: ' +
-          JSON.stringify(tg.initDataUnsafe),
+          '✅ Telegram WebApp запущен\n' +
+          'pathname: ' +
+          window.location.pathname +
+          '\n' +
+          'start_param: ' +
+          tg?.initDataUnsafe?.start_param,
       });
 
       const param = tg.initDataUnsafe?.start_param;
 
       if (param) {
-        tg.showPopup({
-          title: 'Param',
-          message: 'start_param: ' + param,
-        });
-
         if (param.startsWith('event_')) {
           const id = param.replace('event_', '');
+          tg.showPopup({
+            title: 'Переход',
+            message: `Переход на /events/${id}`,
+          });
           router.replace(`/events/${id}`);
+        } else {
+          tg.showPopup({
+            title: 'Info',
+            message: `Получен неизвестный параметр: ${param}`,
+          });
         }
       } else {
         tg.showPopup({
           title: 'Info',
-          message: 'Нет start_param',
+          message: 'Нет параметра start_param',
         });
       }
-    }, 3000);
+    }, 5000);
+
+    return () => clearTimeout(timeout);
   }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     alert(window.location.pathname);
+
+  //     const tg = window.Telegram?.WebApp;
+  //     alert(tg);
+
+  //     if (!tg) {
+  //       alert('❌ Telegram WebApp не инициализирован');
+  //       return;
+  //     }
+
+  //     tg.showPopup({
+  //       title: 'Debug',
+  //       message:
+  //         '✅ Telegram WebApp запущен\ninitDataUnsafe: ' +
+  //         JSON.stringify(tg.initDataUnsafe),
+  //     });
+
+  //     const param = tg.initDataUnsafe?.start_param;
+
+  //     if (param) {
+  //       tg.showPopup({
+  //         title: 'Param',
+  //         message: 'start_param: ' + param,
+  //       });
+
+  //       if (param.startsWith('event_')) {
+  //         const id = param.replace('event_', '');
+  //         router.replace(`/events/${id}`);
+  //       }
+  //     } else {
+  //       tg.showPopup({
+  //         title: 'Info',
+  //         message: 'Нет start_param',
+  //       });
+  //     }
+  //   }, 3000);
+  // }, []);
 
   // useEffect(() => {
   //   alert(window.location.pathname);
