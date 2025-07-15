@@ -1,5 +1,6 @@
 'use client';
 
+import Script from 'next/script'
 import './globals.css';
 import Card from './components/Card';
 import Categories from './components/Categories';
