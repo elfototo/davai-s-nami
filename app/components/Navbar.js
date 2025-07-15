@@ -147,6 +147,14 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      router.back();
+    } else {
+      router.push('/');
+    }
+  };
+
   return (
     <nav className="z-20 relative bg-white shadow dark:bg-gray-800 ">
       <div className="container px-6 py-4 mx-auto max-w-custom-container">
@@ -157,7 +165,7 @@ const Navbar = () => {
               
               <>
                 <div className='flex'>
-                  <button onClick={() => router.back()} className=" lg:mr-6 rounded-full transition">
+                  <button onClick={handleBack} className=" lg:mr-6 rounded-full transition">
                     <IoMdArrowBack className="text-gray-500" size={28} />
                   </button>
                 </div>
