@@ -194,12 +194,12 @@ const Loader = () => {
                             </svg>
                         </div>
                         <div className="logoani">
-                            <div className=' h-full'>
+                            <div className='h-full'>
                                 <Image
                                     src={'/img/logo_main.png'}
                                     width={1000}
                                     height={1000}
-                                    className="w-[15vh]"
+                                    className=""
                                     alt="avatar"
                                     priority
                                 />

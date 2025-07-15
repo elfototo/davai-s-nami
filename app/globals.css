@@ -144,7 +144,9 @@ body {
   overflow: visible;
 }
 .wrapper-no7 .cat-wrapper {
-  width: 300px;
+  width: 40vw;
+  max-width: 300px; 
+  min-width: 150px; 
 }
 .wrapper-no7 .eyes circle {
   fill: #fff;
@@ -154,15 +156,17 @@ body {
   opacity: 1;
 }
 .wrapper-no7 .logoani {
-  /* color: #111; */
   border-radius: 10px;
   align-self: flex-end;
   margin-left: -50px;
-  /* padding: 20px;
-  background-color: #111; */
-  /* font-size: 30px; */
-  /* font-weight: bold; */
-  /* line-height: 100%; */
+  width: clamp(80px, 15vw, 160px);
+  height: auto;
+  display: block;
+}
+@media (min-width: 350px) {
+  .wrapper-no7 .logoani {
+    margin-left: -20px;
+  }
 }
 
 .wrapper-no7 .logo {
