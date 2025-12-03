@@ -7,10 +7,9 @@ const BackButton = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Проверяем, что путь соответствует /events/[id] или /places/[id]
   const isDynamicPage = /^\/(events|places)\/[^/]+$/.test(pathname);
 
-  if (!isDynamicPage) return null; // Если не на нужной странице, не рендерим кнопку
+  if (!isDynamicPage) return null;
 
   return (
     <button 

@@ -110,19 +110,18 @@ const Filtres = ({ selectedTags, setSelectedTags, setBgColor, startDate, setStar
 
     const selectDate = () => {
         if (selectedButton === 'date') {
-            // Сброс даты, если нажали на кнопку
             setStartDate(null);
             setEndDate(null);
             setSelectedDate('');
             setSelectedButton('');
         } else if (startDate && endDate && selectedButton !== 'today' && selectedButton !== 'tomorrow' && selectedButton !== 'weekend') {
-            // Форматируем дату
+           
             const rangeStartDate = startDate.utc().tz('Europe/Moscow').startOf('day').format('DD MMM');
             const rangeEndDate = endDate.utc().tz('Europe/Moscow').startOf('day').format('DD MMM');
 
             const dateRange = rangeStartDate === rangeEndDate ? rangeStartDate : `${rangeStartDate} - ${rangeEndDate}`;
 
-            // Устанавливаем новую дату
+            
             setSelectedDate(dateRange);
             setSelectedButton('date');
         }

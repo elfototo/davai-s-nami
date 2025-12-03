@@ -1,15 +1,14 @@
 'use client'
-import Link from 'next/link';
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 
 export default function Navbar({ search, setSearch, value }) {
     const inputRef = useRef(null);
 
   const handleClear = () => {
-    setSearch(""); // Очищаем состояние
+    setSearch(""); 
     if (inputRef.current) {
-      inputRef.current.value = ""; // Очистка содержимого инпута с помощью рефа
-      inputRef.current.focus(); // Фокус на инпуте после очистки
+      inputRef.current.value = ""; 
+      inputRef.current.focus();
     }
   };
     

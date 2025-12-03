@@ -11,8 +11,8 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import useSWR, { SWRConfig } from 'swr';
-import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+import useSWR from 'swr';
+import { API_URL, API_HEADERS } from '../../config';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
