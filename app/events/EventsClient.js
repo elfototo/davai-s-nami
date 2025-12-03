@@ -26,7 +26,7 @@ dayjs.extend(isSameOrBefore);
 
 function Page({ sortedEvents, isLoadingEvents, isValidating }) {
   // скелетон для cards
-  if (isLoadingEvents) {
+  if (isLoadingEvents && sortedEvents.length < 0) {
     return (
       <div className="space-y-4">
         <div className="t-3 flex-cols mx-auto max-w-custom-container justify-center px-4 lg:flex">
@@ -124,7 +124,6 @@ export default function Events({ initialEvents }) {
   };
 
   const getKey = (pageIndex, previousPageData) => {
-
     if (previousPageData && previousPageData.length < limit) return null;
 
     const offset = pageIndex * limit;
@@ -235,18 +234,17 @@ export default function Events({ initialEvents }) {
       const lastPage = dataEvents[dataEvents.length - 1];
       setHasMore(lastPage?.length === limit);
 
-     
       if (dataEvents.length > 1) {
-        const newPages = dataEvents.slice(1); 
+        const newPages = dataEvents.slice(1);
         const newEvents = newPages.flat();
         const uniqueEvents = newEvents.filter(
-          (event) => !loadedEventIdsRef.current.has(event.id)
+          (event) => !loadedEventIdsRef.current.has(event.id),
         );
 
         if (uniqueEvents.length > 0) {
           setAllEvents((prev) => [...prev, ...uniqueEvents]);
           uniqueEvents.forEach((event) =>
-            loadedEventIdsRef.current.add(event.id)
+            loadedEventIdsRef.current.add(event.id),
           );
         }
       }
