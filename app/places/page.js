@@ -81,7 +81,7 @@ export default function Places() {
   const loadedPlacesIdsRef = useRef(new Set());
 
 
-  const limit = 8;
+  const limit = 20;
 
 
   const getKey = (pageIndex, previousPageData) => {

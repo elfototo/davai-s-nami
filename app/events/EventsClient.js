@@ -96,36 +96,23 @@ export default function Events({ initialEvents }) {
   const { cache, findDataById } = useEvents();
   const loadedEventIdsRef = useRef(new Set());
   const [allEvents, setAllEvents] = useState(initialEvents);
-
   const [search, setSearch] = useState('');
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedTagsId, setSelectedTagsId] = useState([]);
-
-  //   const [sortedEvents, setSortedEvents] = useState([]);
   const [sortPrice, setSortPrice] = useState(null);
-
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  //   const [allEvents, setAllEvents] = useState([]);
-  const [filteredEvents, setfilteredEvents] = useState([]);
   const [isTryingToLoadMore, setIsTryingToLoadMore] = useState(false);
-  const limit = 8;
+  const limit = 20;
 
   useEffect(() => {
     initialEvents.forEach((event) => loadedEventIdsRef.current.add(event.id));
   }, []);
-
-  //   const dateRange = {
-  //     date_from: dayjs(startDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
-  //     date_to: dayjs(endDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD'),
-  //   };
 
   const dateRange = {
     date_from: startDate
@@ -135,13 +122,6 @@ export default function Events({ initialEvents }) {
       ? dayjs(endDate).utc().tz('Europe/Moscow').format('YYYY-MM-DD')
       : '',
   };
-
-  //   const getKey = (pageIndex, previousPageData) => {
-  //     if (previousPageData && previousPageData.length < limit) return null;
-  //     const offset = pageIndex * limit;
-
-  //     return `/api/data?filter=${selectedTagsId.join(',')},${dateRange.date_from || ''},${dateRange.date_to || ''},${search}&page=${pageIndex}&offset=${offset}`;
-  //   };
 
   const getKey = (pageIndex, previousPageData) => {
 
@@ -250,36 +230,14 @@ export default function Events({ initialEvents }) {
     initialSize: 1,
   });
 
-  //   useEffect(() => {
-  //     if (dataEvents) {
-  //       setHasMore(dataEvents?.[dataEvents.length - 1]?.length === limit);
-
-  //       // Объединяем все страницы данных в один массив
-  //       const newEvents = dataEvents.flat();
-
-  //       // Фильтруем события, чтобы избежать дубликатов
-  //       const uniqueEvents = newEvents.filter(
-  //         (event) => !loadedEventIdsRef.current.has(event.id),
-  //       );
-
-  //       if (uniqueEvents.length > 0) {
-  //         setAllEvents((prevEvents) => [...prevEvents, ...uniqueEvents]);
-
-  //         // Обновляем loadedEventIdsRef
-  //         uniqueEvents.forEach((event) =>
-  //           loadedEventIdsRef.current.add(event.id),
-  //         );
-  //       }
-  //     }
-  //   }, [dataEvents]);
   useEffect(() => {
     if (dataEvents) {
       const lastPage = dataEvents[dataEvents.length - 1];
       setHasMore(lastPage?.length === limit);
 
-      // Если есть больше одной страницы, добавляем новые события
+     
       if (dataEvents.length > 1) {
-        const newPages = dataEvents.slice(1); // Пропускаем первую (initialEvents)
+        const newPages = dataEvents.slice(1); 
         const newEvents = newPages.flat();
         const uniqueEvents = newEvents.filter(
           (event) => !loadedEventIdsRef.current.has(event.id)
@@ -310,95 +268,6 @@ export default function Events({ initialEvents }) {
       selectedTags.map((tag) => getCategoryIdByName(tag) || null),
     );
   }, [selectedTags]);
-
-  //   useEffect(() => {
-  //     if (allEvents.length > 0) {
-  //       // Фильтрация событий
-  //       const filtered = allEvents.filter((event) => {
-  //         const eventCategoryName = getCategoryNameById(event.main_category_id);
-  //         const matchesCategory = !category || eventCategoryName === category;
-
-  //         const eventDateFrom = dayjs(event.from_date)
-  //           .utc()
-  //           .startOf('day')
-  //           .tz('Europe/Moscow');
-  //         let eventDateTo = event.to_date
-  //           ? dayjs(event.to_date).utc().startOf('day').tz('Europe/Moscow')
-  //           : eventDateFrom;
-
-  //         const startDateClean = startDate
-  //           ? dayjs(startDate).startOf('day')
-  //           : null;
-  //         const endDateClean = endDate
-  //           ? dayjs(endDate).startOf('day')
-  //           : startDate;
-
-  //         const isInDateRange =
-  //           (!startDateClean ||
-  //             eventDateTo.isSameOrAfter(startDateClean, 'day')) &&
-  //           (!endDateClean || eventDateFrom.isSameOrBefore(endDateClean, 'day'));
-
-  //         const matchesSearch = search
-  //           ? (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
-  //             (event.price?.toString().toLowerCase() &&
-  //               event.price?.toString().toLowerCase().includes(search)) ||
-  //             (event.address?.toLowerCase() || '').includes(
-  //               search.toLowerCase(),
-  //             ) ||
-  //             (event.from_date &&
-  //               (dayjs(event.from_date).format('YYYY-MM-DD').includes(search) ||
-  //                 dayjs(event.from_date)
-  //                   .format('DD MMMM YYYY')
-  //                   .toLowerCase()
-  //                   .includes(search.toLowerCase()) ||
-  //                 dayjs(event.from_date)
-  //                   .format('MMMM DD, YYYY')
-  //                   .toLowerCase()
-  //                   .includes(search.toLowerCase()) ||
-  //                 dayjs(event.from_date)
-  //                   .format('MMMM')
-  //                   .toLowerCase()
-  //                   .includes(search.toLowerCase()))) ||
-  //             (event.place_id && event.place_id.toString().includes(search)) ||
-  //             (event.main_category_id &&
-  //               getCategoryNameById(event.main_category_id)
-  //                 ?.toLowerCase()
-  //                 .includes(search.toLowerCase()))
-  //           : true;
-
-  //         const matchesTags =
-  //           selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
-
-  //         return matchesCategory && isInDateRange && matchesSearch && matchesTags;
-  //       });
-
-  //       setfilteredEvents(filtered);
-
-  //       // Сортировка событий (если нужно)
-  //       const sorted = filtered.sort((a, b) => {
-  //         // Ваша логика сортировки
-  //         return new Date(a.from_date) - new Date(b.from_date);
-  //       });
-
-  //       setSortedEvents(sorted);
-
-  //       // Проверка, нужно ли загружать больше событий
-  //       if (filtered.length === 0 && hasMore && !isTryingToLoadMore) {
-  //         setIsTryingToLoadMore(true);
-  //         loadMoreEvents();
-  //       } else {
-  //         setIsTryingToLoadMore(false);
-  //       }
-  //     }
-  //   }, [
-  //     allEvents,
-  //     category,
-  //     search,
-  //     startDate,
-  //     endDate,
-  //     selectedTags,
-  //     isTryingToLoadMore,
-  //   ]);
 
   const sortedEvents = useMemo(() => {
     if (allEvents.length === 0) return [];

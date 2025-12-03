@@ -23,7 +23,7 @@ async function getInitialEvents() {
           'main_category_id',
         ],
         page: 0,
-        limit: 8,
+        limit: 20,
       }),
       next: { revalidate: 300 }, // Кеш на 5 минут
     });
