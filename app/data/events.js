@@ -99,8 +99,8 @@ export const categoriesID = [
   {
     "id": 11,
     "name": "Exibition",
-    "rusName": "Выствка",
-    "category": 'Выствка',
+    "rusName": "Выставка",
+    "category": 'Выставка',
     "color": 'bg-purple-500',
     "icon": <FaPaintBrush size={12} color='white' className='mr-1 mb-[0.1rem]' />
   },
