@@ -1,4 +1,4 @@
-import HomePage from "./homeClient";
+import HomePage from "./HomeClient";
 import { API_URL, API_HEADERS } from '../config';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
