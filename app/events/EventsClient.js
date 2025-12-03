@@ -132,7 +132,7 @@ export default function Events({ initialEvents }) {
 
   const fetchEvents = async (url) => {
     const urlObj = new URL(url, API_URL);
-    const pageIndex = parseInt(urlObj.searchParams.get('page'), 10) || 0;
+    const pageIndex = parseInt(urlObj.searchParams.get('page'), 20) || 0;
 
     let events = [];
 
