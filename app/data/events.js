@@ -8,6 +8,11 @@ import { PiMaskHappyFill } from "react-icons/pi";
 import { FaCompactDisc } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { BsMusicNoteBeamed } from "react-icons/bs";
+import { HiMiniPaintBrush } from "react-icons/hi2";
+import { FaPaintbrush } from "react-icons/fa6";
+import { FaPaintBrush } from "react-icons/fa";
+
+
 
 
 export const categoriesID = [
@@ -90,6 +95,14 @@ export const categoriesID = [
     "category": 'Стендап',
     "color": 'bg-pink-500',
     "icon": <PiMicrophoneStageFill size={16} color='white' className='mr-1 mb-[0.2rem]' />
+  },
+  {
+    "id": 11,
+    "name": "Exibition",
+    "rusName": "Выствка",
+    "category": 'Выствка',
+    "color": 'bg-purple-500',
+    "icon": <FaPaintBrush size={12} color='white' className='mr-1 mb-[0.1rem]' />
   },
 ];
 
