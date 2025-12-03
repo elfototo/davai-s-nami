@@ -2,15 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { MdAccountCircle } from "react-icons/md";
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
-import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
-import { FaHome, FaMapMarkerAlt, FaInfoCircle, FaCalendarAlt } from 'react-icons/fa';
+import { SEARCH_URL, API_HEADERS } from '../../config';
+import {
+  FaHome,
+  FaMapMarkerAlt,
+  FaInfoCircle,
+  FaCalendarAlt,
+} from 'react-icons/fa';
 import { usePathname, useRouter } from 'next/navigation';
-import { IoMdArrowBack } from "react-icons/io";
+import { IoMdArrowBack } from 'react-icons/io';
 import Image from 'next/image';
-
 
 const pages = [
   { title: 'Места', path: '/places' },
@@ -29,13 +32,10 @@ const pages = [
 ];
 
 const Navbar = () => {
-
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterSearch, setFilterSearch] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
-  const { cache, findDataById } = useEvents();
-  const loadedEventIdsRef = useRef(new Set());
   const searchRef = useRef(null);
   const dropdownRef = useRef(null);
   const limit = 10;
@@ -43,12 +43,10 @@ const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Проверяем, что находимся на странице /events/[id] или /places/[id]
   const isDynamicPage = /^\/(events|places)\/[^/]+$/.test(pathname);
 
   const fetcher = async (target) => {
     try {
-
       const res = await fetch(`${SEARCH_URL}?query=${target}&limit=${limit}`, {
         method: 'GET',
         headers: API_HEADERS,
@@ -57,7 +55,6 @@ const Navbar = () => {
       if (!res.ok) {
         throw new Error(`Ошибка: ${res.statusText}`);
       }
-
 
       const result = await res.json();
 
@@ -71,9 +68,7 @@ const Navbar = () => {
         eventsfromFetcher = eventsfromFetcher.concat(result.places);
       }
 
-
       return eventsfromFetcher;
-
     } catch (error) {
       console.log('Ошибка при выполнении задачи', error);
     }
@@ -82,12 +77,10 @@ const Navbar = () => {
   const {
     data: dataEventSearchQuery,
     error: errorSearchQuery,
-    isLoading: isLoadingsearchQuery
-  } = useSWR(
-    searchQuery ? `/api/search/?query=${searchQuery}` : null,
-    () => fetcher(searchQuery),
+    isLoading: isLoadingsearchQuery,
+  } = useSWR(searchQuery ? `/api/search/?query=${searchQuery}` : null, () =>
+    fetcher(searchQuery),
   );
-
 
   useEffect(() => {
     if (!searchQuery) {
@@ -97,8 +90,7 @@ const Navbar = () => {
     let eventsToSort = [...pages];
 
     if (dataEventSearchQuery && dataEventSearchQuery.length > 0) {
-      dataEventSearchQuery.forEach(event => {
-
+      dataEventSearchQuery.forEach((event) => {
         if (event.place_name) {
           event.path = event.path || `/places/${event.id}`;
         } else if (event.title) {
@@ -106,16 +98,27 @@ const Navbar = () => {
         }
 
         eventsToSort.push(event);
-
       });
     }
 
     const filtered = eventsToSort.filter((event) => {
-      return event.title?.toString().toLowerCase().includes(searchQuery.toLowerCase()) || event.path.toString().toLowerCase().includes(searchQuery.toLowerCase()) || event.place_name?.toString().toLowerCase().includes(searchQuery.toLowerCase());
-    })
+      return (
+        event.title
+          ?.toString()
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        event.path
+          .toString()
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        event.place_name
+          ?.toString()
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      );
+    });
 
     setFilterSearch(filtered);
-
   }, [dataEventSearchQuery, searchQuery, allEvents]);
 
   const handleSearchChange = (e) => {
@@ -132,20 +135,22 @@ const Navbar = () => {
   };
 
   const handleClickOutside = (e) => {
-    if (
-      searchRef.current && !searchRef.current.contains(e.target) &&
-      dropdownRef.current && !dropdownRef.current.contains(e.target)
-    ) {
-      setSearchQuery('');
-    }
-  };
+  if (
+    dropdownRef.current &&
+    !dropdownRef.current.contains(e.target) &&
+    searchRef.current &&
+    !searchRef.current.contains(e.target)
+  ) {
+    setSearchQuery('');
+  }
+};
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+useEffect(() => {
+  document.addEventListener('click', handleClickOutside);
+  return () => {
+    document.removeEventListener('click', handleClickOutside);
+  };
+}, []);
 
   const handleBack = () => {
     if (window.history.length > 2) {
@@ -156,40 +161,40 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="z-20 relative bg-white shadow dark:bg-gray-800 ">
-      <div className="container px-6 py-4 mx-auto max-w-custom-container">
+    <nav className="relative z-20 bg-white shadow dark:bg-gray-800">
+      <div className="container mx-auto max-w-custom-container px-6 py-4">
         <div className="lg:flex lg:w-full lg:items-center lg:justify-between">
-
           <div className="flex items-center justify-between">
             {isDynamicPage ? (
-              
               <>
-                <div className='flex'>
-                  <button onClick={handleBack} className=" lg:mr-6 rounded-full transition">
+                <div className="flex">
+                  <button
+                    onClick={handleBack}
+                    className="rounded-full transition lg:mr-6"
+                  >
                     <IoMdArrowBack className="text-gray-500" size={28} />
                   </button>
                 </div>
-                <div className='mx-auto h-full lg:mr-6'>
-                  <Link href="/" className=''>
+                <div className="mx-auto h-full lg:mr-6">
+                  <Link href="/" className="">
                     {/* Давай с нами!*/}
-                    
+
                     <Image
-                        src={'/img/logo_main.png'}
-                        width={1000}
-                        height={1000}
-                        className=" w-[20vh]"
-                        alt="avatar"
-                        priority
-                      />
-                    
+                      src={'/img/logo_main.png'}
+                      width={1000}
+                      height={1000}
+                      className="w-[20vh]"
+                      alt="avatar"
+                      priority
+                    />
                   </Link>
                 </div>
               </>
             ) : (
               // В остальных случаях показываем логотип
-              <Link href="/" className='mr-5'>
+              <Link href="/" className="mr-5">
                 {/* Давай с нами! */}
-                <div className=' h-full'>
+                <div className="h-full">
                   <Image
                     src={'/img/logo_main.png'}
                     width={1000}
@@ -202,12 +207,11 @@ const Navbar = () => {
               </Link>
             )}
 
-
-            <div className="hidden mx-3 lg:block">
+            <div className="mx-3 hidden lg:block">
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <svg
-                    className="w-5 h-5 text-gray-400"
+                    className="h-5 w-5 text-gray-400"
                     viewBox="0 0 24 24"
                     fill="none"
                   >
@@ -226,28 +230,39 @@ const Navbar = () => {
                   value={searchQuery}
                   onChange={handleSearchChange}
                   type="text"
-                  className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                  className="w-full rounded-md border bg-white py-2 pl-10 pr-4 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:focus:border-blue-300"
                   placeholder="Search"
                 />
                 {searchQuery && (
                   <div
                     ref={dropdownRef}
-                    className="absolute left-0 right-0 mt-2 bg-white shadow-lg max-h-60 overflow-y-auto z-10">
+                    className="absolute left-0 right-0 z-10 mt-2 max-h-60 overflow-y-auto bg-white shadow-lg"
+                  >
                     <ul>
                       {filterSearch.length > 0 ? (
                         filterSearch.map((event) => (
                           <li
                             key={event.path}
-                            onClick={handleItemClick}
-                            className="px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                            onClick={() => console.log('clicked li', event.path)}
+                            className="cursor-pointer px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                           >
-                            <Link href={event.path}>
-                              <div className="block">{event.title || event.place_name}</div>
+                            <Link
+                              href={event.path}
+                              onClick={(e) => {
+                                console.log('clicked link', event.path)
+                              }}
+                              // onClick={handleItemClick}
+                            >
+                              <div className="block">
+                                {event.title || event.place_name}
+                              </div>
                             </Link>
                           </li>
                         ))
                       ) : (
-                        <li className="px-4 py-2 text-gray-500">No results found</li>
+                        <li className="px-4 py-2 text-gray-500">
+                          No results found
+                        </li>
                       )}
                     </ul>
                   </div>
@@ -260,13 +275,13 @@ const Navbar = () => {
               <button
                 onClick={toggleMenu}
                 type="button"
-                className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
+                className="text-gray-500 hover:text-gray-600 focus:text-gray-600 focus:outline-none dark:text-gray-200 dark:hover:text-gray-400 dark:focus:text-gray-400"
                 aria-label="toggle menu"
               >
                 {isOpen ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6"
+                    className="h-6 w-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -281,7 +296,7 @@ const Navbar = () => {
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6"
+                    className="h-6 w-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -300,70 +315,37 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           <div
-            className={`absolute inset-x-0 z-20 w-full px-6 lg:pr-0 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 
-            lg:mt-0 lg:p-0 lg:top-0 lg:right-0  lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center 
-            ${isOpen ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full'}`}
+            className={`absolute inset-x-0 z-20 w-full bg-white px-6 py-4 transition-all duration-300 ease-in-out dark:bg-gray-800 lg:relative lg:right-0 lg:top-0 lg:mt-0 lg:flex lg:w-auto lg:translate-x-0 lg:items-center lg:bg-transparent lg:p-0 lg:pr-0 lg:opacity-100 ${isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}
           >
-            <div className="flex flex-col -mx-5 lg:flex-row lg:items-center lg:justify-end lg:ml-auto">
-
+            <div className="-mx-5 flex flex-col lg:ml-auto lg:flex-row lg:items-center lg:justify-end">
               <Link
                 onClick={toggleMenu}
                 href="/events"
-                className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="mx-3 mt-2 transform rounded-md px-3 py-2 text-gray-700 transition-colors duration-300 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 lg:mt-0"
               >
                 События
               </Link>
               <Link
                 onClick={toggleMenu}
                 href="/places"
-                className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="mx-3 mt-2 transform rounded-md px-3 py-2 text-gray-700 transition-colors duration-300 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 lg:mt-0"
               >
                 Места
               </Link>
               <Link
                 onClick={toggleMenu}
                 href="/about"
-                className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="mx-3 mt-2 transform rounded-md px-3 py-2 text-gray-700 transition-colors duration-300 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 lg:mt-0"
               >
                 О нас
               </Link>
             </div>
 
-            {/* <div className="flex items-center mt-4 lg:mt-0">
-              <button
-                className="hidden mx-4 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none"
-                aria-label="show notifications"
-              >
-                <svg
-                  className="w-6 h-6"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15 17H20L18.5951 15.5951C18.2141 15.2141 18 14.6973 18 14.1585V11C18 8.38757 16.3304 6.16509 14 5.34142V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V5.34142C7.66962 6.16509 6 8.38757 6 11V14.1585C6 14.6973 5.78595 15.2141 5.40493 15.5951L4 17H9M15 17V18C15 19.6569 13.6569 21 12 21C10.3431 21 9 19.6569 9 18V17M15 17H9"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-
-              <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
-                <div className="w-8 h-8 overflow-hidden rounded-full">
-                  <MdAccountCircle className='w-8 h-8 text-[#333]' />
-
-                </div>
-                <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">Войти</h3>
-              </button>
-            </div> */}
-
             <div className="my-4 lg:hidden">
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                   <svg
-                    className="w-5 h-5 text-gray-400"
+                    className="h-5 w-5 text-gray-400"
                     viewBox="0 0 24 24"
                     fill="none"
                   >
@@ -382,71 +364,81 @@ const Navbar = () => {
                   value={searchQuery}
                   onChange={handleSearchChange}
                   type="text"
-                  className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                  className="w-full rounded-md border bg-white py-2 pl-10 pr-4 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:focus:border-blue-300"
                   placeholder="Search"
                 />
                 {searchQuery && (
                   <div
                     ref={dropdownRef}
-                    className="absolute left-0 right-0 mt-2 bg-white shadow-lg max-h-60 overflow-y-auto z-10">
+                    className="absolute left-0 right-0 z-10 mt-2 max-h-60 overflow-y-auto bg-white shadow-lg"
+                  >
                     <ul>
                       {filterSearch.length > 0 ? (
                         filterSearch.map((event) => (
                           <li
                             key={event.path}
-                            onClick={handleItemClick}
-                            className="px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+                            onClick={() => console.log('clicked li', event.path)}
+                            className="cursor-pointer px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                           >
-                            <Link href={event.path}>
-                              <div className="block">{event.title || event.place_name}</div>
+                            <Link href={event.path} onClick={handleItemClick}>
+                              <div className="block">
+                                {event.title || event.place_name}
+                              </div>
                             </Link>
                           </li>
                         ))
                       ) : (
-                        <li className="px-4 py-2 text-gray-500">No results found</li>
+                        <li className="px-4 py-2 text-gray-500">
+                          No results found
+                        </li>
                       )}
                     </ul>
                   </div>
                 )}
               </div>
             </div>
-
           </div>
           <MobileNavBar />
         </div>
       </div>
-    </nav >
+    </nav>
   );
 };
 
 export default Navbar;
 
 const MobileNavBar = () => {
-
   const pathname = usePathname();
 
   // Функция для проверки, является ли ссылка текущей
   const isActive = (path) => pathname === path;
 
   return (
-    <div className='relative lg:hidden'>
-      <div className="fixed bottom-3 left-3 right-3 rounded-full z-50 flex justify-around bg-white border-t border-gray-300 shadow-lg lg:hidden">
-
-        <Link href="/" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/") ? "active text-sky-500 rounded-full" : ""}`}>
+    <div className="relative lg:hidden">
+      <div className="fixed bottom-3 left-3 right-3 z-50 flex justify-around rounded-full border-t border-gray-300 bg-white shadow-lg lg:hidden">
+        <Link
+          href="/"
+          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/') ? 'active rounded-full text-sky-500' : ''}`}
+        >
           <FaHome size={25} />
-          {/* <span className="text-sm font-roboto">События</span> */}
         </Link>
-        <Link href="/events" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/events") ? " active text-green-500 rounded-full" : ""}`}>
+        <Link
+          href="/events"
+          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/events') ? 'active rounded-full text-green-500' : ''}`}
+        >
           <FaCalendarAlt size={25} />
-          {/* <span className="text-sm font-roboto">События</span> */}
         </Link>
-        <Link href="/places" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/places") ? " active rounded-full text-red-500" : ""}`}>
+        <Link
+          href="/places"
+          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/places') ? 'active rounded-full text-red-500' : ''}`}
+        >
           <FaMapMarkerAlt size={25} />
-          {/* <span className="text-sm font-roboto">Места</span> */}
         </Link>
-        <Link href="/about" className={`flex flex-col items-center text-gray-500 transition-all duration-300 py-6 px-7 ${isActive("/about") ? " active text-purple-500 rounded-full" : ""}`}>
+        <Link
+          href="/about"
+          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/about') ? 'active rounded-full text-purple-500' : ''}`}
+        >
           <FaInfoCircle size={25} />
-          {/* <span className="text-sm font-roboto">О нас</span> */}
         </Link>
       </div>
     </div>
