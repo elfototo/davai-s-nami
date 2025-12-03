@@ -51,8 +51,6 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
     const fromWeekday = capitalize(from.format('dd'));
     const toWeekday = to ? capitalize(to.format('dd')) : '';
 
-    console.log('fromWeekday', fromWeekday)
-
     if (!to || from.isSame(to)) {
       return `${fromWeekday}, ${from.format('D MMMM')}`;
     }
