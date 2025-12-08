@@ -12,9 +12,6 @@ import { HiMiniPaintBrush } from "react-icons/hi2";
 import { FaPaintbrush } from "react-icons/fa6";
 import { FaPaintBrush } from "react-icons/fa";
 
-
-
-
 export const categoriesID = [
 
   {

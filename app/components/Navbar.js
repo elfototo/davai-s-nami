@@ -13,6 +13,8 @@ import {
 } from 'react-icons/fa';
 import { usePathname, useRouter } from 'next/navigation';
 import { IoMdArrowBack } from 'react-icons/io';
+import { FaUserCircle } from "react-icons/fa";
+
 import Image from 'next/image';
 
 const pages = [
@@ -135,22 +137,22 @@ const Navbar = () => {
   };
 
   const handleClickOutside = (e) => {
-  if (
-    dropdownRef.current &&
-    !dropdownRef.current.contains(e.target) &&
-    searchRef.current &&
-    !searchRef.current.contains(e.target)
-  ) {
-    setSearchQuery('');
-  }
-};
-
-useEffect(() => {
-  document.addEventListener('click', handleClickOutside);
-  return () => {
-    document.removeEventListener('click', handleClickOutside);
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target) &&
+      searchRef.current &&
+      !searchRef.current.contains(e.target)
+    ) {
+      setSearchQuery('');
+    }
   };
-}, []);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const handleBack = () => {
     if (window.history.length > 2) {
@@ -243,13 +245,15 @@ useEffect(() => {
                         filterSearch.map((event) => (
                           <li
                             key={event.path}
-                            onClick={() => console.log('clicked li', event.path)}
+                            onClick={() =>
+                              console.log('clicked li', event.path)
+                            }
                             className="cursor-pointer px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                           >
                             <Link
                               href={event.path}
                               onClick={(e) => {
-                                console.log('clicked link', event.path)
+                                console.log('clicked link', event.path);
                               }}
                               // onClick={handleItemClick}
                             >
@@ -339,6 +343,13 @@ useEffect(() => {
               >
                 О нас
               </Link>
+              <Link
+                href="/register"
+                onClick={toggleMenu}
+                className="mx-3 mt-2 text-gray-700 transition-colors duration-300 dark:text-gray-200 lg:mt-0"
+              >
+                <FaUserCircle size={25}/>
+              </Link>
             </div>
 
             <div className="my-4 lg:hidden">
@@ -377,7 +388,9 @@ useEffect(() => {
                         filterSearch.map((event) => (
                           <li
                             key={event.path}
-                            onClick={() => console.log('clicked li', event.path)}
+                            onClick={() =>
+                              console.log('clicked li', event.path)
+                            }
                             className="cursor-pointer px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
                           >
                             <Link href={event.path} onClick={handleItemClick}>

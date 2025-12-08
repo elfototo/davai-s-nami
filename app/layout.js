@@ -9,7 +9,6 @@ import { EventsProvider } from '../context/SwrContext';
 import '../utils/dayjsSetup';
 import { useRouter } from 'next/navigation';
 
-// import { useSwipeBack } from '../hooks/useSwipeBack'
 
 export default function RootLayout({ children }) {
   const router = useRouter();
