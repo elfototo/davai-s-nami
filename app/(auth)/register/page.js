@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { keys } from 'lodash';
+import { NEXT_PUBLIC_Register, API_HEADERS } from '../../../config';
 
 export default function RegisterPage() {
   const [user, setUser] = useState({
@@ -14,7 +15,9 @@ export default function RegisterPage() {
 
   const [errors, setErrors] = useState({});
 
-  const requireFields = ["nickname", "email", "password"];
+  const router = useRouter();
+
+  const requireFields = ['nickname', 'email', 'password'];
 
   const validate = (name, value) => {
     if (!requireFields.includes(name) && !value.trim()) return null;
@@ -39,7 +42,7 @@ export default function RegisterPage() {
     }
   };
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
 
     const errorList = {};
@@ -55,13 +58,42 @@ export default function RegisterPage() {
     setErrors(errorList);
 
     if (Object.keys(errorList).length === 0) {
-      alert('Форма отправлена');
-      setUser({
-        nickname: '',
-        email: '',
-        password: '',
-        full_name: '',
-      });
+      console.log('user', user);
+      try {
+        const response = await fetch(NEXT_PUBLIC_Register, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            nickname: user.nickname,
+            email: user.email,
+            password: user.password,
+            full_name: user.full_name,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('network error');
+        }
+
+        const data = await response.json();
+
+        console.log(data, 'data');
+        router.push('/login');
+
+        alert('Форма отправлена');
+
+        setUser({
+          nickname: '',
+          email: '',
+          password: '',
+          full_name: '',
+        });
+      } catch (err) {
+        console.log(err, 'err');
+      }
     }
   };
 
@@ -91,7 +123,7 @@ export default function RegisterPage() {
               type="text"
               placeholder="nickname"
               name="nickname"
-              className="rounded-lg px-2 py-1 w-full"
+              className="w-full rounded-lg px-2 py-1"
             />
             {errors.nickname && (
               <div className="text-red-400">{errors.nickname}</div>
@@ -108,7 +140,7 @@ export default function RegisterPage() {
               type="text"
               placeholder="email"
               name="email"
-              className="rounded-lg px-2 py-1 w-full"
+              className="w-full rounded-lg px-2 py-1"
             />
             {errors.email && <div className="text-red-400">{errors.email}</div>}
           </div>
@@ -123,7 +155,7 @@ export default function RegisterPage() {
               type="password"
               placeholder="password"
               name="password"
-              className="rounded-lg px-2 py-1 w-full"
+              className="w-full rounded-lg px-2 py-1"
             />
             {errors.password && (
               <div className="text-red-400">{errors.password}</div>
@@ -140,14 +172,14 @@ export default function RegisterPage() {
               type="text"
               placeholder="full_name"
               name="full_name"
-              className="rounded-lg px-2 py-1 w-full"
+              className="w-full rounded-lg px-2 py-1"
             />
           </div>
         </div>
 
         <button
           disabled={!isValidating}
-          className={`${isValidating ? 'cursor-pointer rounded-lg bg-[#D52FDD] text-white' : 'cursor-not-allowed bg-gray-300'} col-span-full w-full rounded-lg px-2 py-1`}
+          className={`${isValidating ? 'cursor-pointer rounded-lg bg-[#D52FDD] text-white' : 'cursor-not-allowed bg-gray-300'} col-span-full w-full rounded-lg px-3 py-2`}
         >
           Отправить
         </button>

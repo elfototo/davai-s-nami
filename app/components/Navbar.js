@@ -346,9 +346,18 @@ const Navbar = () => {
               <Link
                 href="/register"
                 onClick={toggleMenu}
-                className="mx-3 mt-2 text-gray-700 transition-colors duration-300 dark:text-gray-200 lg:mt-0"
+                className="mx-3 mt-2 text-gray-700 transition-colors duration-300 dark:text-gray-200 lg:mt-0 flex flex-col items-center justify-center"
               >
                 <FaUserCircle size={25}/>
+                Sign in
+              </Link>
+              <Link
+                href="/login"
+                onClick={toggleMenu}
+                className="mx-3 mt-2 text-gray-700 transition-colors duration-300 dark:text-gray-200 lg:mt-0 flex flex-col items-center justify-center"
+              >
+                <FaUserCircle size={25}/>
+                Sign up
               </Link>
             </div>
 

@@ -16,3 +16,7 @@ export const API_HEADERS = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
 }
+
+export const NEXT_PUBLIC_Register = process.env.NEXT_PUBLIC_Register;
+export const NEXT_PUBLIC_Login = process.env.NEXT_PUBLIC_Login;
+
