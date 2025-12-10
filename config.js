@@ -20,3 +20,5 @@ export const API_HEADERS = {
 export const NEXT_PUBLIC_Register = process.env.NEXT_PUBLIC_Register;
 export const NEXT_PUBLIC_Login = process.env.NEXT_PUBLIC_Login;
 
+
+export const API_URL1 = process.env.NEXT_PUBLIC_API_URL_1;

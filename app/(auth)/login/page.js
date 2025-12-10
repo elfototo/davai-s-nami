@@ -8,6 +8,7 @@ export default function LoginPage() {
   const [user, setUser] = useState({
     nickname: '',
     password: '',
+    
   });
 
   const [errors, setErrors] = useState({});

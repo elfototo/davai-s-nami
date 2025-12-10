@@ -58,7 +58,6 @@ export default function RegisterPage() {
     setErrors(errorList);
 
     if (Object.keys(errorList).length === 0) {
-      console.log('user', user);
       try {
         const response = await fetch(NEXT_PUBLIC_Register, {
           method: 'POST',
