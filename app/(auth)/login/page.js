@@ -66,6 +66,8 @@ export default function LoginPage() {
 
         localStorage.setItem('access_token', data.access_token);
 
+        window.dispatchEvent(new Event('auth-changed'));
+
         router.push('/dashboard');
 
         alert('Форма отправлена');

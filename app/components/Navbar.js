@@ -13,7 +13,8 @@ import {
 } from 'react-icons/fa';
 import { usePathname, useRouter } from 'next/navigation';
 import { IoMdArrowBack } from 'react-icons/io';
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle } from 'react-icons/fa';
+import Dropdown from './Dropdown';
 
 import Image from 'next/image';
 
@@ -343,22 +344,10 @@ const Navbar = () => {
               >
                 О нас
               </Link>
-              <Link
-                href="/register"
-                onClick={toggleMenu}
-                className="mx-3 mt-2 text-gray-700 transition-colors duration-300 dark:text-gray-200 lg:mt-0 flex flex-col items-center justify-center"
-              >
-                <FaUserCircle size={25}/>
-                Sign in
-              </Link>
-              <Link
-                href="/login"
-                onClick={toggleMenu}
-                className="mx-3 mt-2 text-gray-700 transition-colors duration-300 dark:text-gray-200 lg:mt-0 flex flex-col items-center justify-center"
-              >
-                <FaUserCircle size={25}/>
-                Sign up
-              </Link>
+
+              <div className='mx-3 mt-2 transform rounded-md text-gray-700 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 lg:mt-0'>
+                <Dropdown isOpenMenu={isOpen} setIsOpenMenu={setIsOpen}/>
+              </div>
             </div>
 
             <div className="my-4 lg:hidden">
