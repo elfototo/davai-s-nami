@@ -5,18 +5,27 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/ru';
-import useSWR, { SWRConfig } from 'swr';
-import React, { useState, useEffect, useCallback } from 'react';
+import useSWR from 'swr';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { IoShareSocialSharp } from 'react-icons/io5';
 import { IoMdClose } from 'react-icons/io';
 import { BsCheckAll } from 'react-icons/bs';
 import { FaArrowRight } from 'react-icons/fa6';
 import { BsCopy } from 'react-icons/bs';
 import { useEvents } from '../../../context/SwrContext';
 import { API_HEADERS, API_URL_BY_ID } from '../../../config';
+import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  selectIsInWishlist,
+  selectWishlistLoading,
+  selectWishlistInitialized,
+} from '../../../store/slices/wishlistSlice.js';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -66,13 +75,44 @@ const fetchIdEvent = async (id) => {
 };
 
 export default function EventPageClient({ id, initialEvent }) {
+  const dispatch = useDispatch();
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { cache, findDataById, convertImageUrlToJpeg } = useEvents();
+  const { findDataById, convertImageUrlToJpeg } = useEvents();
   const [event, setEvent] = useState(null);
+
+  const idNumber = parseInt(id.id);
+
+  // Redux selectors
+  const isInWishlist = useSelector(selectIsInWishlist(idNumber));
+  const wishlistLoading = useSelector(selectWishlistLoading);
+  const wishlistInitialized = useSelector(selectWishlistInitialized);
+
+  // Загружаем wishlist при монтировании компонента
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token && !wishlistInitialized) {
+      dispatch(fetchWishlist());
+    }
+  }, [dispatch, wishlistInitialized]);
 
   const imageUrl = event?.image || '/img/cat.png';
   const processedImageUrl = convertImageUrlToJpeg(imageUrl);
+
+  const handleAddToWishList = async () => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      alert('Необходимо авторизоваться');
+      return;
+    }
+
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(idNumber));
+    } else {
+      dispatch(addToWishlist(idNumber));
+    }
+  };
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
 
@@ -81,8 +121,6 @@ export default function EventPageClient({ id, initialEvent }) {
       .writeText(window.location.href)
       .then(() => setCopied(true));
   };
-
-  const idNumber = parseInt(id.id);
 
   const styleCopied =
     'border px-4 py-2 mt-3 flex items-center rounded-xl cursor-pointer bg-white border-green-500 text-green-500 transform transition-colors duration-300';
@@ -99,23 +137,25 @@ export default function EventPageClient({ id, initialEvent }) {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      fallbackData: [initialEvent],
+      fallbackData: initialEvent,
     },
   );
 
-  const cachedEvent = findDataById(idNumber);
+  // Мемоизируем cachedEvent
+  const cachedEvent = useMemo(() => {
+    return findDataById(idNumber);
+  }, [idNumber, findDataById]);
 
   useEffect(() => {
     if (dataEvent) {
       setEvent(dataEvent);
-    } else if (!dataIsLoading && !dataError && cache?.size > 0 && cachedEvent) {
-      if (Array.isArray(cachedEvent)) {
-        setEvent(cachedEvent[0]);
-      } else {
-        setEvent(cachedEvent);
+    } else if (!dataIsLoading && !dataError && cachedEvent) {
+      const newEvent = Array.isArray(cachedEvent) ? cachedEvent[0] : cachedEvent;
+      if (newEvent && newEvent !== event) {
+        setEvent(newEvent);
       }
     }
-  }, [dataEvent, dataIsLoading, dataError, cache, idNumber, cachedEvent]);
+  }, [dataEvent, dataIsLoading, dataError, cachedEvent]);
 
   const formatDateRange = (from_date, to_date) => {
     if (!from_date) return 'Скоро будет дата';
@@ -180,9 +220,7 @@ export default function EventPageClient({ id, initialEvent }) {
 
   return (
     <>
-     
       <div className="relative mx-auto max-w-custom-container">
-
         <div className="mx-auto flex min-h-screen w-full flex-col px-6 py-5 md:py-10 lg:inset-x-0">
           <div className="rounded-xl bg-[#fff] p-10 lg:flex lg:items-center">
             {showPhoto && (
@@ -260,7 +298,7 @@ export default function EventPageClient({ id, initialEvent }) {
                 </div>
               </div>
 
-              <div className="flex">
+              <div className="flex flex-wrap">
                 <button
                   onClick={handleCopy}
                   className={copied ? styleCopied : styleNoCopied}
@@ -281,7 +319,7 @@ export default function EventPageClient({ id, initialEvent }) {
                     href={event.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="ml-3 mt-3 flex cursor-pointer items-center rounded-xl border bg-[#F52D85] px-4 py-2 text-white transition-colors duration-300 hover:opacity-80"
+                    className="mx-3 mt-3 flex cursor-pointer items-center rounded-xl border bg-[#F52D85] px-4 py-2 text-white transition-colors duration-300 hover:opacity-80"
                   >
                     {event.price === 'Бесплатно' || event.price === 'во встрече'
                       ? 'На сайт мероприятия'
@@ -291,6 +329,23 @@ export default function EventPageClient({ id, initialEvent }) {
                 ) : (
                   ''
                 )}
+                <button
+                  onClick={handleAddToWishList}
+                  disabled={wishlistLoading}
+                  className="mt-3 flex transform cursor-pointer items-center rounded-xl border border-pink-500 bg-white px-4 py-2 text-pink-500 transition-colors duration-300 disabled:opacity-50"
+                >
+                  {isInWishlist ? (
+                    <>
+                      <MdFavorite size={17} className="mr-2" />
+                      <span>Добавлено в избранное</span>
+                    </>
+                  ) : (
+                    <>
+                      <MdFavoriteBorder size={17} className="mr-2" />
+                      <span>Добавить в избранное</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
@@ -306,7 +361,6 @@ export default function EventPageClient({ id, initialEvent }) {
           </ReactMarkdown>
         </div>
       </div>
-      {/* </Suspense> */}
     </>
   );
 }

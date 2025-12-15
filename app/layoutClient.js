@@ -7,6 +7,8 @@ import Footer from './components/Footer';
 import { EventsProvider } from '../context/SwrContext';
 import '../utils/dayjsSetup';
 import { useRouter } from 'next/navigation';
+import { Provider } from 'react-redux';
+import { store } from '../store/store';
 
 export default function RootLayout({ children, isAuth }) {
   const router = useRouter();
@@ -65,7 +67,7 @@ export default function RootLayout({ children, isAuth }) {
             }
           }}
         />
-        <main>{children}</main>
+        <Provider store={store}>{children}</Provider>
         <footer className="z-0 mt-10 bg-[#333]">
           <Footer />
         </footer>

@@ -67,7 +67,7 @@ const Card = ({ type, main_category_id, title, from_date, address, price, id, im
   };
 
   return (
-    <div className='group '>
+    <div className='group'>
       <div className="flex flex-col justify-between w-full h-auto min-h-full max-w-sm overflow-hidden bg-white rounded-lg border border-[#D9D9D9] group-hover:border-pink-400">
         {/* Header card */}
         <div>

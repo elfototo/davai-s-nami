@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext, useCallback } from 'react';
 import 'dayjs/locale/ru';
 dayjs.locale('ru');
 import isoWeek from 'dayjs/plugin/isoWeek';
@@ -27,7 +27,7 @@ export const EventsProvider = ({ children }) => {
     const { cache } = useSWRConfig();
     console.log('cache', cache, cache.size);
 
-    const findDataById = (id) => {
+    const findDataById = useCallback((id) => {
         const keys = Array.from(cache.keys());
         for (const key of keys) {
             const cachedData = cache.get(key);
@@ -39,7 +39,7 @@ export const EventsProvider = ({ children }) => {
             }
         }
         return null;
-    };
+    }, [cache])
     
 
     const findDataByIdPlace = (place_id) => {
