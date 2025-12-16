@@ -74,8 +74,6 @@ export default function HomePage({
   initialDataDateRange1,
   initialDataDateRange2,
   initialDataDateRangeMonth,
-
-  dateRangeForGame,
   dateRange2,
   dateRange1,
   dateRangemonth,
@@ -87,7 +85,6 @@ export default function HomePage({
   const [monthEvents, setMonthEvents] = useState([]);
   const [eventsTodayTomorrow, setEventsTodayTomorrow] = useState([]);
   const [eventsForGame, setEventsForGame] = useState([]);
-  const { cache, findDataById } = useEvents();
 
   const {
     data: dataEventDateRange1,
@@ -99,9 +96,9 @@ export default function HomePage({
     {
       fallbackData: initialDataDateRange1,
       revalidateOnMount: false,
-      revalidateOnFocus: false, 
-      dedupingInterval: 60000, 
-      revalidateIfStale: false, 
+      revalidateOnFocus: false,
+      // dedupingInterval: 60000,
+      revalidateIfStale: false,
     },
   );
 
@@ -116,7 +113,7 @@ export default function HomePage({
       fallbackData: initialDataDateRange2,
       revalidateOnMount: false,
       revalidateOnFocus: false,
-      dedupingInterval: 60000,
+      // dedupingInterval: 60000,
       revalidateIfStale: false,
     },
   );
@@ -132,22 +129,10 @@ export default function HomePage({
       fallbackData: initialDataDateRangeMonth,
       revalidateOnMount: false,
       revalidateOnFocus: false,
-      dedupingInterval: 60000,
+      // dedupingInterval: 60000,
       revalidateIfStale: false,
     },
   );
-
-  const cacheDataRange1 = cache?.get(
-    `/api/data?dateRange=${(dateRange1.date_from, dateRange1.date_to)}`,
-  )?.data;
-
-  const cacheDataRange2 = cache?.get(
-    `/api/data?dateRange=${(dateRange2.date_from, dateRange2.date_to)}`,
-  )?.data;
-
-  const cacheDataEventDateRangeMonth = cache?.get(
-    `/api/data?dateRange=${(dateRangemonth.date_from, dateRangemonth.date_to)}`,
-  )?.data;
 
   const toggleShowGame = () => {
     setShowGame(!showGame);
@@ -202,41 +187,23 @@ export default function HomePage({
       setEventsForGame(dataEventDateRangeMonth);
     }
 
-    if (cacheDataRange1) {
-      const randomEvents = getRandomEvents(cacheDataRange1, 4);
-
-      setEventsTodayTomorrow(randomEvents);
-    } else if (dataEventDateRange1) {
+    if (dataEventDateRange1) {
       const randomEvents = getRandomEvents(dataEventDateRange1, 4);
       setEventsTodayTomorrow(randomEvents);
     }
 
-    if (cacheDataRange2) {
-      const randomEvents = getRandomEvents(cacheDataRange2, 4);
-
-      setWeekendEvents(randomEvents);
-    } else if (dataEventDateRange2) {
+    if (dataEventDateRange2) {
       const randomEvents = getRandomEvents(dataEventDateRange2, 4);
 
       setWeekendEvents(randomEvents);
     }
 
-    if (cacheDataEventDateRangeMonth) {
-      const randomEvents = getRandomEvents(cacheDataEventDateRangeMonth, 4);
-
-      setMonthEvents(randomEvents);
-    } else if (dataEventDateRangeMonth) {
+    if (dataEventDateRangeMonth) {
       const randomEvents = getRandomEvents(dataEventDateRangeMonth, 4);
 
       setMonthEvents(randomEvents);
     }
-  }, [
-    dataEventDateRange1,
-    dataEventDateRange2,
-    cacheDataRange1,
-    cacheDataRange2,
-    cacheDataEventDateRangeMonth,
-  ]);
+  }, [dataEventDateRange1, dataEventDateRange2, dataEventDateRangeMonth]);
 
   const getRandomEvents = (array, count) => {
     const shuffled = array.slice();

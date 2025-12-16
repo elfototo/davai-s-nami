@@ -23,9 +23,9 @@ async function getInitialEvents() {
           'main_category_id',
         ],
         page: 0,
-        limit: 20,
+        limit: 100,
       }),
-      next: { revalidate: 300 }, // Кеш на 5 минут
+      // next: { revalidate: 300 }, // Кеш на 5 минут
     });
 
     if (!res.ok) {
@@ -34,15 +34,19 @@ async function getInitialEvents() {
 
     const result = await res.json();
 
+    console.log("result", result);
+
     const events = Array.isArray(result)
       ? result
       : Array.isArray(result.result)
-      ? result.result
-      : Array.isArray(result.events)
-      ? result.events
-      : Array.isArray(result.result?.events)
-      ? result.result.events
-      : [];
+        ? result.result
+        : Array.isArray(result.events)
+          ? result.events
+          : Array.isArray(result.result?.events)
+            ? result.result.events
+            : [];
+
+    console.log('events', events);
 
     return events;
   } catch (error) {

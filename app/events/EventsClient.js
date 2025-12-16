@@ -108,7 +108,10 @@ export default function Events({ initialEvents }) {
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isTryingToLoadMore, setIsTryingToLoadMore] = useState(false);
-  const limit = 20;
+  const limit = 100;
+
+  console.log("initialEvents", initialEvents);
+
 
   useEffect(() => {
     initialEvents.forEach((event) => loadedEventIdsRef.current.add(event.id));
@@ -132,7 +135,7 @@ export default function Events({ initialEvents }) {
 
   const fetchEvents = async (url) => {
     const urlObj = new URL(url, API_URL);
-    const pageIndex = parseInt(urlObj.searchParams.get('page'), 20) || 0;
+    const pageIndex = parseInt(urlObj.searchParams.get('page'), 100) || 0;
 
     let events = [];
 
@@ -209,7 +212,7 @@ export default function Events({ initialEvents }) {
         console.error('Ошибка загрузки данных:', error);
       }
     }
-
+    
     return events;
   };
 

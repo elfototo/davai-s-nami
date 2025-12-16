@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { API_HEADERS, API_URL_BY_ID, API_URL1 } from "../../config";
+import { API_URL1 } from "../../config";
 
 // Async thunks
 export const fetchWishlist = createAsyncThunk(
@@ -119,7 +119,7 @@ const wishlistSlice = createSlice({
         state.loading = false;
         state.initialized = true;
         // Предполагаем, что API возвращает массив объектов с id
-        state.items = action.payload.map((event) => event.id || event.event_id);
+        state.items = action.payload.map((event) => event.id);
       })
       .addCase(fetchWishlist.rejected, (state, action) => {
         state.loading = false;
