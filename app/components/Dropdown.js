@@ -74,14 +74,16 @@ export default function Dropdown({ isOpenMenu, setIsOpenMenu }) {
   }, []);
 
   const handleLogOut = () => {
-    // ⛔ ГЛАВНОЕ
+
+    setIsLoggestIn(false);
+    setIsOpen(false);
+    setIsOpenMenu(false);
     sessionStorage.setItem('user_logged_out', 'true');
 
     localStorage.removeItem('access_token');
     localStorage.removeItem('tokenExpiresAt');
 
-    setIsLoggestIn(false);
-    setIsOpen(false);
+    
 
     window.dispatchEvent(new Event('auth-changed'));
     router.push('/');
@@ -92,6 +94,8 @@ export default function Dropdown({ isOpenMenu, setIsOpenMenu }) {
       handleLogOut();
     } else if (option.href) {
       setIsOpen(false);
+      setIsOpenMenu(false);
+
       if (isOpenMenu) {
         setIsOpenMenu(false);
       }
