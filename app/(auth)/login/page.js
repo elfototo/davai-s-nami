@@ -264,7 +264,7 @@ export default function LoginPage() {
             disabled={!isValidating}
             className={`${
               isValidating
-                ? 'cursor-pointer bg-[#D52FDD] hover:bg-[#B826BB]'
+                ? 'cursor-pointer bg-pink-400 hover:bg-pink-300'
                 : 'cursor-not-allowed bg-gray-300'
             } col-span-full w-full rounded-lg px-3 py-2 text-white transition-colors`}
           >
