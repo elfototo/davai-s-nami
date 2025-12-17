@@ -354,7 +354,7 @@ export default function LoginPage() {
             <button
               onClick={handleTelegramLogin}
               disabled={telegramLoading}
-              className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#0088cc] px-4 py-3 text-white transition-colors hover:bg-[#006699] disabled:opacity-50"
+              className="mx-2 flex w-full items-center justify-center gap-3 rounded-lg bg-[#0088cc] px-4 py-3 text-white transition-colors hover:bg-[#006699] disabled:opacity-50"
             >
               <span className="text-2xl">✈️</span>
               {telegramLoading ? 'Авторизация...' : 'Войти через Telegram'}
