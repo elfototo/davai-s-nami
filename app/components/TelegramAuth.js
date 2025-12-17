@@ -133,7 +133,7 @@ export default function TelegramAuth({ children }) {
 
           // Перенаправляем на dashboard если на главной
           if (pathname === '/') {
-            router.push('/dashboard');
+            router.push('/');
           }
         } else {
           throw new Error('access_token не получен');
