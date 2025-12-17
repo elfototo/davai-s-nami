@@ -1,19 +1,15 @@
 'use client';
 
 import { FaUserCircle } from 'react-icons/fa';
-import { FaSignInAlt } from 'react-icons/fa';
-import { FiLogIn } from "react-icons/fi";
-import { TbLogin2 } from "react-icons/tb";
-
+import { TbLogin2 } from 'react-icons/tb';
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-export default function Dropdown({isOpenMenu, setIsOpenMenu}) {
+export default function Dropdown({ isOpenMenu, setIsOpenMenu }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggestIn, setIsLoggestIn] = useState(false);
-  // const [isToken, setIsToken] = useState(false);
   const [hilightIndex, setHilightIndex] = useState(-1);
   const containRef = useRef(null);
   const router = useRouter();
@@ -77,8 +73,22 @@ export default function Dropdown({isOpenMenu, setIsOpenMenu}) {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
+  // const handleLogOut = () => {
+  //   localStorage.removeItem('access_token');
+  //   setIsLoggestIn(false);
+  //   setIsOpen(false);
+
+  //   window.dispatchEvent(new Event('auth-changed'));
+  //   router.push('/');
+  // };
+
   const handleLogOut = () => {
+    // ⛔ ГЛАВНОЕ
+    sessionStorage.setItem('user_logged_out', 'true');
+
     localStorage.removeItem('access_token');
+    localStorage.removeItem('tokenExpiresAt');
+
     setIsLoggestIn(false);
     setIsOpen(false);
 
@@ -92,7 +102,7 @@ export default function Dropdown({isOpenMenu, setIsOpenMenu}) {
     } else if (option.href) {
       setIsOpen(false);
       if (isOpenMenu) {
-        setIsOpenMenu(false)
+        setIsOpenMenu(false);
       }
       router.push(option.href);
     }
