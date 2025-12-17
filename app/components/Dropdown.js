@@ -73,15 +73,6 @@ export default function Dropdown({ isOpenMenu, setIsOpenMenu }) {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // const handleLogOut = () => {
-  //   localStorage.removeItem('access_token');
-  //   setIsLoggestIn(false);
-  //   setIsOpen(false);
-
-  //   window.dispatchEvent(new Event('auth-changed'));
-  //   router.push('/');
-  // };
-
   const handleLogOut = () => {
     // ⛔ ГЛАВНОЕ
     sessionStorage.setItem('user_logged_out', 'true');

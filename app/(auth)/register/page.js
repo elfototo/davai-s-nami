@@ -111,16 +111,16 @@ export default function RegisterPage() {
     <main className="flex items-center justify-center">
       <form
         onSubmit={handleOnSubmit}
-        className="grid gap-5 rounded-xl bg-gray-100 p-10"
+        className="mx-3 grid gap-5 rounded-xl bg-gray-100 p-10"
       >
         <div className="grid grid-cols-[1fr_3fr] gap-5">
-          <label htmlFor="nickname">Nickname</label>
+          <label htmlFor="nickname">Никнейм</label>
           <div>
             <input
               onChange={handleOnChange}
               value={user.nickname}
               type="text"
-              placeholder="nickname"
+              // placeholder="введите никнейм"
               name="nickname"
               className="w-full rounded-lg px-2 py-1"
             />
@@ -137,7 +137,7 @@ export default function RegisterPage() {
               onChange={handleOnChange}
               value={user.email}
               type="text"
-              placeholder="email"
+              // placeholder="введите email"
               name="email"
               className="w-full rounded-lg px-2 py-1"
             />
@@ -152,7 +152,7 @@ export default function RegisterPage() {
               onChange={handleOnChange}
               value={user.password}
               type="password"
-              placeholder="password"
+              // placeholder="введите пароль"
               name="password"
               className="w-full rounded-lg px-2 py-1"
             />
@@ -169,7 +169,7 @@ export default function RegisterPage() {
               onChange={handleOnChange}
               value={user.full_name}
               type="text"
-              placeholder="full_name"
+              // placeholder="введите полное имя"
               name="full_name"
               className="w-full rounded-lg px-2 py-1"
             />
