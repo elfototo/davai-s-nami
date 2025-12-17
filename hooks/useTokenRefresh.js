@@ -1,8 +1,7 @@
-// hooks/useTokenRefresh.js
-"use client";
+'use client';
 
 import { useEffect, useRef } from 'react';
-import { API_URL1 } from "../config";
+import { API_URL1 } from '../config';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -18,7 +17,7 @@ const log = {
   },
   warn: (message, data = {}) => {
     if (isDev) console.warn(`[Token Timer] ⚠️ ${message}`, data);
-  }
+  },
 };
 
 export const useTokenRefresh = () => {
@@ -26,23 +25,17 @@ export const useTokenRefresh = () => {
 
   const refreshToken = async () => {
     log.info('Starting proactive token refresh');
-    
-    try {
-      const refresh = localStorage.getItem('refresh_token');
-      
-      if (!refresh) {
-        log.warn('No refresh token available');
-        return;
-      }
 
-      log.info('Sending refresh request to API');
-      
-      const response = await fetch(`${API_URL1}/api/auth/refresh`, {
+    try {
+      log.info('Sending refresh request (refresh_token в httpOnly cookie)');
+
+      // refresh_token автоматически отправится в httpOnly cookie
+      const response = await fetch(`${API_URL1}api/auth/refresh`, {
         method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${refresh}`,
-          'Content-Type': 'application/json'
-        }
+        credentials: 'include', // 🔑 КРИТИЧЕСКИ ВАЖНО для отправки httpOnly cookie
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -51,33 +44,48 @@ export const useTokenRefresh = () => {
       }
 
       const data = await response.json();
-      
-      log.success('Received new tokens from API', { 
-        hasAccessToken: !!data.access_token,
-        hasRefreshToken: !!data.refresh_token 
-      });
-      
-      // Используем имена полей, которые возвращает ваш API
-      localStorage.setItem('access_token', data.access_token);
-      if (data.refresh_token) {
-        localStorage.setItem('refresh_token', data.refresh_token);
-        log.info('Refresh token updated');
-      }
 
-      // Записываем время истечения
-      const expiresAt = Date.now() + 30 * 60 * 1000; // 30 минут
+      log.success('Received new access token from API', {
+        hasAccessToken: !!data.access_token,
+      });
+
+      // Сохраняем только access_token
+      // refresh_token уже автоматически обновлён backend'ом в httpOnly cookie
+      localStorage.setItem('access_token', data.access_token);
+
+      // Записываем время истечения (30 минут)
+      const expiresAt = Date.now() + 30 * 60 * 1000;
       localStorage.setItem('tokenExpiresAt', expiresAt.toString());
-      
+
       log.success('Token refreshed successfully', {
         expiresAt: new Date(expiresAt).toLocaleString(),
-        nextRefreshIn: '25 minutes'
+        nextRefreshIn: '25 minutes',
       });
-      
+
       // Обновляем за 5 минут до истечения (через 25 минут)
       scheduleRefresh(25 * 60 * 1000);
+      
     } catch (error) {
-      log.error('Token refresh failed, clearing session', error);
-      localStorage.clear();
+      // log.error('Token refresh failed, clearing session', error);
+
+      // // Очищаем localStorage
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('tokenExpiresAt');
+
+      log.error('Token refresh failed', {
+        message: error?.message,
+      });
+
+      // Опционально: вызываем logout для очистки httpOnly cookie на сервере
+      try {
+        await fetch(`${API_URL1}api/auth/logout`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+      } catch (logoutError) {
+        log.error('Logout request failed', logoutError);
+      }
+
       window.location.href = '/login';
     }
   };
@@ -87,13 +95,13 @@ export const useTokenRefresh = () => {
       clearTimeout(refreshTimeoutRef.current);
       log.info('Cleared previous refresh timeout');
     }
-    
+
     const delayMinutes = Math.round(delay / 60000);
     log.info(`Scheduling next refresh in ${delayMinutes} minutes`, {
       delayMs: delay,
-      scheduledFor: new Date(Date.now() + delay).toLocaleString()
+      scheduledFor: new Date(Date.now() + delay).toLocaleString(),
     });
-    
+
     refreshTimeoutRef.current = setTimeout(() => {
       log.info('Refresh timeout triggered');
       refreshToken();
@@ -102,15 +110,15 @@ export const useTokenRefresh = () => {
 
   const checkAndScheduleRefresh = () => {
     log.info('Checking token expiration status');
-    
+
     const expiresAt = localStorage.getItem('tokenExpiresAt');
-    const accessToken = localStorage.getItem('access_token'); // ИСПРАВЛЕНО: было accessToken
-    
+    const accessToken = localStorage.getItem('access_token');
+
     if (!accessToken) {
       log.warn('No access token found, skipping refresh scheduling');
       return;
     }
-    
+
     if (!expiresAt) {
       log.warn('No expiration time found, setting default (30 min)');
       // Если нет времени истечения, устанавливаем его
@@ -122,12 +130,12 @@ export const useTokenRefresh = () => {
 
     const timeUntilExpiry = parseInt(expiresAt) - Date.now();
     const minutesUntilExpiry = Math.round(timeUntilExpiry / 60000);
-    
+
     log.info(`Token expires in ${minutesUntilExpiry} minutes`, {
       expiresAt: new Date(parseInt(expiresAt)).toLocaleString(),
-      timeUntilExpiryMs: timeUntilExpiry
+      timeUntilExpiryMs: timeUntilExpiry,
     });
-    
+
     if (timeUntilExpiry <= 0) {
       log.warn('Token already expired, refreshing immediately');
       refreshToken();
@@ -143,9 +151,9 @@ export const useTokenRefresh = () => {
 
   useEffect(() => {
     log.info('Token refresh hook mounted');
-    
+
     const token = localStorage.getItem('access_token');
-    
+
     if (token) {
       log.info('Access token found, initializing refresh schedule');
       checkAndScheduleRefresh();
@@ -173,5 +181,6 @@ export const useTokenRefresh = () => {
     };
   }, []);
 
-  return { refreshToken };
+  // Возвращаем функции для тестирования
+  return { refreshToken, checkAndScheduleRefresh };
 };

@@ -10,10 +10,11 @@ import { useRouter } from 'next/navigation';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
 import { useTokenRefresh } from '../hooks/useTokenRefresh';
+import TelegramAuth from './components/TelegramAuth';
 
 export default function RootLayout({ children, isAuth }) {
   const router = useRouter();
- useTokenRefresh();
+  useTokenRefresh();
 
   useEffect(() => {
     const handleTelegramInit = () => {
@@ -69,7 +70,10 @@ export default function RootLayout({ children, isAuth }) {
             }
           }}
         />
-        <Provider store={store}>{children}</Provider>
+        <TelegramAuth>
+          <Provider store={store}>{children}</Provider>
+        </TelegramAuth>
+
         <footer className="z-0 mt-10 bg-[#333]">
           <Footer />
         </footer>

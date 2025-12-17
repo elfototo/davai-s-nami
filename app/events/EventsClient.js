@@ -12,7 +12,6 @@ import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useEvents } from '../../context/SwrContext';
 import useSWRInfinite from 'swr/infinite';
 import { API_URL, SEARCH_URL, API_HEADERS } from '../../config';
 import { useMemo } from 'react';
@@ -93,7 +92,6 @@ function Page({ sortedEvents, isLoadingEvents, isValidating }) {
 }
 
 export default function Events({ initialEvents }) {
-  const { cache, findDataById } = useEvents();
   const loadedEventIdsRef = useRef(new Set());
   const [allEvents, setAllEvents] = useState(initialEvents);
   const [search, setSearch] = useState('');
@@ -105,7 +103,6 @@ export default function Events({ initialEvents }) {
   const [category, setCategory] = useState('');
   const [bgColor, setBgColor] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isTryingToLoadMore, setIsTryingToLoadMore] = useState(false);
   const limit = 100;
@@ -382,7 +379,6 @@ export default function Events({ initialEvents }) {
             isLoadingEvents={isLoadingEvents}
             selectedTagsId={selectedTagsId}
             setSelectedTagsId={setSelectedTagsId}
-            cache={cache}
             limit={limit}
             loadMoreEvents={loadMoreEvents}
             search={search}
