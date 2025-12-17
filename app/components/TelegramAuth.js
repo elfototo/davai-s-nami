@@ -97,7 +97,7 @@ export default function TelegramAuth({ children }) {
         setLoading(true);
 
         // 6. Отправляем запрос на авторизацию
-        const response = await fetch(`${API_URL1}/api/auth/telegram/login`, {
+        const response = await fetch(`${API_URL1}api/auth/telegram/login`, {
           method: 'POST',
           credentials: 'include',
           headers: {

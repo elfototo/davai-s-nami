@@ -343,12 +343,12 @@ export default function DashBoard() {
                         <p className="text-gray-600">{user.full_name}</p>
                       </div>
 
-                      <div className="grid sm:grid-cols-[1fr_2fr] sm:gap-5">
+                      {/* <div className="grid sm:grid-cols-[1fr_2fr] sm:gap-5">
                         <p>Телеграм: </p>
                         <p className="text-gray-600">
                           {user.telegram_nickname}
                         </p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 
