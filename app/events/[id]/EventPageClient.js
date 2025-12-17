@@ -301,7 +301,7 @@ export default function EventPageClient({ id, initialEvent }) {
               <div className="flex flex-wrap">
                 <button
                   onClick={handleCopy}
-                  className={copied ? styleCopied : styleNoCopied}
+                  className={`${copied ? styleCopied : styleNoCopied} mr-3`}
                 >
                   {copied ? (
                     <BsCheckAll size={18} className="mr-0 md:mr-2" />
@@ -319,7 +319,7 @@ export default function EventPageClient({ id, initialEvent }) {
                     href={event.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mx-3 mt-3 flex cursor-pointer items-center rounded-xl border bg-[#F52D85] px-4 py-2 text-white transition-colors duration-300 hover:opacity-80"
+                    className="mr-3 mt-3 flex cursor-pointer items-center rounded-xl border bg-[#F52D85] px-4 py-2 text-white transition-colors duration-300 hover:opacity-80"
                   >
                     {event.price === 'Бесплатно' || event.price === 'во встрече'
                       ? 'На сайт мероприятия'
