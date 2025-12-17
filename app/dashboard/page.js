@@ -286,29 +286,6 @@ export default function DashBoard() {
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="block font-medium text-gray-700"
-                    >
-                      telegram_nickname:
-                    </label>
-                    <input
-                      type="text"
-                      id="telegram_nickname"
-                      name="telegram_nickname"
-                      placeholder="Введите telegram_nickname"
-                      value={userInput.telegram_nickname}
-                      onChange={handleOnChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {errors.telegram_nickname && (
-                      <span className="text-sm text-red-500">
-                        {errors.telegram_nickname}
-                      </span>
-                    )}
-                  </div>
-
                   <div className="flex gap-3 pt-3">
                     <button
                       onClick={handleSubmit}
@@ -342,13 +319,6 @@ export default function DashBoard() {
                         <p>Полное имя: </p>
                         <p className="text-gray-600">{user.full_name}</p>
                       </div>
-
-                      {/* <div className="grid sm:grid-cols-[1fr_2fr] sm:gap-5">
-                        <p>Телеграм: </p>
-                        <p className="text-gray-600">
-                          {user.telegram_nickname}
-                        </p>
-                      </div> */}
                     </div>
                   </div>
 
@@ -365,7 +335,7 @@ export default function DashBoard() {
           </div>
         </div>
 
-        <h1 className="my-10 mt-10 text-start text-gray-700 font-roboto font-bold">
+        <h1 className="my-10 mt-10 text-start font-roboto font-bold text-gray-700">
           Избранное
         </h1>
         <div className="grid-rows-auto mt-10 grid grid-cols-2 items-stretch gap-3 md:grid-cols-4">
