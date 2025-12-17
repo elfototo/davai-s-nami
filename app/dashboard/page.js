@@ -268,7 +268,7 @@ export default function DashBoard() {
                       htmlFor="nickname"
                       className="block font-medium text-gray-700"
                     >
-                      full_name:
+                      Полное имя:
                     </label>
                     <input
                       type="text"
