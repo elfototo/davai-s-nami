@@ -14,7 +14,7 @@ export default function LoginPage() {
     password: '',
   });
   const [errors, setErrors] = useState({});
-  const [isTelegramAvailable, setIsTelegramAvailable] = useState(true);
+  const [isTelegramAvailable, setIsTelegramAvailable] = useState(false);
   const [telegramLoading, setTelegramLoading] = useState(false);
   const router = useRouter();
 
