@@ -199,9 +199,9 @@ export default function LoginPage() {
           <div className="flex w-full items-center justify-start">
             <button
               onClick={handleBack}
-              className="flex gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6"
+              className="flex gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6 items-center"
             >
-              <IoMdArrowBack className="" size={26} /> На главный экран
+              <IoMdArrowBack className="" size={20} /> На главный экран
             </button>
           </div>
         </div>
