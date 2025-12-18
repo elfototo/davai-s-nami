@@ -195,7 +195,7 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="mx-3 w-full max-w-md">
-        <div className="absolute top-10">
+        <div className="absolute top-10 mx-3">
           <div className="flex w-full items-center justify-start">
             <button
               onClick={handleBack}
@@ -207,7 +207,7 @@ export default function LoginPage() {
         </div>
         {/* Кнопка Telegram (если доступна) */}
         {isTelegramAvailable && (
-          <div className="mb-6">
+          <div className="mb-6 mx-3">
             <button
               onClick={handleTelegramLogin}
               disabled={telegramLoading}
@@ -232,7 +232,7 @@ export default function LoginPage() {
         {/* Обычная форма входа */}
         <form
           onSubmit={handleOnSubmit}
-          className="grid gap-5 rounded-xl bg-gray-100 p-10"
+          className="grid gap-5 rounded-xl bg-gray-100 p-10 mx-3"
         >
           <h2 className="mb-4 text-center text-2xl font-bold">Вход</h2>
 
@@ -290,13 +290,13 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="my-6 flex items-center gap-4">
+        <div className="my-6 flex items-center gap-4 mx-3">
           <div className="h-px flex-1 bg-gray-300"></div>
           <span className="text-gray-500">или</span>
           <div className="h-px flex-1 bg-gray-300"></div>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 mx-3">
           <Link
             href="/register"
             className="flex w-full items-center justify-center gap-3 rounded-lg bg-pink-400 px-4 py-3 text-white transition-colors hover:bg-pink-300 disabled:opacity-50"
