@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { NEXT_PUBLIC_Login, API_URL1 } from '../../../config';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaTelegramPlane } from "react-icons/fa";
+import { FaTelegramPlane } from 'react-icons/fa';
+import { IoMdArrowBack } from 'react-icons/io';
 
 
 export default function LoginPage() {
@@ -13,7 +14,7 @@ export default function LoginPage() {
     password: '',
   });
   const [errors, setErrors] = useState({});
-  const [isTelegramAvailable, setIsTelegramAvailable] = useState(false);
+  const [isTelegramAvailable, setIsTelegramAvailable] = useState(true);
   const [telegramLoading, setTelegramLoading] = useState(false);
   const router = useRouter();
 
@@ -188,9 +189,26 @@ export default function LoginPage() {
     Object.keys(errors).some((err) => errors[err]) === false &&
     requireFields.every((name) => user[name].trim() !== '');
 
+  const handleBack = () => {
+      router.push('/');
+    }
+  
+
   return (
     <main className="flex min-h-screen items-center justify-center">
       <div className="mx-3 w-full max-w-md">
+
+        <div>
+          <div className="flex w-full items-center justify-start bg mb-10">
+            <button
+              onClick={handleBack}
+              className="rounded-full transition lg:mr-6 flex gap-2 text-gray-400 text-lg"
+            > 
+              <IoMdArrowBack className="" size={26} /> На главный экран
+            </button>
+          </div>
+          
+        </div>
         {/* Кнопка Telegram (если доступна) */}
         {isTelegramAvailable && (
           <div className="mb-6">
@@ -199,8 +217,12 @@ export default function LoginPage() {
               disabled={telegramLoading}
               className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#0088cc] px-4 py-3 text-white transition-colors hover:bg-[#006699] disabled:opacity-50"
             >
-              <span className="text-2xl text-white"><FaTelegramPlane/></span>
-              <span className='text-xl'>{telegramLoading ? 'Авторизация...' : 'Войти через Telegram'}</span>
+              <span className="text-lg text-white">
+                <FaTelegramPlane />
+              </span>
+              <span className="text-lg">
+                {telegramLoading ? 'Авторизация...' : 'Войти через Telegram'}
+              </span>
             </button>
 
             <div className="my-6 flex items-center gap-4">
@@ -268,7 +290,7 @@ export default function LoginPage() {
                 : 'cursor-not-allowed bg-gray-300'
             } col-span-full w-full rounded-lg px-3 py-2 text-white transition-colors`}
           >
-            <span className='text-xl'>Войти</span>
+            <span className="text-lg">Войти</span>
           </button>
         </form>
 
@@ -283,10 +305,11 @@ export default function LoginPage() {
             href="/register"
             className="flex w-full items-center justify-center gap-3 rounded-lg bg-pink-400 px-4 py-3 text-white transition-colors hover:bg-pink-300 disabled:opacity-50"
           >
-            <span className="text-xl">Зарегистрироваться</span>
-            
+            <span className="text-lg">Зарегистрироваться</span>
           </Link>
         </div>
+
+        
       </div>
     </main>
   );

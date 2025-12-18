@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { keys } from 'lodash';
 import { NEXT_PUBLIC_Register, API_HEADERS } from '../../../config';
+import { IoMdArrowBack } from 'react-icons/io';
 
 export default function RegisterPage() {
   const [user, setUser] = useState({
@@ -106,83 +107,99 @@ export default function RegisterPage() {
   const isValidating =
     Object.keys(errors).some((err) => err) &&
     requireFields.every((name) => user[name].trim() !== '');
+  const handleBack = () => {
+    router.push('/');
+  };
 
   return (
-    <main className="flex items-center justify-center">
-      <form
-        onSubmit={handleOnSubmit}
-        className="mx-3 grid gap-5 rounded-xl bg-gray-100 p-10"
-      >
-        <div className="grid grid-cols-[1fr_3fr] gap-5">
-          <label htmlFor="nickname">Никнейм</label>
-          <div>
-            <input
-              onChange={handleOnChange}
-              value={user.nickname}
-              type="text"
-              // placeholder="введите никнейм"
-              name="nickname"
-              className="w-full rounded-lg px-2 py-1"
-            />
-            {errors.nickname && (
-              <div className="text-red-400">{errors.nickname}</div>
-            )}
-          </div>
+    <main className="flex min-h-screen items-center justify-center">
+      <div className="mx-3 w-full max-w-md">
+        <div className="bg mb-10 flex w-full items-center justify-start">
+          <button
+            onClick={handleBack}
+            className="flex gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6"
+          >
+            <IoMdArrowBack className="" size={26} /> На главный экран
+          </button>
         </div>
 
-        <div className="grid grid-cols-[1fr_3fr] gap-5">
-          <label htmlFor="email">email</label>
-          <div>
-            <input
-              onChange={handleOnChange}
-              value={user.email}
-              type="text"
-              // placeholder="введите email"
-              name="email"
-              className="w-full rounded-lg px-2 py-1"
-            />
-            {errors.email && <div className="text-red-400">{errors.email}</div>}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-[1fr_3fr] gap-5">
-          <label htmlFor="password">Пароль</label>
-          <div>
-            <input
-              onChange={handleOnChange}
-              value={user.password}
-              type="password"
-              // placeholder="введите пароль"
-              name="password"
-              className="w-full rounded-lg px-2 py-1"
-            />
-            {errors.password && (
-              <div className="text-red-400">{errors.password}</div>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-[1fr_3fr] gap-5">
-          <label htmlFor="full_name">Полное имя</label>
-          <div>
-            <input
-              onChange={handleOnChange}
-              value={user.full_name}
-              type="text"
-              // placeholder="введите полное имя"
-              name="full_name"
-              className="w-full rounded-lg px-2 py-1"
-            />
-          </div>
-        </div>
-
-        <button
-          disabled={!isValidating}
-          className={`${isValidating ? 'cursor-pointer rounded-lg bg-[#D52FDD] text-white' : 'cursor-not-allowed bg-gray-300'} col-span-full w-full rounded-lg px-3 py-2`}
+        <form
+          onSubmit={handleOnSubmit}
+          className="mx-3 grid gap-5 rounded-xl bg-gray-100 p-10"
         >
-          Отправить
-        </button>
-      </form>
+          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+            <label htmlFor="nickname">Никнейм</label>
+            <div>
+              <input
+                onChange={handleOnChange}
+                value={user.nickname}
+                type="text"
+                // placeholder="введите никнейм"
+                name="nickname"
+                className="w-full rounded-lg px-2 py-1"
+              />
+              {errors.nickname && (
+                <div className="text-red-400">{errors.nickname}</div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+            <label htmlFor="email">email</label>
+            <div>
+              <input
+                onChange={handleOnChange}
+                value={user.email}
+                type="text"
+                // placeholder="введите email"
+                name="email"
+                className="w-full rounded-lg px-2 py-1"
+              />
+              {errors.email && (
+                <div className="text-red-400">{errors.email}</div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+            <label htmlFor="password">Пароль</label>
+            <div>
+              <input
+                onChange={handleOnChange}
+                value={user.password}
+                type="password"
+                // placeholder="введите пароль"
+                name="password"
+                className="w-full rounded-lg px-2 py-1"
+              />
+              {errors.password && (
+                <div className="text-red-400">{errors.password}</div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+            <label htmlFor="full_name">Полное имя</label>
+            <div>
+              <input
+                onChange={handleOnChange}
+                value={user.full_name}
+                type="text"
+                // placeholder="введите полное имя"
+                name="full_name"
+                className="w-full rounded-lg px-2 py-1"
+              />
+            </div>
+          </div>
+
+          <button
+            disabled={!isValidating}
+            className={`${isValidating ? 'cursor-pointer rounded-lg bg-[#D52FDD] text-white' : 'cursor-not-allowed bg-gray-300'} col-span-full w-full rounded-lg px-3 py-2 text-lg`}
+          >
+            Отправить
+          </button>
+        </form>
+      </div>
     </main>
   );
 }
