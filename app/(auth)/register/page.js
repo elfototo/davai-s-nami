@@ -114,20 +114,21 @@ export default function RegisterPage() {
   return (
     <main className="flex min-h-screen items-center justify-center">
       <div className="mx-3 w-full max-w-md">
-        <div className="bg mb-10 flex w-full items-center justify-start">
-          <button
-            onClick={handleBack}
-            className="flex gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6"
-          >
-            <IoMdArrowBack className="" size={26} /> На главный экран
-          </button>
+        <div className="absolute top-10">
+          <div className="flex w-full items-center justify-start">
+            <button
+              onClick={handleBack}
+              className="flex gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6"
+            >
+              <IoMdArrowBack className="" size={26} /> На главный экран
+            </button>
+          </div>
         </div>
-
         <form
           onSubmit={handleOnSubmit}
           className="mx-3 grid gap-5 rounded-xl bg-gray-100 p-10"
         >
-          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+          <div className="grid gap-2 text-sm sm:grid-cols-[1fr_3fr] sm:gap-5">
             <label htmlFor="nickname">Никнейм</label>
             <div>
               <input
@@ -144,7 +145,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+          <div className="grid gap-2 text-sm sm:grid-cols-[1fr_3fr] sm:gap-5">
             <label htmlFor="email">email</label>
             <div>
               <input
@@ -161,7 +162,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+          <div className="grid gap-2 text-sm sm:grid-cols-[1fr_3fr] sm:gap-5">
             <label htmlFor="password">Пароль</label>
             <div>
               <input
@@ -178,7 +179,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-[1fr_3fr] sm:gap-5 gap-2 text-sm">
+          <div className="grid gap-2 text-sm sm:grid-cols-[1fr_3fr] sm:gap-5">
             <label htmlFor="full_name">Полное имя</label>
             <div>
               <input

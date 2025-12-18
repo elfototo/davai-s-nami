@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { FaTelegramPlane } from 'react-icons/fa';
 import { IoMdArrowBack } from 'react-icons/io';
 
-
 export default function LoginPage() {
   const [user, setUser] = useState({
     nickname: '',
@@ -190,24 +189,21 @@ export default function LoginPage() {
     requireFields.every((name) => user[name].trim() !== '');
 
   const handleBack = () => {
-      router.push('/');
-    }
-  
+    router.push('/');
+  };
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="mx-3 w-full max-w-md">
-
-        <div>
-          <div className="flex w-full items-center justify-start bg mb-10">
+        <div className="absolute top-10">
+          <div className="flex w-full items-center justify-start">
             <button
               onClick={handleBack}
-              className="rounded-full transition lg:mr-6 flex gap-2 text-gray-400 text-lg"
-            > 
+              className="flex gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6"
+            >
               <IoMdArrowBack className="" size={26} /> На главный экран
             </button>
           </div>
-          
         </div>
         {/* Кнопка Telegram (если доступна) */}
         {isTelegramAvailable && (
@@ -308,8 +304,6 @@ export default function LoginPage() {
             <span className="text-lg">Зарегистрироваться</span>
           </Link>
         </div>
-
-        
       </div>
     </main>
   );
