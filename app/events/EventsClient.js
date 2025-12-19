@@ -3,7 +3,7 @@
 import HeroSearch from '../components/HeroSearch';
 import Filtres from '../components/Filtres';
 import Card from '../components/Card';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useReducer } from 'react';
 import { categoriesID } from '../data/events';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
@@ -15,6 +15,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import useSWRInfinite from 'swr/infinite';
 import { API_URL, SEARCH_URL, API_HEADERS } from '../../config';
 import { useMemo } from 'react';
+import { filtersReducer, initialFiltersState, filterActions } from '../components/filtersReducer';
+
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -94,25 +96,37 @@ function Page({ sortedEvents, isLoadingEvents, isValidating }) {
 export default function Events({ initialEvents }) {
   const loadedEventIdsRef = useRef(new Set());
   const [allEvents, setAllEvents] = useState(initialEvents);
-  const [search, setSearch] = useState('');
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedTagsId, setSelectedTagsId] = useState([]);
-  const [sortPrice, setSortPrice] = useState(null);
-  const [category, setCategory] = useState('');
-  const [bgColor, setBgColor] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [isTryingToLoadMore, setIsTryingToLoadMore] = useState(false);
   const limit = 100;
 
-  console.log("initialEvents", initialEvents);
+  const [filters, dispatch] = useReducer(filtersReducer, initialFiltersState);
 
+  const {
+    search,
+    startDate,
+    endDate,
+    selectedTags,
+    selectedTagsId,
+    sortPrice,
+    category,
+    isOpen,
+  } = filters;
 
   useEffect(() => {
     initialEvents.forEach((event) => loadedEventIdsRef.current.add(event.id));
   }, []);
+
+  const getCategoryIdByName = (name) => {
+    const categoryObj = categoriesID.find((cat) => cat.category === name);
+    return categoryObj ? categoryObj.id : null;
+  };
+
+  // Обновляем selectedTagsId когда меняются selectedTags
+  useEffect(() => {
+    const ids = selectedTags.map((tag) => getCategoryIdByName(tag) || null);
+    dispatch(filterActions.setSelectedTagsId(ids));
+  }, [selectedTags]);
 
   const dateRange = {
     date_from: startDate
@@ -125,7 +139,6 @@ export default function Events({ initialEvents }) {
 
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && previousPageData.length < limit) return null;
-
     const offset = pageIndex * limit;
     return `/api/data?filter=${selectedTagsId.join(',')},${dateRange.date_from},${dateRange.date_to},${search}&page=${pageIndex}&offset=${offset}`;
   };
@@ -209,7 +222,7 @@ export default function Events({ initialEvents }) {
         console.error('Ошибка загрузки данных:', error);
       }
     }
-    
+
     return events;
   };
 
@@ -251,21 +264,10 @@ export default function Events({ initialEvents }) {
     }
   }, [dataEvents]);
 
-  const getCategoryIdByName = (name) => {
-    const categoryObj = categoriesID.find((cat) => cat.category === name);
-    return categoryObj ? categoryObj.id : null;
-  };
-
   const getCategoryNameById = (id) => {
     const categoryObj = categoriesID.find((cat) => cat.id === id);
     return categoryObj ? categoryObj.category : null;
   };
-
-  useEffect(() => {
-    setSelectedTagsId(
-      selectedTags.map((tag) => getCategoryIdByName(tag) || null),
-    );
-  }, [selectedTags]);
 
   const sortedEvents = useMemo(() => {
     if (allEvents.length === 0) return [];
@@ -291,28 +293,7 @@ export default function Events({ initialEvents }) {
 
       const matchesSearch = search
         ? (event.title?.toLowerCase() || '').includes(search.toLowerCase()) ||
-          (event.price?.toString().toLowerCase() &&
-            event.price?.toString().toLowerCase().includes(search)) ||
-          (event.address?.toLowerCase() || '').includes(search.toLowerCase()) ||
-          (event.from_date &&
-            (dayjs(event.from_date).format('YYYY-MM-DD').includes(search) ||
-              dayjs(event.from_date)
-                .format('DD MMMM YYYY')
-                .toLowerCase()
-                .includes(search.toLowerCase()) ||
-              dayjs(event.from_date)
-                .format('MMMM DD, YYYY')
-                .toLowerCase()
-                .includes(search.toLowerCase()) ||
-              dayjs(event.from_date)
-                .format('MMMM')
-                .toLowerCase()
-                .includes(search.toLowerCase()))) ||
-          (event.place_id && event.place_id.toString().includes(search)) ||
-          (event.main_category_id &&
-            getCategoryNameById(event.main_category_id)
-              ?.toLowerCase()
-              .includes(search.toLowerCase()))
+          (event.address?.toLowerCase() || '').includes(search.toLowerCase())
         : true;
 
       const matchesTags =
@@ -321,25 +302,10 @@ export default function Events({ initialEvents }) {
       return matchesCategory && isInDateRange && matchesSearch && matchesTags;
     });
 
-    // Сортировка
     return filtered.sort(
       (a, b) => new Date(a.from_date) - new Date(b.from_date),
     );
   }, [allEvents, category, search, startDate, endDate, selectedTags]);
-
-  useEffect(() => {
-    if (
-      sortedEvents.length === 0 &&
-      hasMore &&
-      !isTryingToLoadMore &&
-      !isLoadingEvents
-    ) {
-      setIsTryingToLoadMore(true);
-      loadMoreEvents();
-    } else {
-      setIsTryingToLoadMore(false);
-    }
-  }, [sortedEvents, hasMore, isTryingToLoadMore, isLoadingEvents]);
 
   const loadMoreEvents = () => {
     if (isLoadingEvents || !hasMore) return;
@@ -350,24 +316,17 @@ export default function Events({ initialEvents }) {
     <>
       <HeroSearch
         search={search}
-        setSearch={setSearch}
+        setSearch={(value) => dispatch(filterActions.setSearch(value))}
         value={'Найти мероприятие'}
       />
       <div className="flex-cols mx-auto mt-3 max-w-custom-container justify-center px-4 lg:flex">
         <aside className="relative mb-3 mr-3 w-full lg:w-[20%]">
           <section className="inset-0 z-10 block lg:sticky lg:top-4">
             <Filtres
-              setBgColor={setBgColor}
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-              selectedTags={selectedTags}
-              setSelectedTags={setSelectedTags}
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              category={category}
+              filters={filters}
+              dispatch={dispatch}
             />
+
           </section>
         </aside>
         <section
@@ -375,27 +334,8 @@ export default function Events({ initialEvents }) {
         >
           <Page
             isValidating={isValidating}
-            dataEvents={dataEvents}
             isLoadingEvents={isLoadingEvents}
-            selectedTagsId={selectedTagsId}
-            setSelectedTagsId={setSelectedTagsId}
-            limit={limit}
-            loadMoreEvents={loadMoreEvents}
-            search={search}
-            setSearch={setSearch}
-            setBgColor={setBgColor}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            sortPrice={sortPrice}
-            category={category}
             sortedEvents={sortedEvents}
-            // setSortedEvents={setSortedEvents}
           />
 
           <div className="mx-auto mt-10 flex justify-center gap-6">
