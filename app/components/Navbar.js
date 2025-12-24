@@ -5,6 +5,8 @@ import Link from 'next/link';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../../context/SwrContext';
 import { SEARCH_URL, API_HEADERS } from '../../config';
+import { FaUserCircle } from 'react-icons/fa';
+import { TbLogin2 } from 'react-icons/tb';
 import {
   FaHome,
   FaMapMarkerAlt,
@@ -13,7 +15,7 @@ import {
 } from 'react-icons/fa';
 import { usePathname, useRouter } from 'next/navigation';
 import { IoMdArrowBack } from 'react-icons/io';
-import { FaUserCircle } from 'react-icons/fa';
+// import { FaUserCircle } from 'react-icons/fa';
 import Dropdown from './Dropdown';
 
 import Image from 'next/image';
@@ -39,6 +41,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterSearch, setFilterSearch] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
+
   const searchRef = useRef(null);
   const dropdownRef = useRef(null);
   const limit = 10;
@@ -164,7 +167,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative z-60 bg-white shadow dark:bg-gray-800">
+    <nav className="z-60 relative bg-white shadow dark:bg-gray-800">
       <div className="container mx-auto max-w-custom-container px-6 py-4">
         <div className="lg:flex lg:w-full lg:items-center lg:justify-between">
           <div className="flex items-center justify-between">
@@ -345,8 +348,8 @@ const Navbar = () => {
                 О нас
               </Link>
 
-              <div className='mx-3 mt-2 transform rounded-md text-gray-700 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 lg:mt-0'>
-                <Dropdown isOpenMenu={isOpen} setIsOpenMenu={setIsOpen}/>
+              <div className="mx-3 mt-2 transform rounded-md text-gray-700 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 lg:mt-0">
+                <Dropdown isOpenMenu={isOpen} setIsOpenMenu={setIsOpen} />
               </div>
             </div>
 
@@ -420,6 +423,38 @@ export default Navbar;
 
 const MobileNavBar = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isLoggestIn, setIsLoggestIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    setIsLoggestIn(!!token);
+  }, []);
+
+  useEffect(() => {
+    const handleAuthChange = () => {
+      const token = localStorage.getItem('access_token');
+
+      setIsLoggestIn(!!token);
+      console.log('Auth changed, token:', !!token);
+    };
+
+    window.addEventListener('auth-changed', handleAuthChange);
+
+    return () => window.removeEventListener('auth-changed', handleAuthChange);
+  }, []);
+
+  const handleLogOut = () => {
+    setIsLoggestIn(false);
+
+    sessionStorage.setItem('user_logged_out', 'true');
+
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('tokenExpiresAt');
+
+    window.dispatchEvent(new Event('auth-changed'));
+    router.push('/');
+  };
 
   // Функция для проверки, является ли ссылка текущей
   const isActive = (path) => pathname === path;
@@ -429,27 +464,33 @@ const MobileNavBar = () => {
       <div className="fixed bottom-3 left-3 right-3 z-50 flex justify-around rounded-full border-t border-gray-300 bg-white shadow-lg lg:hidden">
         <Link
           href="/"
-          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/') ? 'active rounded-full text-sky-500' : ''}`}
+          className={`flex flex-col items-center py-6 text-gray-500 transition-all duration-300 ${isActive('/') ? 'active rounded-full text-sky-500' : ''}`}
         >
           <FaHome size={25} />
         </Link>
         <Link
           href="/events"
-          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/events') ? 'active rounded-full text-green-500' : ''}`}
+          className={`flex flex-col items-center py-6 text-gray-500 transition-all duration-300 ${isActive('/events') ? 'active rounded-full text-green-500' : ''}`}
         >
           <FaCalendarAlt size={25} />
         </Link>
         <Link
           href="/places"
-          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/places') ? 'active rounded-full text-red-500' : ''}`}
+          className={`flex flex-col items-center py-6 text-gray-500 transition-all duration-300 ${isActive('/places') ? 'active rounded-full text-red-500' : ''}`}
         >
           <FaMapMarkerAlt size={25} />
         </Link>
         <Link
           href="/about"
-          className={`flex flex-col items-center px-7 py-6 text-gray-500 transition-all duration-300 ${isActive('/about') ? 'active rounded-full text-purple-500' : ''}`}
+          className={`flex flex-col items-center py-6 text-gray-500 transition-all duration-300 ${isActive('/about') ? 'active rounded-full text-purple-500' : ''}`}
         >
           <FaInfoCircle size={25} />
+        </Link>
+        <Link
+          href={`${isLoggestIn ? '/dashboard' : '/login'}`}
+          className={`flex flex-col items-center py-6 text-gray-500 transition-all duration-300 ${isActive('/dashboard') ? 'active rounded-full text-purple-500' : ''}`}
+        >
+          {isLoggestIn ? <FaUserCircle size={25} /> : <TbLogin2 size={25} />}
         </Link>
       </div>
     </div>

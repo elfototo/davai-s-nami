@@ -25,7 +25,7 @@ async function getInitialEvents() {
         page: 0,
         limit: 100,
       }),
-      // next: { revalidate: 300 }, // Кеш на 5 минут
+      next: { revalidate: 300 }, // Кеш на 5 минут
     });
 
     if (!res.ok) {
