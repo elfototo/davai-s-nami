@@ -7,7 +7,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isoWeek);
 
-// Начальное состояние
 export const initialFiltersState = {
   search: '',
   startDate: null,
@@ -39,7 +38,6 @@ export const FILTER_ACTIONS = {
   SET_SELECTED_TAGS_ID: 'SET_SELECTED_TAGS_ID',
 };
 
-// Reducer функция
 export function filtersReducer(state, action) {
   switch (action.type) {
     case FILTER_ACTIONS.SET_SEARCH:
@@ -99,7 +97,7 @@ export function filtersReducer(state, action) {
         };
       }
 
-      const tomorrow = dayjs().add(1, 'day').tz('Europe/Moscow').startOf('day');
+      const tomorrow = dayjs().tz('Europe/Moscow').add(1, 'day').startOf('day');
 
       return {
         ...state,
@@ -121,10 +119,19 @@ export function filtersReducer(state, action) {
         };
       }
 
-      const startOfWeekend = dayjs()
-        .isoWeekday(6)
-        .tz('Europe/Moscow')
-        .startOf('day');
+      const today = dayjs().tz('Europe/Moscow');
+      const currentDayOfWeek = today.isoWeekday(); // 1 = Пн, 7 = Вс
+      
+      let startOfWeekend;
+      
+      // Если сегодня уже суббота или воскресенье - берём текущие выходные
+      if (currentDayOfWeek === 6 || currentDayOfWeek === 7) {
+        startOfWeekend = today.isoWeekday(6).startOf('day');
+      } else {
+        // Иначе берём следующую субботу
+        startOfWeekend = today.isoWeekday(6 + 7).startOf('day');
+      }
+      
       const endOfWeekend = startOfWeekend.add(1, 'day');
 
       return {
@@ -139,16 +146,8 @@ export function filtersReducer(state, action) {
     case FILTER_ACTIONS.SET_DATE_RANGE: {
       const { startDate, endDate } = action.payload;
 
-      const rangeStartDate = startDate
-        .utc()
-        .tz('Europe/Moscow')
-        .startOf('day')
-        .format('DD MMM');
-      const rangeEndDate = endDate
-        .utc()
-        .tz('Europe/Moscow')
-        .startOf('day')
-        .format('DD MMM');
+      const rangeStartDate = dayjs(startDate).format('DD MMM');
+      const rangeEndDate = dayjs(endDate).format('DD MMM');
 
       const dateLabel =
         rangeStartDate === rangeEndDate
@@ -157,8 +156,8 @@ export function filtersReducer(state, action) {
 
       return {
         ...state,
-        startDate,
-        endDate,
+        startDate: dayjs(startDate).tz('Europe/Moscow').startOf('day'),
+        endDate: dayjs(endDate).tz('Europe/Moscow').startOf('day'),
         selectedButton: 'date',
         selectedDateLabel: dateLabel,
       };
@@ -194,7 +193,6 @@ export function filtersReducer(state, action) {
     case FILTER_ACTIONS.CLEAR_ALL_FILTERS:
       return {
         ...initialFiltersState,
-        // Сохраняем isOpen, чтобы панель не закрывалась при очистке
         isOpen: state.isOpen,
       };
 
@@ -215,7 +213,7 @@ export function filtersReducer(state, action) {
   }
 }
 
-// Action creators для удобства использования
+// Action creators
 export const filterActions = {
   setSearch: (value) => ({
     type: FILTER_ACTIONS.SET_SEARCH,
