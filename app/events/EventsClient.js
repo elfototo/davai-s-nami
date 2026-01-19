@@ -15,8 +15,12 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import useSWRInfinite from 'swr/infinite';
 import { API_URL, SEARCH_URL, API_HEADERS } from '../../config';
 import { useMemo } from 'react';
-import { filtersReducer, initialFiltersState, filterActions } from '../components/filtersReducer';
-
+import {
+  filtersReducer,
+  initialFiltersState,
+  filterActions,
+} from '../components/filtersReducer';
+import { useSearchParams } from 'next/navigation';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -100,7 +104,16 @@ export default function Events({ initialEvents }) {
   const [isTryingToLoadMore, setIsTryingToLoadMore] = useState(false);
   const limit = 100;
 
+  const searchParams = useSearchParams();
   const [filters, dispatch] = useReducer(filtersReducer, initialFiltersState);
+
+  useEffect(() => {
+    const category = searchParams.get('category');
+
+    if (category) {
+      dispatch(filterActions.initFromUrl({ category }));
+    }
+  }, [searchParams]);
 
   const {
     search,
@@ -322,11 +335,7 @@ export default function Events({ initialEvents }) {
       <div className="flex-cols mx-auto mt-3 max-w-custom-container justify-center px-4 lg:flex">
         <aside className="relative mb-3 mr-3 w-full lg:w-[20%]">
           <section className="inset-0 z-10 block lg:sticky lg:top-4">
-            <Filtres
-              filters={filters}
-              dispatch={dispatch}
-            />
-
+            <Filtres filters={filters} dispatch={dispatch} />
           </section>
         </aside>
         <section

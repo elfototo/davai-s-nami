@@ -36,10 +36,71 @@ export const FILTER_ACTIONS = {
   CLEAR_ALL_FILTERS: 'CLEAR_ALL_FILTERS',
   APPLY_CATEGORY_TAGS: 'APPLY_CATEGORY_TAGS',
   SET_SELECTED_TAGS_ID: 'SET_SELECTED_TAGS_ID',
+  INIT_FROM_URL: 'INIT_FROM_URL',
 };
 
 export function filtersReducer(state, action) {
   switch (action.type) {
+    case FILTER_ACTIONS.INIT_FROM_URL: {
+      const { category } = action.payload;
+
+      // Проверяем, является ли category датой
+      if (category === 'Сегодня') {
+        const today = dayjs().tz('Europe/Moscow').startOf('day');
+        return {
+          ...state,
+          startDate: today,
+          endDate: today,
+          selectedButton: 'today',
+          selectedDateLabel: '',
+          category: '',
+        };
+      }
+
+      if (category === 'Завтра') {
+        const tomorrow = dayjs()
+          .tz('Europe/Moscow')
+          .add(1, 'day')
+          .startOf('day');
+        return {
+          ...state,
+          startDate: tomorrow,
+          endDate: tomorrow,
+          selectedButton: 'tomorrow',
+          selectedDateLabel: '',
+          category: '',
+        };
+      }
+
+      if (category === 'Выходные') {
+        const today = dayjs().tz('Europe/Moscow');
+        const currentDayOfWeek = today.isoWeekday();
+
+        let startOfWeekend;
+        if (currentDayOfWeek === 6 || currentDayOfWeek === 7) {
+          startOfWeekend = today.isoWeekday(6).startOf('day');
+        } else {
+          startOfWeekend = today.isoWeekday(6).startOf('day');
+        }
+
+        const endOfWeekend = startOfWeekend.add(1, 'day');
+
+        return {
+          ...state,
+          startDate: startOfWeekend,
+          endDate: endOfWeekend,
+          selectedButton: 'weekend',
+          selectedDateLabel: '',
+          category: '',
+        };
+      }
+
+      // Если это обычная категория
+      return {
+        ...state,
+        category: category || '',
+      };
+    }
     case FILTER_ACTIONS.SET_SEARCH:
       return {
         ...state,
@@ -121,9 +182,9 @@ export function filtersReducer(state, action) {
 
       const today = dayjs().tz('Europe/Moscow');
       const currentDayOfWeek = today.isoWeekday(); // 1 = Пн, 7 = Вс
-      
+
       let startOfWeekend;
-      
+
       // Если сегодня уже суббота или воскресенье - берём текущие выходные
       if (currentDayOfWeek === 6 || currentDayOfWeek === 7) {
         startOfWeekend = today.isoWeekday(6).startOf('day');
@@ -131,7 +192,7 @@ export function filtersReducer(state, action) {
         // Иначе берём следующую субботу
         startOfWeekend = today.isoWeekday(6).startOf('day');
       }
-      
+
       const endOfWeekend = startOfWeekend.add(1, 'day');
 
       return {
@@ -215,6 +276,11 @@ export function filtersReducer(state, action) {
 
 // Action creators
 export const filterActions = {
+  initFromUrl: (params) => ({
+    type: FILTER_ACTIONS.INIT_FROM_URL,
+    payload: params,
+  }),
+
   setSearch: (value) => ({
     type: FILTER_ACTIONS.SET_SEARCH,
     payload: value,
