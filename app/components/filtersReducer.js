@@ -129,7 +129,7 @@ export function filtersReducer(state, action) {
         startOfWeekend = today.isoWeekday(6).startOf('day');
       } else {
         // Иначе берём следующую субботу
-        startOfWeekend = today.isoWeekday(6 + 7).startOf('day');
+        startOfWeekend = today.isoWeekday(6).startOf('day');
       }
       
       const endOfWeekend = startOfWeekend.add(1, 'day');
