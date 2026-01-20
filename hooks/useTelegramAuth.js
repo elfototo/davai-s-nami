@@ -32,6 +32,7 @@ export const useTelegramAuth = () => {
 
         // 3. Проверяем есть ли уже access_token
         const existingToken = localStorage.getItem('access_token');
+
         if (existingToken) {
           console.log('Пользователь уже авторизован');
           return;
@@ -39,16 +40,17 @@ export const useTelegramAuth = () => {
 
         // 4. Проверяем флаг "пользователь вышел намеренно"
         const userLoggedOut = sessionStorage.getItem('user_logged_out');
+
         if (userLoggedOut === 'true') {
           console.log('Пользователь вышел из аккаунта, автовход отключён');
           return;
         }
 
-        // 5. НЕ делаем автовход на странице /login
-        if (pathname === '/login') {
-          console.log('На странице login, автовход отключён');
-          return;
-        }
+        // // 5. НЕ делаем автовход на странице /login
+        // if (pathname === '/login' && !window.Telegram?.WebApp?.initData) {
+        //   console.log('ℹ️ На странице login вне Telegram — автовход отключён');
+        //   return;
+        // }
 
         console.log('Начинаем автоматическую Telegram авторизацию...');
         setLoading(true);
@@ -89,8 +91,8 @@ export const useTelegramAuth = () => {
           window.dispatchEvent(new Event('auth-changed'));
 
           // Перенаправляем на dashboard если на главной
-          if (pathname === '/') {
-            router.push('/');
+          if (pathname === '/login') {
+            router.replace('/');
           }
         } else {
           throw new Error('access_token не получен');
