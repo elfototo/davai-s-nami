@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { API_URL1 } from '../config';
 
 export const useTelegramAuth = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -15,42 +15,42 @@ export const useTelegramAuth = () => {
       try {
         // 1. Проверяем доступен ли Telegram WebApp
         if (typeof window === 'undefined' || !window.Telegram?.WebApp) {
-          console.log('❌ Telegram WebApp недоступен');
+          console.log('Telegram WebApp недоступен');
           return;
         }
 
         const telegram = window.Telegram.WebApp;
         const initData = telegram.initData;
 
-        console.log('🔍 Telegram initData:', initData ? 'Есть' : 'Нет');
+        console.log('Telegram initData:', initData ? 'Есть' : 'Нет');
 
         // 2. Если нет initData - значит открыто не в Telegram
         if (!initData) {
-          console.log('ℹ️ Приложение открыто не в Telegram');
+          console.log('Приложение открыто не в Telegram');
           return;
         }
 
         // 3. Проверяем есть ли уже access_token
         const existingToken = localStorage.getItem('access_token');
         if (existingToken) {
-          console.log('✅ Пользователь уже авторизован');
+          console.log('Пользователь уже авторизован');
           return;
         }
 
         // 4. Проверяем флаг "пользователь вышел намеренно"
         const userLoggedOut = sessionStorage.getItem('user_logged_out');
         if (userLoggedOut === 'true') {
-          console.log('ℹ️ Пользователь вышел из аккаунта, автовход отключён');
+          console.log('Пользователь вышел из аккаунта, автовход отключён');
           return;
         }
 
         // 5. НЕ делаем автовход на странице /login
         if (pathname === '/login') {
-          console.log('ℹ️ На странице login, автовход отключён');
+          console.log('На странице login, автовход отключён');
           return;
         }
 
-        console.log('🚀 Начинаем автоматическую Telegram авторизацию...');
+        console.log('Начинаем автоматическую Telegram авторизацию...');
         setLoading(true);
 
         // 6. Отправляем запрос на авторизацию
@@ -104,7 +104,7 @@ export const useTelegramAuth = () => {
     };
 
     // Запускаем с небольшой задержкой, чтобы Telegram успел инициализироваться
-    const timer = setTimeout(loginWithTelegram, 300);
+    const timer = setTimeout(loginWithTelegram, 400);
     return () => clearTimeout(timer);
   }, [router, pathname]);
 
