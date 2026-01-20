@@ -6,7 +6,7 @@ import { FaEdit } from 'react-icons/fa';
 import { IoIosSave } from 'react-icons/io';
 import { API_URL1 } from '../../config';
 import { IoCloseOutline } from 'react-icons/io5';
-import Card from '../components/Card';
+import Card from '../../components/Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_HEADERS, API_URL_BY_ID } from '../../config';
 

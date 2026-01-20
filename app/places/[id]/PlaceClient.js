@@ -3,7 +3,7 @@
 import { places, data } from '../../data/events';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Card from '../../components/Card';
+import Card from '../../../components/Card';
 import { useEvents } from '../../../context/SwrContext';
 import useSWR, { SWRConfig } from 'swr';
 import dayjs from 'dayjs';
@@ -19,7 +19,7 @@ import {
   API_HEADERS,
   API_URL_PL_BY_ID,
 } from '../../../config';
-import BackButton from '../../components/BackButton';
+import BackButton from '../../../components/BackButton';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');

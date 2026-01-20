@@ -1,6 +1,6 @@
 'use client';
 
-import { categories } from '../data/events';
+import { categories } from '../app/data/events';
 import { useState } from 'react';
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaVk } from "react-icons/fa";

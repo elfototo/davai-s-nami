@@ -1,5 +1,4 @@
 'use client';
-import '../globals.css';
 import { BsFillMortarboardFill } from "react-icons/bs";
 import { MdMuseum } from "react-icons/md";
 import { PiMusicNoteFill } from "react-icons/pi";

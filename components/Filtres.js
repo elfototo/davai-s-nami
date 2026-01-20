@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import CalendarModal from './Calendar';
 import { useSearchParams } from 'next/navigation';
-import { categoriesID } from '../data/events';
+import { categoriesID } from '../app/data/events';
 import { IoClose } from 'react-icons/io5';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { filterActions } from './filtersReducer';

@@ -9,8 +9,9 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import Link from 'next/link';
 import { BsFillGeoAltFill } from 'react-icons/bs';
 import { AiFillClockCircle } from 'react-icons/ai';
-import { useEvents } from '../../context/SwrContext';
+import { useEvents } from '../context/SwrContext';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import {formatDateRange} from "../utils/formatDateRange"
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchWishlist,
@@ -19,7 +20,7 @@ import {
   selectIsInWishlist,
   selectWishlistLoading,
   selectWishlistInitialized,
-} from '../../store/slices/wishlistSlice.js';
+} from '../store/slices/wishlistSlice.js';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -78,31 +79,7 @@ const Card = ({
     max: 'object-cover object-center w-full h-auto transform transition duration-300 group-hover:scale-105 relative',
   };
 
-  const formatDateRange = (from_date, to_date) => {
-    if (!from_date) return 'Скоро будет дата';
 
-    const from = dayjs(from_date).utc().tz('Europe/Moscow');
-    const to = to_date ? dayjs(to_date).utc().tz('Europe/Moscow') : null;
-
-    const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-
-    const fromWeekday = capitalize(from.format('dd'));
-    const toWeekday = to ? capitalize(to.format('dd')) : '';
-
-    if (!to || from.isSame(to)) {
-      return `${fromWeekday}, ${from.format('D MMMM')}`;
-    }
-
-    if (from.isSame(to, 'day')) {
-      return `${fromWeekday}, ${from.format('D MMMM')}`;
-    }
-
-    if (to.hour() === 0 && to.minute() === 0) {
-      return `${fromWeekday}, ${from.format('D MMMM')} - 00:00`;
-    }
-
-    return `${fromWeekday}, ${from.format('D MMMM')} - ${toWeekday}, ${to.format('D MMMM')}`;
-  };
 
   return (
     <div className="group">

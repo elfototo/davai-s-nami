@@ -1,8 +1,8 @@
 'use client';
 
-import HeroSearch from '../components/HeroSearch';
+import HeroSearch from '../../components/HeroSearch';
 import { useEffect, useState, useRef } from 'react';
-import PlaceCard from '../components/PlaceCard';
+import PlaceCard from '../../components/PlaceCard';
 import { useEvents } from '../../context/SwrContext';
 import useSWRInfinite from "swr/infinite";
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';

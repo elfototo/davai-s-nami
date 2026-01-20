@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import useSWR, { SWRConfig } from 'swr';
-import { useEvents } from '../../context/SwrContext';
-import { SEARCH_URL, API_HEADERS } from '../../config';
+import { useEvents } from '../context/SwrContext';
+import { SEARCH_URL, API_HEADERS } from '../config';
 import { FaUserCircle } from 'react-icons/fa';
 import { TbLogin2 } from 'react-icons/tb';
 import {

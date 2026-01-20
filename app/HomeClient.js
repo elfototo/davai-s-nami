@@ -1,8 +1,8 @@
 'use client';
 
 import './globals.css';
-import Card from './components/Card';
-import Categories from './components/Categories';
+import Card from '../components/Card';
+import Categories from '../components/Categories';
 import Link from 'next/link';
 import 'animate.css';
 import { useState, useEffect } from 'react';
@@ -14,7 +14,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
 import Image from 'next/image';
 import { IoMdClose } from 'react-icons/io';
-import Loader from './components/Loader';
+import Loader from '../components/Loader';
 import useSWR from 'swr';
 import { useEvents } from '../context/SwrContext';
 import { API_URL, API_HEADERS } from '../config';
