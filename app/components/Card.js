@@ -42,7 +42,7 @@ const Card = ({
   const dispatch = useDispatch();
   const isInWishlist = useSelector(selectIsInWishlist(idNumber));
 
-  const { findDataById, convertImageUrlToJpeg } = useEvents();
+  const { convertImageUrlToJpeg } = useEvents();
   const [showFulltext, setShowFulltext] = useState(false);
   const [showFullTitletext, setShowFullTitletext] = useState(false);
 
