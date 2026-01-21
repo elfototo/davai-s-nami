@@ -11,7 +11,7 @@ import { BsFillGeoAltFill } from 'react-icons/bs';
 import { AiFillClockCircle } from 'react-icons/ai';
 import { useEvents } from '../context/SwrContext';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
-import {formatDateRange} from "../utils/formatDateRange"
+import { formatDateRange } from '../utils/formatDateRange';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchWishlist,
@@ -21,6 +21,7 @@ import {
   selectWishlistLoading,
   selectWishlistInitialized,
 } from '../store/slices/wishlistSlice.js';
+import { useWishlist } from '../hooks/useWishList';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -38,10 +39,16 @@ const Card = ({
   image,
   to_date,
 }) => {
-  const idNumber = parseInt(id);
+  const idNumber = typeof id === 'number' ? id : parseInt(id, 10);
 
   const dispatch = useDispatch();
-  const isInWishlist = useSelector(selectIsInWishlist(idNumber));
+  const { isInWishlist, toggleWishlist, loading } = useWishlist(idNumber);
+
+  // const isInWishlist = useSelector((state) =>
+  //   selectIsInWishlist(idNumber)(state),
+  // );
+
+  console.log('Card ID:', idNumber, 'Is in wishlist:', isInWishlist);
 
   const { convertImageUrlToJpeg } = useEvents();
   const [showFulltext, setShowFulltext] = useState(false);
@@ -79,15 +86,13 @@ const Card = ({
     max: 'object-cover object-center w-full h-auto transform transition duration-300 group-hover:scale-105 relative',
   };
 
-
-
   return (
     <div className="group">
       <div className="flex h-auto min-h-full w-full max-w-sm flex-col justify-between overflow-hidden rounded-lg border border-[#D9D9D9] bg-white group-hover:border-pink-400">
         {/* Header card */}
         <div>
           <div className="relative overflow-hidden border-b border-[#D9D9D9]">
-            <Link href={`/events/${id}`} className='z-0'>
+            <Link href={`/events/${id}`} className="z-0">
               <Image
                 className={heightImage[type]}
                 src={processedImageUrl}
@@ -190,7 +195,7 @@ const Card = ({
           </div>
         </div>
         <div>
-          <div className="flex items-center gap-3 m-3">
+          <div className="m-3 flex items-center gap-3">
             <Link href={`/events/${id}`} className="flex-1">
               <button className="w-full rounded-lg bg-pink-500 py-2 font-roboto text-[1rem] font-medium text-white transition hover:bg-pink-400">
                 Смотреть
@@ -198,7 +203,8 @@ const Card = ({
             </Link>
 
             <button
-              onClick={handleAddToWishList}
+              onClick={toggleWishlist}
+              disabled={loading}
               className="flex h-[40px] min-h-[40px] w-[40px] min-w-[40px] flex-shrink-0 items-center justify-center rounded-full border border-[#D9D9D9] bg-white"
             >
               {isInWishlist ? (

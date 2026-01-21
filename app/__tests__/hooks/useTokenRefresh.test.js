@@ -264,7 +264,7 @@ describe(useTokenRefresh, () => {
   describe('Жизненный цикл хука', () => {
     test('Необходимо инициализировать расписание обновления на точке монтирования с помощью токена.', () => {
       const expiresAt = Date.now() + 30 * 60 * 1000;
-      localStorage.setItem('access_token', 'token'); 
+      localStorage.setItem('access_token', 'token');
       localStorage.setItem('tokenExpiresAt', expiresAt.toString());
 
       renderHook(() => useTokenRefresh());
@@ -296,7 +296,7 @@ describe(useTokenRefresh, () => {
   describe('Синхронизация событий хранилища', () => {
     test('Следует перенести обновление на другое время при изменении токена в другой вкладке.', () => {
       const expiresAt = Date.now() + 30 * 60 * 1000;
-      localStorage.setItem('access_token', 'token'); 
+      localStorage.setItem('access_token', 'token');
       localStorage.setItem('tokenExpiresAt', expiresAt.toString());
 
       renderHook(() => useTokenRefresh());
@@ -391,8 +391,17 @@ describe(useTokenRefresh, () => {
 
       await Promise.all([promise1, promise2]);
 
-      // Должен быть только один активный таймер
-      expect(clearTimeout).toHaveBeenCalled();
+      // Проверяем, что fetch был вызван только ОДИН раз (защита от дублирования)
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+
+      // Проверяем, что токен успешно сохранён
+      expect(localStorage.getItem('access_token')).toBe('token');
+
+      // Проверяем, что установлен таймер для следующего обновления
+      expect(setTimeout).toHaveBeenCalledWith(
+        expect.any(Function),
+        25 * 60 * 1000,
+      );
     });
   });
 });
