@@ -46,12 +46,6 @@ export const useTelegramAuth = () => {
           return;
         }
 
-        // // 5. НЕ делаем автовход на странице /login
-        // if (pathname === '/login' && !window.Telegram?.WebApp?.initData) {
-        //   console.log('ℹ️ На странице login вне Telegram — автовход отключён');
-        //   return;
-        // }
-
         console.log('Начинаем автоматическую Telegram авторизацию...');
         setLoading(true);
 
