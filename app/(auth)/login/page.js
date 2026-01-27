@@ -164,9 +164,9 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex flex-col items-center justify-center">
       <div className="mx-3 w-full max-w-md">
-        <div className="absolute top-10 mx-3">
+        <div className="my-5 mx-3">
           <div className="flex w-full items-center justify-start">
             <button
               onClick={handleBack}
