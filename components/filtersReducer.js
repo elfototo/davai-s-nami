@@ -42,37 +42,32 @@ export const FILTER_ACTIONS = {
 export function filtersReducer(state, action) {
   switch (action.type) {
     case FILTER_ACTIONS.INIT_FROM_URL: {
-      const { category } = action.payload;
+      const { tags, date, startDate, endDate, dateLabel } = action.payload;
 
-      // Проверяем, является ли category датой
-      if (category === 'Сегодня') {
-        const today = dayjs().tz('Europe/Moscow').startOf('day');
-        return {
-          ...state,
-          startDate: today,
-          endDate: today,
-          selectedButton: 'today',
-          selectedDateLabel: '',
-          category: '',
-        };
+      let newState = { ...state };
+
+      // Восстанавливаем теги
+      if (tags && tags.length > 0) {
+        newState.selectedTags = tags;
       }
 
-      if (category === 'Завтра') {
+      // Восстанавливаем дату
+      if (date === 'today') {
+        const today = dayjs().tz('Europe/Moscow').startOf('day');
+        newState.startDate = today;
+        newState.endDate = today;
+        newState.selectedButton = 'today';
+        newState.selectedDateLabel = '';
+      } else if (date === 'tomorrow') {
         const tomorrow = dayjs()
           .tz('Europe/Moscow')
           .add(1, 'day')
           .startOf('day');
-        return {
-          ...state,
-          startDate: tomorrow,
-          endDate: tomorrow,
-          selectedButton: 'tomorrow',
-          selectedDateLabel: '',
-          category: '',
-        };
-      }
-
-      if (category === 'Выходные') {
+        newState.startDate = tomorrow;
+        newState.endDate = tomorrow;
+        newState.selectedButton = 'tomorrow';
+        newState.selectedDateLabel = '';
+      } else if (date === 'weekend') {
         const today = dayjs().tz('Europe/Moscow');
         const currentDayOfWeek = today.isoWeekday();
 
@@ -84,22 +79,21 @@ export function filtersReducer(state, action) {
         }
 
         const endOfWeekend = startOfWeekend.add(1, 'day');
-
-        return {
-          ...state,
-          startDate: startOfWeekend,
-          endDate: endOfWeekend,
-          selectedButton: 'weekend',
-          selectedDateLabel: '',
-          category: '',
-        };
+        newState.startDate = startOfWeekend;
+        newState.endDate = endOfWeekend;
+        newState.selectedButton = 'weekend';
+        newState.selectedDateLabel = '';
+      } else if (startDate && endDate) {
+        // Кастомный диапазон дат
+        newState.startDate = dayjs(startDate)
+          .tz('Europe/Moscow')
+          .startOf('day');
+        newState.endDate = dayjs(endDate).tz('Europe/Moscow').startOf('day');
+        newState.selectedButton = 'date';
+        newState.selectedDateLabel = dateLabel || '';
       }
 
-      // Если это обычная категория
-      return {
-        ...state,
-        category: category || '',
-      };
+      return newState;
     }
     case FILTER_ACTIONS.SET_SEARCH:
       return {

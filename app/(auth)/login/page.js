@@ -19,35 +19,6 @@ export default function LoginPage() {
 
   const requireFields = ['nickname', 'password'];
 
-  // useEffect(() => {
-  //   const tryRestoreSession = async () => {
-  //     try {
-  //       const res = await fetch(`${API_URL1}api/auth/refresh`, {
-  //         method: 'POST',
-  //         credentials: 'include',
-  //       });
-
-  //       if (!res.ok) return;
-
-  //       const data = await res.json();
-
-  //       if (data.access_token) {
-  //         localStorage.setItem('access_token', data.access_token);
-  //         const expiresAt = Date.now() + 30 * 60 * 1000;
-  //         localStorage.setItem('tokenExpiresAt', expiresAt.toString());
-
-  //         console.log('♻️ Session restored on login page');
-  //         router.replace('/dashboard');
-  //       }
-  //     } catch {
-  //       // ничего — пользователь реально не залогинен
-  //     }
-  //   };
-
-  //   tryRestoreSession();
-  // }, []);
-
-  // Проверяем доступность Telegram при загрузке
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initData) {
       setIsTelegramAvailable(true);

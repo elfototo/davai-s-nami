@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Card from '../components/Card';
+import Card from '../../components/Card';
 import { useEvents } from '../../context/SwrContext';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';

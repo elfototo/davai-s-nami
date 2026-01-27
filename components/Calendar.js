@@ -1,6 +1,5 @@
 'use client';
 
-import '../globals.css';
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';

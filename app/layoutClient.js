@@ -2,15 +2,15 @@
 
 import { useEffect } from 'react';
 import Script from 'next/script';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { EventsProvider } from '../context/SwrContext';
 import '../utils/dayjsSetup';
 import { useRouter } from 'next/navigation';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
 import { useTokenRefresh } from '../hooks/useTokenRefresh';
-import TelegramAuth from './components/TelegramAuth';
+import TelegramAuth from '../components/TelegramAuth';
 
 export default function RootLayout({ children, isAuth }) {
   const router = useRouter();

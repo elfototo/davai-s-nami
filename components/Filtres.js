@@ -1,17 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import CalendarModal from './Calendar';
-import { useSearchParams } from 'next/navigation';
-import { categoriesID } from '../data/events';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { categoriesID } from '../app/data/events';
 import { IoClose } from 'react-icons/io5';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { filterActions } from './filtersReducer';
 
 const Filtres = ({ filters, dispatch }) => {
   const searchParams = useSearchParams();
-  const categoryParam = searchParams.get('category') || '';
+  const router = useRouter();
+  const pathname = usePathname();
+  const isInitialMount = useRef(true);
 
   const {
     selectedTags,
@@ -31,17 +33,120 @@ const Filtres = ({ filters, dispatch }) => {
     Представления: ['Концерт', 'Театр', 'Перформанс', 'Стендап'],
   };
 
-  useEffect(() => {
-    if (categoryParam && categoryTags[categoryParam]) {
-      dispatch(filterActions.applyCategoryTags(categoryTags[categoryParam]));
-    } else if (categoryParam === 'Сегодня') {
-      dispatch(filterActions.selectToday());
-    } else if (categoryParam === 'Завтра') {
-      dispatch(filterActions.selectTomorrow());
-    } else if (categoryParam === 'Выходные') {
-      dispatch(filterActions.selectWeekend());
+  // Функция для обновления URL на основе текущих фильтров
+  const updateURL = (tags, dateButton, start, end, dateLabel) => {
+    const params = new URLSearchParams();
+
+    // Добавляем теги
+    // if (tags && tags.length > 0) {
+    //   params.set('tags', tags.join(','));
+    // }
+    if (tags && tags.length > 0) {
+      params.set('tags', encodeURIComponent(tags.join(',')));
     }
-  }, [categoryParam]);
+
+    // Добавляем дату-кнопку (сегодня/завтра/выходные)
+    if (dateButton && dateButton !== 'date') {
+      params.set('date', dateButton);
+    }
+
+    // Добавляем кастомный диапазон дат
+    if (start && end && dateButton === 'date') {
+      params.set('startDate', start.format('YYYY-MM-DD'));
+      params.set('endDate', end.format('YYYY-MM-DD'));
+      if (dateLabel) {
+        params.set('dateLabel', dateLabel);
+      }
+    }
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+
+    router.replace(newUrl, { scroll: false });
+  };
+
+  // Инициализация фильтров из URL при первой загрузке
+  useEffect(() => {
+    if (!isInitialMount.current) return;
+
+    const categoryParam = searchParams.get('category');
+    const tagsParam = searchParams.get('tags');
+    const dateParam = searchParams.get('date');
+    const startDateParam = searchParams.get('startDate');
+    const endDateParam = searchParams.get('endDate');
+    const dateLabelParam = searchParams.get('dateLabel');
+
+    // Собираем параметры для инициализации
+    const initParams = {};
+
+    // Приоритет: tags из URL -> category -> ничего
+    if (tagsParam) {
+      // initParams.tags = tagsParam.split(',').filter((tag) => tag.trim());
+      const decodedTags = decodeURIComponent(tagsParam);
+      initParams.tags = decodedTags.split(',').filter((tag) => tag.trim());
+    } else if (categoryParam && categoryTags[categoryParam]) {
+      initParams.tags = categoryTags[categoryParam];
+    }
+
+    // Обрабатываем даты
+    if (dateParam) {
+      initParams.date = dateParam;
+    } else if (categoryParam === 'Сегодня') {
+      initParams.date = 'today';
+    } else if (categoryParam === 'Завтра') {
+      initParams.date = 'tomorrow';
+    } else if (categoryParam === 'Выходные') {
+      initParams.date = 'weekend';
+    }
+
+    // Кастомный диапазон дат
+    if (startDateParam && endDateParam) {
+      initParams.startDate = startDateParam;
+      initParams.endDate = endDateParam;
+      initParams.dateLabel = dateLabelParam;
+    }
+
+    // Инициализируем только если есть параметры
+    if (Object.keys(initParams).length > 0) {
+      dispatch(filterActions.initFromUrl(initParams));
+
+      // Если был старый формат с category, обновляем URL на новый формат
+      if (categoryParam) {
+        setTimeout(() => {
+          updateURL(
+            initParams.tags || [],
+            initParams.date || '',
+            startDateParam ? { format: () => startDateParam } : null,
+            endDateParam ? { format: () => endDateParam } : null,
+            dateLabelParam,
+          );
+        }, 100);
+      }
+    }
+
+    isInitialMount.current = false;
+  }, []);
+
+  // Синхронизация URL при изменении фильтров (кроме первого рендера)
+  useEffect(() => {
+    if (isInitialMount.current) return;
+
+    const hasFilters =
+      selectedTags.length > 0 || selectedButton || startDate || endDate;
+
+    if (hasFilters) {
+      updateURL(
+        selectedTags,
+        selectedButton,
+        startDate,
+        endDate,
+        selectedDateLabel,
+      );
+    } else {
+      // Очищаем URL если все фильтры сброшены
+      router.replace(pathname, { scroll: false });
+    }
+  }, [selectedTags, selectedButton, startDate, endDate, selectedDateLabel]);
 
   const handleDateRangeChange = (start, end) => {
     if (start && end) {
@@ -50,9 +155,21 @@ const Filtres = ({ filters, dispatch }) => {
   };
 
   const buttons = [
-    { id: 'today', label: 'Сегодня', onClick: () => dispatch(filterActions.selectToday()) },
-    { id: 'tomorrow', label: 'Завтра', onClick: () => dispatch(filterActions.selectTomorrow()) },
-    { id: 'weekend', label: 'Выходные', onClick: () => dispatch(filterActions.selectWeekend()) },
+    {
+      id: 'today',
+      label: 'Сегодня',
+      onClick: () => dispatch(filterActions.selectToday()),
+    },
+    {
+      id: 'tomorrow',
+      label: 'Завтра',
+      onClick: () => dispatch(filterActions.selectTomorrow()),
+    },
+    {
+      id: 'weekend',
+      label: 'Выходные',
+      onClick: () => dispatch(filterActions.selectWeekend()),
+    },
   ];
 
   if (startDate && endDate && selectedDateLabel) {
@@ -80,10 +197,16 @@ const Filtres = ({ filters, dispatch }) => {
     return bActive - aActive;
   });
 
-  const hasActiveFilters = selectedButton.length > 0 || selectedTags.length > 0 || endDate || startDate;
+  const hasActiveFilters =
+    selectedButton.length > 0 ||
+    selectedTags.length > 0 ||
+    endDate ||
+    startDate;
 
   return (
-    <div className={`${isOpen ? 'bg-white' : 'bg-[#f4f4f9]'} relative rounded-lg lg:border lg:border-[#D9D9D9] lg:bg-white lg:shadow-lg`}>
+    <div
+      className={`${isOpen ? 'bg-white' : 'bg-[#f4f4f9]'} relative rounded-lg lg:border lg:border-[#D9D9D9] lg:bg-white lg:shadow-lg`}
+    >
       <div className={`${isOpen ? 'absolute' : 'block'}`}>
         <div className="scroll-hidden -mx-2 flex justify-start overflow-y-auto whitespace-nowrap px-2 py-2 lg:hidden">
           <button
@@ -92,7 +215,12 @@ const Filtres = ({ filters, dispatch }) => {
               hasActiveFilters ? 'bg-pink-400 text-white' : 'bg-[#fff]'
             } ${!isOpen ? 'block' : 'hidden'}`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="size-5"
+            >
               <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
             </svg>
           </button>
@@ -102,13 +230,17 @@ const Filtres = ({ filters, dispatch }) => {
               key={button.id}
               onClick={button.onClick}
               className={`mx-3 flex items-center justify-center rounded-md px-2 py-1 text-[1rem] ${
-                selectedButton === button.id || selectedTags.includes(button.label) || button.id === 'date'
+                selectedButton === button.id ||
+                selectedTags.includes(button.label) ||
+                button.id === 'date'
                   ? 'bg-pink-400 text-white'
                   : 'bg-[#fff]'
               } ${!isOpen ? 'block' : 'hidden'}`}
             >
               {button.label}
-              {(selectedButton === button.id || selectedTags.includes(button.label) || button.id === 'date') && (
+              {(selectedButton === button.id ||
+                selectedTags.includes(button.label) ||
+                button.id === 'date') && (
                 <IoClose size={18} className="ml-2 mt-[3px]" />
               )}
             </button>
@@ -126,7 +258,9 @@ const Filtres = ({ filters, dispatch }) => {
         )}
       </div>
 
-      <div className={`${isOpen ? 'block' : 'hidden'} relative w-full p-4 lg:block`}>
+      <div
+        className={`${isOpen ? 'block' : 'hidden'} relative w-full p-4 lg:block`}
+      >
         <div>
           <div className="mb-5">
             <div className="mb-3 flex items-baseline justify-between">
@@ -183,7 +317,9 @@ const Filtres = ({ filters, dispatch }) => {
               {categoriesID.map((tag) => (
                 <button
                   key={tag.id}
-                  onClick={() => dispatch(filterActions.toggleTag(tag.category))}
+                  onClick={() =>
+                    dispatch(filterActions.toggleTag(tag.category))
+                  }
                   className={`mx-1 my-1 rounded-full px-4 py-1 text-left ${selectedTags.includes(tag.category) ? 'bg-pink-400 text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
                 >
                   {tag.category}

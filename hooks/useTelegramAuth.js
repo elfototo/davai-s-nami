@@ -1,50 +1,58 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { API_URL1 } from '../config';
 
 export const useTelegramAuth = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const loginWithTelegram = async () => {
       try {
-        // Проверяем доступен ли Telegram WebApp
+        // 1. Проверяем доступен ли Telegram WebApp
         if (typeof window === 'undefined' || !window.Telegram?.WebApp) {
-          console.log('❌ Telegram WebApp недоступен');
-          setLoading(false);
+          console.log('Telegram WebApp недоступен');
           return;
         }
 
         const telegram = window.Telegram.WebApp;
         const initData = telegram.initData;
 
-        console.log('🔍 Telegram initData:', initData);
+        console.log('Telegram initData:', initData ? 'Есть' : 'Нет');
 
-        // Если нет initData - значит открыто не в Telegram
+        // 2. Если нет initData - значит открыто не в Telegram
         if (!initData) {
-          console.log('ℹ️ Приложение открыто не в Telegram');
-          setLoading(false);
+          console.log('Приложение открыто не в Telegram');
           return;
         }
 
-        // Проверяем есть ли уже access_token
+        // 3. Проверяем есть ли уже access_token
         const existingToken = localStorage.getItem('access_token');
+
         if (existingToken) {
-          console.log('✅ Пользователь уже авторизован');
-          setLoading(false);
+          console.log('Пользователь уже авторизован');
           return;
         }
 
-        console.log('🚀 Начинаем Telegram авторизацию...');
+        // 4. Проверяем флаг "пользователь вышел намеренно"
+        const userLoggedOut = sessionStorage.getItem('user_logged_out');
 
-        // Отправляем запрос на авторизацию
-        const response = await fetch(`${API_URL1}/api/auth/telegram/login`, {
+        if (userLoggedOut === 'true') {
+          console.log('Пользователь вышел из аккаунта, автовход отключён');
+          return;
+        }
+
+        console.log('Начинаем автоматическую Telegram авторизацию...');
+        setLoading(true);
+
+        // 6. Отправляем запрос на авторизацию
+        const response = await fetch(`${API_URL1}api/auth/telegram/login`, {
           method: 'POST',
-          credentials: 'include', // Для получения httpOnly cookie
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -61,21 +69,25 @@ export const useTelegramAuth = () => {
 
         console.log('✅ Telegram авторизация успешна');
 
-        // Сохраняем access_token
+        // 7. Сохраняем токены
         if (data.access_token) {
           localStorage.setItem('access_token', data.access_token);
-          
-          // Устанавливаем время истечения (30 минут)
-          const expiresAt = Date.now() + 30 * 60 * 1000;
-        //   const expiresAt = Date.now() + 1 * 60 * 1000;
 
+          const expiresAt = Date.now() + 30 * 60 * 1000;
           localStorage.setItem('tokenExpiresAt', expiresAt.toString());
 
-          console.log('✅ Токены сохранены');
-          console.log('✅ refresh_token в httpOnly cookie');
+          // Очищаем флаг выхода
+          sessionStorage.removeItem('user_logged_out');
 
-          // Перенаправляем на главную (или куда нужно)
-          router.push('/');
+          console.log('✅ Токены сохранены');
+
+          // Уведомляем приложение об изменении auth
+          window.dispatchEvent(new Event('auth-changed'));
+
+          // Перенаправляем на dashboard если на главной
+          if (pathname === '/login') {
+            router.replace('/');
+          }
         } else {
           throw new Error('access_token не получен');
         }
@@ -87,8 +99,10 @@ export const useTelegramAuth = () => {
       }
     };
 
-    loginWithTelegram();
-  }, [router]);
+    // Запускаем с небольшой задержкой, чтобы Telegram успел инициализироваться
+    const timer = setTimeout(loginWithTelegram, 400);
+    return () => clearTimeout(timer);
+  }, [router, pathname]);
 
   return { loading, error };
 };

@@ -1,6 +1,6 @@
 
 import { IoStar } from "react-icons/io5";
-import { categoriesID } from "../data/events";
+import { categoriesID } from "../app/data/events";
 
 
 const Tag = ({ main_category_id }) => {

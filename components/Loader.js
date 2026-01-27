@@ -1,4 +1,3 @@
-import '../globals.css';
 import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import Image from 'next/image';

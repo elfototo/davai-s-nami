@@ -1,8 +1,8 @@
 'use client';
 
-import HeroSearch from '../components/HeroSearch';
-import Filtres from '../components/Filtres';
-import Card from '../components/Card';
+import HeroSearch from '../../components/HeroSearch';
+import Filtres from '../../components/Filtres';
+import Card from '../../components/Card';
 import React, { useEffect, useState, useRef, useReducer } from 'react';
 import { categoriesID } from '../data/events';
 import dayjs from 'dayjs';
@@ -19,7 +19,7 @@ import {
   filtersReducer,
   initialFiltersState,
   filterActions,
-} from '../components/filtersReducer';
+} from '../../components/filtersReducer';
 import { useSearchParams } from 'next/navigation';
 
 dayjs.locale('ru');
