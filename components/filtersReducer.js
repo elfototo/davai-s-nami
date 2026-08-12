@@ -88,12 +88,19 @@ export function filtersReducer(state, action) {
         newState.selectedDateLabel = '';
       } else if (startDate && endDate) {
         // Кастомный диапазон дат
+        const rangeStartDate = dayjs(startDate).format('DD MMM');
+        const rangeEndDate = dayjs(endDate).format('DD MMM');
+        const rangeDateLabel =
+          rangeStartDate === rangeEndDate
+            ? rangeStartDate
+            : `${rangeStartDate} - ${rangeEndDate}`;
+
         newState.startDate = dayjs(startDate)
           .tz('Europe/Moscow')
           .startOf('day');
         newState.endDate = dayjs(endDate).tz('Europe/Moscow').startOf('day');
         newState.selectedButton = 'date';
-        newState.selectedDateLabel = dateLabel || '';
+        newState.selectedDateLabel = dateLabel || rangeDateLabel;
       }
 
       if (price) {

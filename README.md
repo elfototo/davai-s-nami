@@ -122,6 +122,22 @@ The image is available on Docker Hub: [elfototo/davai-s-nami](https://hub.docker
 2. **"Мне повезет" Button:** This button randomly selects a single event and displays it in a modal window.
 3. **Popular Places:** The **"Places"** tab displays the most popular venues in the city. On each place's page, users can see upcoming events held there.
 
+### Telegram Mini App startapp parameters
+
+Telegram `startapp` values should use only latin letters, digits, `_` and `-`. The app supports these formats:
+
+- `event_TIMEPAD-3096349` opens one event by id.
+- `events` opens `/events`.
+- `events__date-weekend` opens events for the nearest weekend.
+- `events__date-today` and `events__date-tomorrow` open today or tomorrow.
+- `events__date-20260815` opens one date.
+- `events__date-20260815-20260816` opens a date range.
+- `events__cat-1-3-7` opens categories by ids without commas.
+- `events__cat-concert-cinema-theater` opens categories by aliases.
+- Parameters can be combined: `events__date-weekend__cat-1-3__price-1000`.
+
+Category aliases: `concert`, `other`, `cinema`, `lecture`, `culture`, `festival`, `theater`, `party`, `performance`, `standup`, `exhibition`, `workshop`, `tour`.
+
 ---
 
 ## ⚙️ Tech Stack

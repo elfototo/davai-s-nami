@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store';
 import { useTokenRefresh } from '../hooks/useTokenRefresh';
 import TelegramAuth from '../components/TelegramAuth';
+import { parseTelegramStartParam } from '../utils/telegramStartParam';
 
 export default function RootLayout({ children, isAuth }) {
   const router = useRouter();
@@ -31,9 +32,10 @@ export default function RootLayout({ children, isAuth }) {
 
       console.log('📦 start_param:', startParam);
 
-      if (startParam && startParam.startsWith('event_')) {
-        const id = startParam.replace('event_', '');
-        router.replace(`/events/${id}`);
+      const startRoute = parseTelegramStartParam(startParam);
+
+      if (startRoute) {
+        router.replace(startRoute);
       }
     };
 
