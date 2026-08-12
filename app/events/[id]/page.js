@@ -1,5 +1,6 @@
 import React from 'react';
 import EventPageClient from './EventPageClient';
+import { API_HEADERS, API_URL_BY_ID } from '../../../config';
 
 async function fetchIdEvent(id) {
   try {
@@ -47,5 +48,5 @@ async function fetchIdEvent(id) {
 export default async function EventPage({ params }) {
   const initialEvent = await fetchIdEvent(params.id);
 
-  return <EventPageClient id={params} initialEvent={initialEvent}/>;
+  return <EventPageClient id={params} initialEvent={initialEvent} />;
 }

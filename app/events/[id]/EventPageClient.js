@@ -14,8 +14,14 @@ import { IoMdClose } from 'react-icons/io';
 import { BsCheckAll } from 'react-icons/bs';
 import { FaArrowRight } from 'react-icons/fa6';
 import { BsCopy } from 'react-icons/bs';
+import Card from '../../../components/Card';
 import { useEvents } from '../../../context/SwrContext';
-import { API_HEADERS, API_URL_BY_ID } from '../../../config';
+import {
+  API_HEADERS,
+  API_URL_BY_ID,
+  API_EVENTS_SIMILAR_URL,
+  API_TASKS_STATUS_URL,
+} from '../../../config';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -30,6 +36,8 @@ import {
 dayjs.locale('ru');
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+const SIMILAR_EVENTS_LIMIT = 4;
 
 const fetchIdEvent = async (id) => {
   try {
@@ -46,7 +54,7 @@ const fetchIdEvent = async (id) => {
           'price',
           'address',
           'from_date',
-          'full_text',
+          'prepared_text',
           'place_id',
           'main_category_id',
         ],
@@ -74,14 +82,80 @@ const fetchIdEvent = async (id) => {
   }
 };
 
+const normalizeEventsList = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.events)) return payload.events;
+  if (Array.isArray(payload?.result?.events)) return payload.result.events;
+  if (Array.isArray(payload?.result)) return payload.result;
+  return [];
+};
+
+const normalizeTaskStatus = (payload) => {
+  return String(
+    payload?.status || payload?.state || payload?.task_status || '',
+  ).toLowerCase();
+};
+
+const fetchSimilarEvents = async (eventId) => {
+  const res = await fetch(
+    `${API_EVENTS_SIMILAR_URL}${eventId}/similar?limit=${SIMILAR_EVENTS_LIMIT}`,
+    {
+    method: 'GET',
+    headers: API_HEADERS,
+    },
+  );
+
+  const result = await res.json();
+
+  if (res.status === 202 || result?.status === 'pending') {
+    return {
+      status: 'pending',
+      events: normalizeEventsList(result),
+      taskId: result?.task_id || result?.taskId || null,
+      message:
+        result?.message || 'Подбираем похожие мероприятия, попробуйте чуть позже.',
+    };
+  }
+
+  if (!res.ok) {
+    throw new Error(`Ошибка загрузки похожих мероприятий: ${res.statusText}`);
+  }
+
+  return {
+    status: 'success',
+    events: normalizeEventsList(result),
+    taskId: result?.task_id || result?.taskId || null,
+    message: result?.message || '',
+  };
+};
+
+const fetchTaskStatus = async (taskId) => {
+  const res = await fetch(`${API_TASKS_STATUS_URL}${taskId}`, {
+    method: 'GET',
+    headers: API_HEADERS,
+  });
+
+  const result = await res.json();
+
+  if (!res.ok) {
+    throw new Error(`Ошибка проверки задачи: ${res.statusText}`);
+  }
+
+  return result;
+};
+
 export default function EventPageClient({ id, initialEvent }) {
   const dispatch = useDispatch();
   const [showPhoto, setShowPhoto] = useState(false);
   const [copied, setCopied] = useState(false);
   const { findDataById, convertImageUrlToJpeg } = useEvents();
   const [event, setEvent] = useState(null);
+  const [similarEvents, setSimilarEvents] = useState([]);
+  const [similarStatus, setSimilarStatus] = useState('idle');
+  const [similarMessage, setSimilarMessage] = useState('');
+  const [similarTaskId, setSimilarTaskId] = useState(null);
 
-  const idNumber = parseInt(id.id);
+  const idNumber = parseInt(id.id, 10);
 
   // Redux selectors
   const isInWishlist = useSelector(selectIsInWishlist(idNumber));
@@ -151,11 +225,104 @@ export default function EventPageClient({ id, initialEvent }) {
       setEvent(dataEvent);
     } else if (!dataIsLoading && !dataError && cachedEvent) {
       const newEvent = Array.isArray(cachedEvent) ? cachedEvent[0] : cachedEvent;
-      if (newEvent && newEvent !== event) {
+      if (newEvent) {
         setEvent(newEvent);
       }
     }
   }, [dataEvent, dataIsLoading, dataError, cachedEvent]);
+
+  useEffect(() => {
+    if (!idNumber) return;
+
+    let cancelled = false;
+    let timeoutId = null;
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    const loadSimilar = async () => {
+      setSimilarStatus('loading');
+      setSimilarMessage('');
+      setSimilarTaskId(null);
+      setSimilarEvents([]);
+
+      try {
+        const response = await fetchSimilarEvents(idNumber);
+        if (cancelled) return;
+
+        if (response.status === 'pending' && response.taskId) {
+          setSimilarStatus('pending');
+          setSimilarTaskId(response.taskId);
+          setSimilarMessage(response.message);
+
+          const pollTask = async () => {
+            if (cancelled) return;
+            attempts += 1;
+
+            try {
+              const taskStatus = await fetchTaskStatus(response.taskId);
+              if (cancelled) return;
+
+              const normalizedStatus = normalizeTaskStatus(taskStatus);
+              const isPending =
+                normalizedStatus === 'pending' ||
+                normalizedStatus === 'queued' ||
+                normalizedStatus === 'processing' ||
+                normalizedStatus === 'started';
+
+              if (isPending && attempts < maxAttempts) {
+                timeoutId = setTimeout(pollTask, 3000);
+                return;
+              }
+
+          const finalResponse = await fetchSimilarEvents(idNumber);
+              if (cancelled) return;
+
+              if (finalResponse.status === 'pending' && attempts < maxAttempts) {
+                timeoutId = setTimeout(pollTask, 3000);
+                return;
+              }
+
+              setSimilarEvents(finalResponse.events || []);
+              setSimilarStatus('success');
+              setSimilarTaskId(null);
+              setSimilarMessage(finalResponse.message || '');
+            } catch (error) {
+              if (cancelled) return;
+
+              if (attempts < maxAttempts) {
+                timeoutId = setTimeout(pollTask, 3000);
+                return;
+              }
+
+              setSimilarStatus('error');
+              setSimilarMessage('Не удалось загрузить похожие мероприятия.');
+              console.error('Ошибка загрузки похожих мероприятий:', error);
+            }
+          };
+
+          timeoutId = setTimeout(pollTask, 3000);
+          return;
+        }
+
+        setSimilarEvents(response.events || []);
+        setSimilarStatus('success');
+        setSimilarMessage(response.message || '');
+      } catch (error) {
+        if (cancelled) return;
+
+        setSimilarStatus('error');
+        setSimilarMessage('Не удалось загрузить похожие мероприятия.');
+        console.error('Ошибка загрузки похожих мероприятий:', error);
+      }
+    };
+
+    loadSimilar();
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [idNumber]);
 
   const formatDateRange = (from_date, to_date) => {
     if (!from_date) return 'Скоро будет дата';
@@ -351,14 +518,64 @@ export default function EventPageClient({ id, initialEvent }) {
           </div>
 
           <p className="mt-10 font-roboto font-bold text-[#777]">
-            {event?.full_text ? 'Описание:' : ''}
+            {event?.prepared_text ? 'Описание:' : ''}
           </p>
           <ReactMarkdown
             className="prose prose-sm md:prose-lg lg:prose-xl mt-4 leading-relaxed text-gray-800"
             remarkPlugins={[remarkGfm]}
           >
-            {event?.full_text}
+            {event?.prepared_text}
           </ReactMarkdown>
+
+          <section className="mt-12">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <h2 className="text-2xl font-bold text-[#333]">
+                Похожие мероприятия
+              </h2>
+              {similarStatus === 'pending' && similarTaskId ? (
+                <p className="text-sm text-gray-500">{similarMessage}</p>
+              ) : null}
+            </div>
+
+            {similarStatus === 'loading' ? (
+              <div className="flex justify-center py-10">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-solid border-pink-300 border-r-transparent"></div>
+              </div>
+            ) : null}
+
+            {similarStatus === 'error' ? (
+              <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                {similarMessage}
+              </p>
+            ) : null}
+
+            {similarStatus === 'success' && similarEvents.length === 0 ? (
+              <p className="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-600">
+                Похожих мероприятий пока нет.
+              </p>
+            ) : null}
+
+            {similarEvents.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+                {similarEvents.map((similarEvent) => (
+                  <Card
+                    key={similarEvent.event_id || similarEvent.id}
+                    type="mini"
+                    to_date={similarEvent.to_date}
+                    category={similarEvent.category}
+                    main_category_id={similarEvent.main_category_id}
+                    price={similarEvent.price}
+                    title={similarEvent.title}
+                    from_date={similarEvent.from_date}
+                    address={similarEvent.address}
+                    id={similarEvent.id}
+                    data={similarEvent}
+                    image={similarEvent.image}
+                  />
+                ))}
+              </div>
+            ) : null}
+          </section>
         </div>
       </div>
     </>
