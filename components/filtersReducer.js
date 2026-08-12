@@ -16,6 +16,7 @@ export const initialFiltersState = {
   selectedButton: '',
   selectedDateLabel: '',
   sortPrice: null,
+  orderBy: 'date-asc',
   category: '',
   isOpen: false,
 };
@@ -32,6 +33,7 @@ export const FILTER_ACTIONS = {
   CLEAR_DATES: 'CLEAR_DATES',
   SET_CATEGORY: 'SET_CATEGORY',
   SET_SORT_PRICE: 'SET_SORT_PRICE',
+  SET_ORDER_BY: 'SET_ORDER_BY',
   TOGGLE_FILTER_PANEL: 'TOGGLE_FILTER_PANEL',
   CLEAR_ALL_FILTERS: 'CLEAR_ALL_FILTERS',
   APPLY_CATEGORY_TAGS: 'APPLY_CATEGORY_TAGS',
@@ -42,7 +44,8 @@ export const FILTER_ACTIONS = {
 export function filtersReducer(state, action) {
   switch (action.type) {
     case FILTER_ACTIONS.INIT_FROM_URL: {
-      const { tags, date, startDate, endDate, dateLabel } = action.payload;
+      const { tags, date, startDate, endDate, dateLabel, price, orderBy } =
+        action.payload;
 
       let newState = { ...state };
 
@@ -91,6 +94,14 @@ export function filtersReducer(state, action) {
         newState.endDate = dayjs(endDate).tz('Europe/Moscow').startOf('day');
         newState.selectedButton = 'date';
         newState.selectedDateLabel = dateLabel || '';
+      }
+
+      if (price) {
+        newState.sortPrice = String(price);
+      }
+
+      if (orderBy) {
+        newState.orderBy = orderBy;
       }
 
       return newState;
@@ -236,7 +247,13 @@ export function filtersReducer(state, action) {
     case FILTER_ACTIONS.SET_SORT_PRICE:
       return {
         ...state,
-        sortPrice: action.payload,
+        sortPrice: action.payload ? String(action.payload) : null,
+      };
+
+    case FILTER_ACTIONS.SET_ORDER_BY:
+      return {
+        ...state,
+        orderBy: action.payload || initialFiltersState.orderBy,
       };
 
     case FILTER_ACTIONS.TOGGLE_FILTER_PANEL:
@@ -318,6 +335,11 @@ export const filterActions = {
 
   setSortPrice: (value) => ({
     type: FILTER_ACTIONS.SET_SORT_PRICE,
+    payload: value,
+  }),
+
+  setOrderBy: (value) => ({
+    type: FILTER_ACTIONS.SET_ORDER_BY,
     payload: value,
   }),
 

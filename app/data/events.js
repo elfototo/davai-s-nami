@@ -11,6 +11,8 @@ import { BsMusicNoteBeamed } from "react-icons/bs";
 import { HiMiniPaintBrush } from "react-icons/hi2";
 import { FaPaintbrush } from "react-icons/fa6";
 import { FaPaintBrush } from "react-icons/fa";
+import { FaRoute } from "react-icons/fa6";
+import { MdBuild } from "react-icons/md";
 
 export const categoriesID = [
 
@@ -100,6 +102,22 @@ export const categoriesID = [
     "category": 'Выставка',
     "color": 'bg-purple-500',
     "icon": <FaPaintBrush size={12} color='white' className='mr-1 mb-[0.1rem]' />
+  },
+  {
+    "id": 12,
+    "name": "workshop",
+    "rusName": "Мастер-класс",
+    "category": 'Мастер-класс',
+    "color": 'bg-orange-500',
+    "icon": <MdBuild size={14} color='white' className='mr-1 mb-[0.1rem]' />
+  },
+  {
+    "id": 13,
+    "name": "tour",
+    "rusName": "Экскурсия",
+    "category": 'Экскурсия',
+    "color": 'bg-indigo-500',
+    "icon": <FaRoute size={14} color='white' className='mr-1 mb-[0.1rem]' />
   },
 ];
 

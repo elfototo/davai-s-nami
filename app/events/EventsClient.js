@@ -3,7 +3,7 @@
 import HeroSearch from '../../components/HeroSearch';
 import Filtres from '../../components/Filtres';
 import Card from '../../components/Card';
-import React, { useEffect, useState, useRef, useReducer } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { categoriesID } from '../data/events';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
@@ -28,6 +28,33 @@ dayjs.extend(customParseFormat);
 dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
+
+const orderOptions = [
+  { value: 'date-asc', label: 'Дата ↑' },
+  { value: 'date-desc', label: 'Дата ↓' },
+  { value: 'price-asc', label: 'Цена ↑' },
+  { value: 'price-desc', label: 'Цена ↓' },
+  { value: 'title-asc', label: 'Название ↑' },
+  { value: 'title-desc', label: 'Название ↓' },
+  { value: 'ad-asc', label: 'Ad ↑' },
+  { value: 'ad-desc', label: 'Ad ↓' },
+  { value: 'id-asc', label: 'ID ↑' },
+  { value: 'id-desc', label: 'ID ↓' },
+];
+
+function useDebouncedValue(value, delay = 500) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 function Page({ sortedEvents, isLoadingEvents, isValidating }) {
   // скелетон для cards
@@ -98,10 +125,7 @@ function Page({ sortedEvents, isLoadingEvents, isValidating }) {
 }
 
 export default function Events({ initialEvents }) {
-  const loadedEventIdsRef = useRef(new Set());
-  const [allEvents, setAllEvents] = useState(initialEvents);
   const [hasMore, setHasMore] = useState(true);
-  const [isTryingToLoadMore, setIsTryingToLoadMore] = useState(false);
   const limit = 100;
 
   const searchParams = useSearchParams();
@@ -122,13 +146,10 @@ export default function Events({ initialEvents }) {
     selectedTags,
     selectedTagsId,
     sortPrice,
+    orderBy,
     category,
     isOpen,
   } = filters;
-
-  useEffect(() => {
-    initialEvents.forEach((event) => loadedEventIdsRef.current.add(event.id));
-  }, []);
 
   const getCategoryIdByName = (name) => {
     const categoryObj = categoriesID.find((cat) => cat.category === name);
@@ -150,10 +171,15 @@ export default function Events({ initialEvents }) {
       : '',
   };
 
+  const debouncedPrice = useDebouncedValue(sortPrice);
+  const parsedPriceMax = Number(debouncedPrice);
+  const priceMax =
+    debouncedPrice && Number.isFinite(parsedPriceMax) ? parsedPriceMax : null;
+
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && previousPageData.length < limit) return null;
     const offset = pageIndex * limit;
-    return `/api/data?filter=${selectedTagsId.join(',')},${dateRange.date_from},${dateRange.date_to},${search}&page=${pageIndex}&offset=${offset}`;
+    return `/api/events/valid?filter=${selectedTagsId.join(',')},${dateRange.date_from},${dateRange.date_to},${search},${debouncedPrice || ''},${orderBy}&page=${pageIndex}&offset=${offset}`;
   };
 
   const fetchEvents = async (url) => {
@@ -164,8 +190,17 @@ export default function Events({ initialEvents }) {
 
     if (search) {
       try {
+        const searchQueryParams = new URLSearchParams({
+          query: search,
+          type: 'event',
+        });
+        if (priceMax !== null) {
+          searchQueryParams.set('price_max', priceMax);
+        }
+        searchQueryParams.set('order_by', orderBy);
+
         const res = await fetch(
-          `${SEARCH_URL}?query=${encodeURIComponent(search)}&type=event`,
+          `${SEARCH_URL}?${searchQueryParams.toString()}`,
           {
             method: 'GET',
             headers: API_HEADERS,
@@ -201,6 +236,7 @@ export default function Events({ initialEvents }) {
         ],
         page: pageIndex,
         limit,
+        order_by: orderBy,
       };
 
       if (selectedTagsId.length > 0) {
@@ -209,6 +245,9 @@ export default function Events({ initialEvents }) {
       if (startDate && endDate) {
         body.date_from = dateRange.date_from;
         body.date_to = dateRange.date_to;
+      }
+      if (priceMax !== null) {
+        body.price_max = priceMax;
       }
 
       try {
@@ -241,39 +280,22 @@ export default function Events({ initialEvents }) {
 
   const {
     data: dataEvents,
-    error: errorEvents,
     isLoading: isLoadingEvents,
-    mutate,
-    size,
     setSize,
     isValidating,
   } = useSWRInfinite(getKey, fetchEvents, {
     revalidateFirstPage: false,
-    revalidateOnMount: false,
+    revalidateOnMount: true,
     revalidateOnFocus: false,
     fallbackData: [initialEvents],
     initialSize: 1,
+    persistSize: false,
   });
 
   useEffect(() => {
     if (dataEvents) {
       const lastPage = dataEvents[dataEvents.length - 1];
       setHasMore(lastPage?.length === limit);
-
-      if (dataEvents.length > 1) {
-        const newPages = dataEvents.slice(1);
-        const newEvents = newPages.flat();
-        const uniqueEvents = newEvents.filter(
-          (event) => !loadedEventIdsRef.current.has(event.id),
-        );
-
-        if (uniqueEvents.length > 0) {
-          setAllEvents((prev) => [...prev, ...uniqueEvents]);
-          uniqueEvents.forEach((event) =>
-            loadedEventIdsRef.current.add(event.id),
-          );
-        }
-      }
     }
   }, [dataEvents]);
 
@@ -283,6 +305,7 @@ export default function Events({ initialEvents }) {
   };
 
   const sortedEvents = useMemo(() => {
+    const allEvents = dataEvents?.flat() || [];
     if (allEvents.length === 0) return [];
 
     const filtered = allEvents.filter((event) => {
@@ -312,13 +335,23 @@ export default function Events({ initialEvents }) {
       const matchesTags =
         selectedTags.length === 0 || selectedTags.includes(eventCategoryName);
 
-      return matchesCategory && isInDateRange && matchesSearch && matchesTags;
+      return (
+        matchesCategory &&
+        isInDateRange &&
+        matchesSearch &&
+        matchesTags
+      );
     });
 
-    return filtered.sort(
-      (a, b) => new Date(a.from_date) - new Date(b.from_date),
-    );
-  }, [allEvents, category, search, startDate, endDate, selectedTags]);
+    return filtered;
+  }, [
+    dataEvents,
+    category,
+    search,
+    startDate,
+    endDate,
+    selectedTags,
+  ]);
 
   const loadMoreEvents = () => {
     if (isLoadingEvents || !hasMore) return;
@@ -341,6 +374,23 @@ export default function Events({ initialEvents }) {
         <section
           className={`w-full lg:w-[80%] ${isOpen ? 'hidden lg:block' : 'block'}`}
         >
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            {orderOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => dispatch(filterActions.setOrderBy(option.value))}
+                className={`rounded-md px-3 py-2 text-sm transition-colors ${
+                  orderBy === option.value
+                    ? 'bg-pink-500 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
           <Page
             isValidating={isValidating}
             isLoadingEvents={isLoadingEvents}

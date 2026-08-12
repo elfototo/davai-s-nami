@@ -21,6 +21,8 @@ const Filtres = ({ filters, dispatch }) => {
     endDate,
     selectedButton,
     selectedDateLabel,
+    sortPrice,
+    orderBy,
     isOpen,
   } = filters;
 
@@ -34,7 +36,15 @@ const Filtres = ({ filters, dispatch }) => {
   };
 
   // Функция для обновления URL на основе текущих фильтров
-  const updateURL = (tags, dateButton, start, end, dateLabel) => {
+  const updateURL = (
+    tags,
+    dateButton,
+    start,
+    end,
+    dateLabel,
+    price,
+    order,
+  ) => {
     const params = new URLSearchParams();
 
     // Добавляем теги
@@ -59,6 +69,14 @@ const Filtres = ({ filters, dispatch }) => {
       }
     }
 
+    if (price) {
+      params.set('price', price);
+    }
+
+    if (order && order !== 'date-asc') {
+      params.set('order', order);
+    }
+
     const queryString = params.toString();
     const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
@@ -75,6 +93,8 @@ const Filtres = ({ filters, dispatch }) => {
     const startDateParam = searchParams.get('startDate');
     const endDateParam = searchParams.get('endDate');
     const dateLabelParam = searchParams.get('dateLabel');
+    const priceParam = searchParams.get('price');
+    const orderParam = searchParams.get('order');
 
     // Собираем параметры для инициализации
     const initParams = {};
@@ -106,6 +126,14 @@ const Filtres = ({ filters, dispatch }) => {
       initParams.dateLabel = dateLabelParam;
     }
 
+    if (priceParam) {
+      initParams.price = priceParam;
+    }
+
+    if (orderParam) {
+      initParams.orderBy = orderParam;
+    }
+
     // Инициализируем только если есть параметры
     if (Object.keys(initParams).length > 0) {
       dispatch(filterActions.initFromUrl(initParams));
@@ -119,6 +147,8 @@ const Filtres = ({ filters, dispatch }) => {
             startDateParam ? { format: () => startDateParam } : null,
             endDateParam ? { format: () => endDateParam } : null,
             dateLabelParam,
+            priceParam,
+            orderParam,
           );
         }, 100);
       }
@@ -132,7 +162,12 @@ const Filtres = ({ filters, dispatch }) => {
     if (isInitialMount.current) return;
 
     const hasFilters =
-      selectedTags.length > 0 || selectedButton || startDate || endDate;
+      selectedTags.length > 0 ||
+      selectedButton ||
+      startDate ||
+      endDate ||
+      sortPrice ||
+      orderBy !== 'date-asc';
 
     if (hasFilters) {
       updateURL(
@@ -141,12 +176,22 @@ const Filtres = ({ filters, dispatch }) => {
         startDate,
         endDate,
         selectedDateLabel,
+        sortPrice,
+        orderBy,
       );
     } else {
       // Очищаем URL если все фильтры сброшены
       router.replace(pathname, { scroll: false });
     }
-  }, [selectedTags, selectedButton, startDate, endDate, selectedDateLabel]);
+  }, [
+    selectedTags,
+    selectedButton,
+    startDate,
+    endDate,
+    selectedDateLabel,
+    sortPrice,
+    orderBy,
+  ]);
 
   const handleDateRangeChange = (start, end) => {
     if (start && end) {
@@ -180,6 +225,14 @@ const Filtres = ({ filters, dispatch }) => {
     });
   }
 
+  if (sortPrice) {
+    buttons.push({
+      id: 'price',
+      label: `До ${sortPrice} ₽`,
+      onClick: () => dispatch(filterActions.setSortPrice(null)),
+    });
+  }
+
   const allButtons = [
     ...categoriesID.map((category) => ({
       id: category.id,
@@ -201,7 +254,9 @@ const Filtres = ({ filters, dispatch }) => {
     selectedButton.length > 0 ||
     selectedTags.length > 0 ||
     endDate ||
-    startDate;
+    startDate ||
+    sortPrice ||
+    orderBy !== 'date-asc';
 
   return (
     <div
@@ -325,6 +380,38 @@ const Filtres = ({ filters, dispatch }) => {
                   {tag.category}
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div className="mt-5">
+            <h3 className="mb-2 text-lg">Цена</h3>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="0"
+                step="100"
+                inputMode="numeric"
+                value={sortPrice || ''}
+                onChange={(event) =>
+                  dispatch(
+                    filterActions.setSortPrice(
+                      event.target.value.replace(/\D/g, ''),
+                    ),
+                  )
+                }
+                placeholder="До, ₽"
+                className="w-full rounded-md border border-gray-200 bg-gray-100 px-3 py-2 outline-none transition-colors focus:border-pink-400 focus:bg-white"
+              />
+              {sortPrice && (
+                <button
+                  type="button"
+                  onClick={() => dispatch(filterActions.setSortPrice(null))}
+                  className="rounded-md bg-gray-100 px-3 py-2 text-gray-600 hover:bg-gray-200"
+                  aria-label="Сбросить цену"
+                >
+                  <IoClose size={20} />
+                </button>
+              )}
             </div>
           </div>
 
