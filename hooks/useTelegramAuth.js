@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { API_URL1 } from '../config';
+import {
+  getTelegramWebApp,
+  hasTelegramAuthData,
+} from '../utils/telegramWebApp';
 
 export const useTelegramAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -13,22 +17,15 @@ export const useTelegramAuth = () => {
   useEffect(() => {
     const loginWithTelegram = async () => {
       try {
-        // 1. Проверяем доступен ли Telegram WebApp
-        if (typeof window === 'undefined' || !window.Telegram?.WebApp) {
-          console.log('Telegram WebApp недоступен');
-          return;
-        }
-
-        const telegram = window.Telegram.WebApp;
-        const initData = telegram.initData;
-
-        console.log('Telegram initData:', initData ? 'Есть' : 'Нет');
-
-        // 2. Если нет initData - значит открыто не в Telegram
-        if (!initData) {
+        if (!hasTelegramAuthData()) {
           console.log('Приложение открыто не в Telegram');
           return;
         }
+
+        const telegram = getTelegramWebApp();
+        const initData = telegram.initData;
+
+        console.log('Telegram initData:', initData ? 'Есть' : 'Нет');
 
         // 3. Проверяем есть ли уже access_token
         const existingToken = localStorage.getItem('access_token');

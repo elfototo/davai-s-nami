@@ -6,6 +6,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaTelegramPlane } from 'react-icons/fa';
 import { IoMdArrowBack } from 'react-icons/io';
+import {
+  getTelegramWebApp,
+  hasTelegramAuthData,
+} from '../../../utils/telegramWebApp';
 
 export default function LoginPage() {
   const [user, setUser] = useState({
@@ -20,7 +24,7 @@ export default function LoginPage() {
   const requireFields = ['nickname', 'password'];
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.Telegram?.WebApp?.initData) {
+    if (hasTelegramAuthData()) {
       setIsTelegramAvailable(true);
       console.log('✅ Telegram доступен для входа');
     }
@@ -106,7 +110,7 @@ export default function LoginPage() {
 
   // Вход через Telegram
   const handleTelegramLogin = async () => {
-    if (!window.Telegram?.WebApp?.initData) {
+    if (!hasTelegramAuthData()) {
       alert('Telegram данные недоступны');
       return;
     }
@@ -121,7 +125,7 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          init_data: window.Telegram.WebApp.initData,
+          init_data: getTelegramWebApp().initData,
         }),
       });
 
@@ -166,11 +170,11 @@ export default function LoginPage() {
   return (
     <main className="flex flex-col items-center justify-center">
       <div className="mx-3 w-full max-w-md">
-        <div className="my-5 mx-3">
+        <div className="mx-3 my-5">
           <div className="flex w-full items-center justify-start">
             <button
               onClick={handleBack}
-              className="flex gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6 items-center"
+              className="flex items-center gap-2 rounded-full text-lg text-gray-400 transition lg:mr-6"
             >
               <IoMdArrowBack className="" size={20} /> На главный экран
             </button>
@@ -178,7 +182,7 @@ export default function LoginPage() {
         </div>
         {/* Кнопка Telegram (если доступна) */}
         {isTelegramAvailable && (
-          <div className="mb-6 mx-3">
+          <div className="mx-3 mb-6">
             <button
               onClick={handleTelegramLogin}
               disabled={telegramLoading}
@@ -203,7 +207,7 @@ export default function LoginPage() {
         {/* Обычная форма входа */}
         <form
           onSubmit={handleOnSubmit}
-          className="grid gap-5 rounded-xl bg-gray-100 p-10 mx-3"
+          className="mx-3 grid gap-5 rounded-xl bg-gray-100 p-10"
         >
           <h2 className="mb-4 text-center text-2xl font-bold">Вход</h2>
 
@@ -261,13 +265,13 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="my-6 flex items-center gap-4 mx-3">
+        <div className="mx-3 my-6 flex items-center gap-4">
           <div className="h-px flex-1 bg-gray-300"></div>
           <span className="text-gray-500">или</span>
           <div className="h-px flex-1 bg-gray-300"></div>
         </div>
 
-        <div className="mb-6 mx-3">
+        <div className="mx-3 mb-6">
           <Link
             href="/register"
             className="flex w-full items-center justify-center gap-3 rounded-lg bg-pink-400 px-4 py-3 text-white transition-colors hover:bg-pink-300 disabled:opacity-50"

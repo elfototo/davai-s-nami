@@ -325,6 +325,14 @@ const log = {
   },
 };
 
+const shouldRedirectToLogin = () => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return window.location.pathname.startsWith('/dashboard');
+};
+
 export const useTokenRefresh = () => {
   const refreshTimeoutRef = useRef(null);
   const isRefreshingRef = useRef(false);
@@ -427,8 +435,9 @@ export const useTokenRefresh = () => {
           log.error('Logout request failed', logoutError);
         }
 
-        // ✅ Редирект на логин (после этого НЕ должно быть новых запросов!)
-        redirectToLogin();
+        if (shouldRedirectToLogin()) {
+          redirectToLogin();
+        }
       } finally {
         isRefreshingRef.current = false;
         refreshPromiseRef.current = null;
@@ -455,6 +464,14 @@ export const useTokenRefresh = () => {
     }
 
     const parsedExpiresAt = Number(expiresAt);
+
+    if (!expiresAt) {
+      log.warn('No expiration time found, setting default (30 min)');
+      const newExpiresAt = Date.now() + 30 * 60 * 1000;
+      localStorage.setItem('tokenExpiresAt', newExpiresAt.toString());
+      scheduleRefresh(25 * 60 * 1000);
+      return;
+    }
 
     if (!Number.isFinite(parsedExpiresAt)) {
       log.warn('Invalid expiration time, setting default (30 min)');
@@ -516,13 +533,13 @@ export const useTokenRefresh = () => {
       // ✅ Сбрасываем флаг монтирования
       isMountedRef.current = false;
       log.info('Token refresh hook unmounting, cleaning up');
-      
+
       if (refreshTimeoutRef.current) {
         clearTimeout(refreshTimeoutRef.current);
         refreshTimeoutRef.current = null; // ✅ Обнуляем ссылку
         log.info('Cleared refresh timeout');
       }
-      
+
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []); // ✅ Пустой массив зависимостей!

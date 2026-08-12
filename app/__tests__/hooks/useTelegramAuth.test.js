@@ -28,6 +28,11 @@ beforeEach(() => {
   window.Telegram = {
     WebApp: {
       initData: 'test-init-data',
+      initDataUnsafe: {
+        user: {
+          id: 123,
+        },
+      },
     },
   };
 
@@ -53,6 +58,19 @@ test('не запускает авторизацию если Telegram WebApp н
 
 test('не запускает авторизацию если нет initData', async () => {
   window.Telegram.WebApp.initData = '';
+
+  const { result } = renderHook(() => useTelegramAuth());
+
+  await act(async () => {
+    jest.runAllTimers();
+  });
+
+  expect(fetch).not.toHaveBeenCalled();
+  expect(result.current.loading).toBe(false);
+});
+
+test('не запускает авторизацию если нет данных пользователя Telegram', async () => {
+  window.Telegram.WebApp.initDataUnsafe = {};
 
   const { result } = renderHook(() => useTelegramAuth());
 

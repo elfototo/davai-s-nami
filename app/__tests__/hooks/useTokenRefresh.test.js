@@ -4,7 +4,7 @@ jest.mock('@/utils/redirect', () => ({
 
 import { API_URL1 } from '../../../config';
 import { useTokenRefresh } from '../../../hooks/useTokenRefresh';
-import { renderHook, waitFor } from '@testing-library/react';
+import { cleanup, renderHook, waitFor } from '@testing-library/react';
 import { redirectToLogin } from '../../../utils/redirect';
 
 jest.mock('../../../config', () => ({
@@ -37,6 +37,9 @@ describe(useTokenRefresh, () => {
     setTimeoutSpy?.mockRestore();
     clearTimeoutSpy?.mockRestore();
     consoleErrorSpy.mockRestore();
+    cleanup();
+    redirectToLogin.mockClear();
+    window.history.pushState({}, '', '/');
 
     jest.clearAllTimers();
     jest.useRealTimers();
@@ -105,6 +108,8 @@ describe(useTokenRefresh, () => {
 
   describe('Сбой Token Refresh', () => {
     test('Следует обрабатывать неудачные попытки обновления и перенаправлять на страницу входа в систему', async () => {
+      window.history.pushState({}, '', '/dashboard');
+
       global.fetch
         .mockResolvedValueOnce({
           ok: false,
@@ -141,6 +146,8 @@ describe(useTokenRefresh, () => {
     });
 
     test('должна обрабатывать сетевые ошибки во время обновления.', async () => {
+      window.history.pushState({}, '', '/dashboard');
+
       global.fetch.mockRejectedValueOnce(new Error('Network error'));
 
       const { result } = renderHook(() => useTokenRefresh());
@@ -156,6 +163,8 @@ describe(useTokenRefresh, () => {
     });
 
     test('следует корректно обрабатывать ошибки выхода из системы.', async () => {
+      window.history.pushState({}, '', '/dashboard');
+
       global.fetch
         .mockResolvedValueOnce({
           ok: false,
@@ -175,6 +184,32 @@ describe(useTokenRefresh, () => {
         expect.stringContaining('Logout request failed'),
         expect.any(Error),
       );
+    });
+
+    test('не перенаправляет на login при сбое refresh на публичной странице', async () => {
+      window.history.pushState({}, '', '/events');
+
+      global.fetch
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 401,
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+        });
+
+      const { result } = renderHook(() => useTokenRefresh());
+
+      localStorage.setItem('access_token', 'old_token');
+      localStorage.setItem('tokenExpiresAt', (Date.now() + 1000).toString());
+
+      await result.current.refreshToken();
+
+      await waitFor(() => {
+        expect(localStorage.getItem('access_token')).toBeNull();
+        expect(localStorage.getItem('tokenExpiresAt')).toBeNull();
+        expect(redirectToLogin).not.toHaveBeenCalled();
+      });
     });
   });
 
