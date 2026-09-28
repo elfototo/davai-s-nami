@@ -20,6 +20,7 @@ async function fetchIdEvent(id) {
           'full_text',
           'place_id',
           'main_category_id',
+          'city_id',
         ],
       }),
     });
