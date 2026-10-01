@@ -35,6 +35,14 @@ const Filtres = ({ filters, dispatch }) => {
     Представления: ['Концерт', 'Театр', 'Перформанс', 'Стендап'],
   };
 
+  const keepSelectionParam = (params) => {
+    const selection = searchParams.get('sel');
+
+    if (selection) {
+      params.set('sel', selection);
+    }
+  };
+
   // Функция для обновления URL на основе текущих фильтров
   const updateURL = (
     tags,

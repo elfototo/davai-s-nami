@@ -1,19 +1,23 @@
 require('dotenv').config();
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_1;
 
-export const API_URL_BY_ID = process.env.NEXT_PUBLIC_API_URL_BY_ID;
+// Модульные эндпоинты API. Раньше адреса брались из env и вели в legacy
+// (get_valid_events, get_valid_event/{id}, get_places, get_place/{id}) —
+// ответы у пар одинаковые, а города поддерживаются в модульных.
+export const API_URL = `${API_BASE_URL}api/events/valid/`;
 
-export const API_URL_PL = process.env.NEXT_PUBLIC_API_URL_PL;
+export const API_URL_BY_ID = `${API_BASE_URL}api/events/valid/`;
 
-export const API_URL_PL_BY_ID = process.env.NEXT_PUBLIC_API_URL_PL_BY_ID;
+export const API_URL_PL = `${API_BASE_URL}api/places/`;
+
+export const API_URL_PL_BY_ID = `${API_BASE_URL}api/places/`;
 
 
 export const SEARCH_URL = process.env.NEXT_PUBLIC_SEARCH_URL;
-
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_1;
 export const API_EVENTS_SIMILAR_URL = `${API_BASE_URL}api/events/`;
 export const API_TASKS_STATUS_URL = `${API_BASE_URL}api/tasks/status/`;
+export const API_SELECTION_URL = `${API_BASE_URL}api/content-generator/selection/`;
 
 export const API_HEADERS = {
     'Authorization': `${process.env.NEXT_PUBLIC_API_AUTHORIZATION_KEY}`,

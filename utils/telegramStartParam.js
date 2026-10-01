@@ -158,6 +158,12 @@ export function parseTelegramStartParam(startParam) {
 
     if (key === 'order' && ORDER_VALUES.has(value)) {
       params.set('order', value);
+      return;
+    }
+
+    // Подборка из поста: events__sel-412 (секция идёт последней)
+    if (key === 'sel' && /^\d+$/.test(value)) {
+      params.set('sel', value);
     }
   });
 
