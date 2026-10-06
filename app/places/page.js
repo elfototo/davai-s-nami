@@ -1,7 +1,8 @@
 import Places from './PlacesClient';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+import { getServerCity } from '../../utils/cityServer';
 
-async function fetcherPlaces(url) {
+async function fetcherPlaces(url, city) {
   const urlObj = new URL(url, API_URL_PL);
   const pageIndex = parseInt(urlObj.searchParams.get('page'), 20) || 0;
 
@@ -22,6 +23,7 @@ async function fetcherPlaces(url) {
         page: pageIndex,
         limit: 20,
         order_by: 'id-asc',
+        city,
       }),
     });
 
@@ -53,7 +55,8 @@ async function fetcherPlaces(url) {
 
 export default async function PlacesPage() {
   const limit = 20;
-  const initialPlaces = await fetcherPlaces();
+  const city = getServerCity();
+  const initialPlaces = await fetcherPlaces(undefined, city);
 
-  return <Places initialPlaces={initialPlaces}/>;
+  return <Places initialPlaces={initialPlaces} serverCity={city} />;
 }

@@ -2,9 +2,6 @@ require('dotenv').config();
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_1;
 
-// Модульные эндпоинты API. Раньше адреса брались из env и вели в legacy
-// (get_valid_events, get_valid_event/{id}, get_places, get_place/{id}) —
-// ответы у пар одинаковые, а города поддерживаются в модульных.
 export const API_URL = `${API_BASE_URL}api/events/valid/`;
 
 export const API_URL_BY_ID = `${API_BASE_URL}api/events/valid/`;
