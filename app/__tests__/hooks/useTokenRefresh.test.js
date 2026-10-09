@@ -132,7 +132,7 @@ describe(useTokenRefresh, () => {
         expect(redirectToLogin).toHaveBeenCalled();
       });
 
-      // Проверяем вызов logout
+      // Проверяем вызов refresh (logout на бэкенде не вызывается — эндпоинта нет)
       expect(global.fetch).toHaveBeenCalledWith(
         `${API_URL1}api/auth/refresh`,
         expect.objectContaining({
@@ -162,15 +162,13 @@ describe(useTokenRefresh, () => {
       });
     });
 
-    test('следует корректно обрабатывать ошибки выхода из системы.', async () => {
+    test('не вызывает api/auth/logout после неудачного refresh (эндпоинта нет)', async () => {
       window.history.pushState({}, '', '/dashboard');
 
-      global.fetch
-        .mockResolvedValueOnce({
-          ok: false,
-          status: 401,
-        })
-        .mockRejectedValueOnce(new Error('Logout failed'));
+      global.fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+      });
 
       const { result } = renderHook(() => useTokenRefresh());
 
@@ -180,9 +178,9 @@ describe(useTokenRefresh, () => {
         expect(redirectToLogin).toHaveBeenCalled();
       });
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Logout request failed'),
-        expect.any(Error),
+      expect(global.fetch).not.toHaveBeenCalledWith(
+        `${API_URL1}api/auth/logout`,
+        expect.anything(),
       );
     });
 
