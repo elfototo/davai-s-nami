@@ -6,6 +6,8 @@ import {
   API_HEADERS,
   API_URL_PL_BY_ID,
 } from '../../../config';
+import { getServerCity } from '../../../utils/cityServer';
+import { getItemCity } from '../../../utils/cities';
 
 async function fetchPlaceById(id) {
   try {
@@ -20,6 +22,7 @@ async function fetchPlaceById(id) {
           'place_url',
           'place_metro',
           'place_image',
+          'city_id',
         ],
       }),
     });
@@ -48,13 +51,15 @@ async function fetchPlaceById(id) {
   }
 }
 
-async function fetchEventsInPlaceByID(id) {
+// Список событий — запрос коллекции, поэтому нужен город — город площадки
+async function fetchEventsInPlaceByID(id, city) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: API_HEADERS,
       body: JSON.stringify({
         place: [id],
+        city,
         fields: [
           'event_id',
           'id',
@@ -95,7 +100,8 @@ async function fetchEventsInPlaceByID(id) {
 
 export default async function PlacePage({params}) {
   const initialPalce = await fetchPlaceById(params.id);
-  const initialPalcesEvents = await fetchEventsInPlaceByID(params.id);
+  const placeCity = getItemCity(initialPalce) || getServerCity();
+  const initialPalcesEvents = await fetchEventsInPlaceByID(params.id, placeCity);
 
   return <EventPlace initialPalce={initialPalce} initialPalcesEvents={initialPalcesEvents} id={params.id}/>
 

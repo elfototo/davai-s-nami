@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../context/SwrContext';
@@ -17,10 +17,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { IoMdArrowBack } from 'react-icons/io';
 // import { FaUserCircle } from 'react-icons/fa';
 import Dropdown from './Dropdown';
+import CitySwitcher from './CitySwitcher';
+import { useCity } from '../context/CityContext';
+import { getCityLinks } from '../utils/cities';
 
 import Image from 'next/image';
 
-const pages = [
+const basePages = [
   { title: 'Места', path: '/places' },
   { title: 'О нас', path: '/about' },
   { title: 'События', path: '/events' },
@@ -32,9 +35,18 @@ const pages = [
   { title: 'Сегодня', path: '/events?category=Сегодня' },
   { title: 'Завтра', path: '/events?category=Завтра' },
   { title: 'Выходные', path: '/events?category=Выходные' },
-  { title: 'Вконтакте', path: 'https://vk.com/davaisnamispb' },
-  { title: 'Телеграм', path: 'https://t.me/DavaiSNami' },
 ];
+
+// Страницы для подсказок поиска + соцсети текущего города
+const getPages = (city) => {
+  const links = getCityLinks(city);
+
+  return [
+    ...basePages,
+    { title: 'Вконтакте', path: links.vk },
+    { title: 'Телеграм', path: links.telegram },
+  ];
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,12 +60,20 @@ const Navbar = () => {
 
   const pathname = usePathname();
   const router = useRouter();
+  const { city } = useCity();
+  const pages = useMemo(() => getPages(city), [city]);
 
   const isDynamicPage = /^\/(events|places)\/[^/]+$/.test(pathname);
 
   const fetcher = async (target) => {
     try {
-      const res = await fetch(`${SEARCH_URL}?query=${target}&limit=${limit}`, {
+      const searchQueryParams = new URLSearchParams({
+        query: target,
+        limit,
+        city,
+      });
+
+      const res = await fetch(`${SEARCH_URL}?${searchQueryParams.toString()}`, {
         method: 'GET',
         headers: API_HEADERS,
       });
@@ -84,8 +104,9 @@ const Navbar = () => {
     data: dataEventSearchQuery,
     error: errorSearchQuery,
     isLoading: isLoadingsearchQuery,
-  } = useSWR(searchQuery ? `/api/search/?query=${searchQuery}` : null, () =>
-    fetcher(searchQuery),
+  } = useSWR(
+    searchQuery ? `/api/search/?query=${searchQuery}&city=${city}` : null,
+    () => fetcher(searchQuery),
   );
 
   useEffect(() => {
@@ -125,7 +146,7 @@ const Navbar = () => {
     });
 
     setFilterSearch(filtered);
-  }, [dataEventSearchQuery, searchQuery, allEvents]);
+  }, [dataEventSearchQuery, searchQuery, allEvents, pages]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -351,6 +372,8 @@ const Navbar = () => {
               <div className="mx-3 mt-2 transform rounded-md text-gray-700 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 lg:mt-0">
                 <Dropdown isOpenMenu={isOpen} setIsOpenMenu={setIsOpen} />
               </div>
+
+              <CitySwitcher className="mx-3 mt-2 lg:mt-0" />
             </div>
 
             <div className="my-4 lg:hidden">

@@ -87,8 +87,6 @@ function resolveCategories(value) {
 }
 
 // Город из start_param списка событий: секция `city-<код>`.
-// Нет секции -> город по умолчанию (а не сохранённый город пользователя),
-// неизвестный код -> тоже город по умолчанию.
 // Для `event_<id>` и неизвестных форматов -> null: город не меняется
 // (у события город свой).
 export function parseTelegramStartCity(startParam) {

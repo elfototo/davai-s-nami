@@ -1,8 +1,10 @@
 import EventsClient from './EventsClient';
 import { API_URL, API_HEADERS } from '../../config';
 import dayjs from 'dayjs';
+import { getServerCity } from '../../utils/cityServer';
+import { getCity } from '../../utils/cities';
 
-async function getInitialEvents() {
+async function getInitialEvents(city) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -24,6 +26,7 @@ async function getInitialEvents() {
         ],
         page: 0,
         limit: 100,
+        city,
       }),
       next: { revalidate: 300 }, // Кеш на 5 минут
     });
@@ -56,12 +59,13 @@ async function getInitialEvents() {
 }
 
 export async function generateMetadata() {
+  const { nameIn } = getCity(getServerCity());
+
   return {
-    title: 'Все мероприятия в Санкт-Петербурге | События',
-    description:
-      'Полный список мероприятий, концертов, выставок и событий в Санкт-Петербурге. Найдите интересные события на любой вкус.',
+    title: `Все мероприятия в ${nameIn} | События`,
+    description: `Полный список мероприятий, концертов, выставок и событий в ${nameIn}. Найдите интересные события на любой вкус.`,
     openGraph: {
-      title: 'Все мероприятия в Санкт-Петербурге',
+      title: `Все мероприятия в ${nameIn}`,
       description: 'Афиша событий и мероприятий',
     },
   };
@@ -69,7 +73,8 @@ export async function generateMetadata() {
 
 export default async function EventsPage() {
   // Получаем начальные события на сервере
-  const initialEvents = await getInitialEvents();
+  const city = getServerCity();
+  const initialEvents = await getInitialEvents(city);
 
-  return <EventsClient initialEvents={initialEvents} />;
+  return <EventsClient initialEvents={initialEvents} serverCity={city} />;
 }

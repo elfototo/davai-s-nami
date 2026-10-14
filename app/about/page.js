@@ -6,6 +6,7 @@ import timezone from 'dayjs/plugin/timezone';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import isBetween from 'dayjs/plugin/isBetween';
 import About from "./AboutClient";
+import { getServerCity } from '../../utils/cityServer';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -13,7 +14,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isBetween);
 
-async function fetcher(dateRange) {
+async function fetcher(dateRange, city) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -35,6 +36,7 @@ async function fetcher(dateRange) {
           'main_category_id',
         ],
         limit: dateRange.limit,
+        city,
       }),
     });
 
@@ -74,7 +76,8 @@ export default async function AboutPage() {
 
   const dateRangemonth = { date_from: today, date_to: month, limit: 10 };
 
-  const initialEvents = await fetcher(dateRangemonth)
+  const city = getServerCity();
+  const initialEvents = await fetcher(dateRangemonth, city);
 
-  return <About initialEvents={initialEvents}/>
+  return <About initialEvents={initialEvents} serverCity={city} />
 }

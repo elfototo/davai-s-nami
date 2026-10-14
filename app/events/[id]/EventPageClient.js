@@ -8,6 +8,7 @@ import 'dayjs/locale/ru';
 import useSWR from 'swr';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { IoMdClose } from 'react-icons/io';
@@ -32,6 +33,9 @@ import {
   selectWishlistLoading,
   selectWishlistInitialized,
 } from '../../../store/slices/wishlistSlice.js';
+import { useCity } from '../../../context/CityContext';
+import { getCity, getItemCity } from '../../../utils/cities';
+import { normalizeEventsList } from '../../../utils/normalizeEvents';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -81,14 +85,6 @@ const fetchIdEvent = async (id) => {
     console.log('Ошибка при запросе:', error);
     return null;
   }
-};
-
-const normalizeEventsList = (payload) => {
-  if (Array.isArray(payload)) return payload;
-  if (Array.isArray(payload?.events)) return payload.events;
-  if (Array.isArray(payload?.result?.events)) return payload.result.events;
-  if (Array.isArray(payload?.result)) return payload.result;
-  return [];
 };
 
 const normalizeTaskStatus = (payload) => {
@@ -157,6 +153,8 @@ export default function EventPageClient({ id, initialEvent }) {
   const [similarTaskId, setSimilarTaskId] = useState(null);
 
   const idNumber = parseInt(id.id, 10);
+  const router = useRouter();
+  const { city, setCity } = useCity();
 
   // Redux selectors
   const isInWishlist = useSelector(selectIsInWishlist(idNumber));
@@ -187,6 +185,16 @@ export default function EventPageClient({ id, initialEvent }) {
     } else {
       dispatch(addToWishlist(idNumber));
     }
+  };
+
+  // Событие открыто по ссылке из другого города: карточку показываем,
+  // а к списку ведём в город события
+  const eventCity = getItemCity(event);
+  const isOtherCity = Boolean(eventCity) && eventCity !== city;
+
+  const openEventCityList = () => {
+    setCity(eventCity, { refresh: false });
+    router.push('/events');
   };
 
   const togglePhoto = () => setShowPhoto(!showPhoto);
@@ -517,6 +525,21 @@ export default function EventPageClient({ id, initialEvent }) {
               </div>
             </div>
           </div>
+
+          {isOtherCity && (
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#fff] px-6 py-4">
+              <p className="font-roboto text-[#333]">
+                Это мероприятие в {getCity(eventCity).nameIn}
+              </p>
+              <button
+                onClick={openEventCityList}
+                className="flex items-center rounded-xl border border-[#F52D85] bg-white px-4 py-2 text-[#F52D85] transition-colors duration-300 hover:bg-[#F52D85] hover:text-white"
+              >
+                Все мероприятия {getCity(eventCity).nameOf}
+                <FaArrowRight size={18} className="ml-3" />
+              </button>
+            </div>
+          )}
 
           <p className="mt-10 font-roboto font-bold text-[#777]">
             {event?.prepared_text ? 'Описание:' : ''}

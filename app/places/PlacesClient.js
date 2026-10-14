@@ -6,6 +6,7 @@ import PlaceCard from '../../components/PlaceCard';
 import { useEvents } from '../../context/SwrContext';
 import useSWRInfinite from "swr/infinite";
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+import { useCity } from '../../context/CityContext';
 
 function PagePlaces({ sortedPlaces, isLoadingDataPlaces }) {
 
@@ -72,7 +73,9 @@ function PagePlaces({ sortedPlaces, isLoadingDataPlaces }) {
   )
 }
 
-export default function Places({initialPlaces}) {
+export default function Places({initialPlaces, serverCity}) {
+  const { city } = useCity();
+  const hasServerData = city === serverCity;
   const [search, setSearch] = useState('');
   const [hasMore, setHasMore] = useState(true);
   const [sortedPlaces, setSortedPlaces] = useState([]);
@@ -85,7 +88,7 @@ export default function Places({initialPlaces}) {
     if (previousPageData && previousPageData.length < limit) return null;
     const offset = pageIndex * limit;
 
-    return `/api/data?query=${search}&page=${pageIndex}&offset=${offset}`;
+    return `/api/places?query=${search}&city=${city}&page=${pageIndex}&offset=${offset}`;
   };
 
   const fetcherPlaces = async (url) => {
@@ -97,7 +100,13 @@ export default function Places({initialPlaces}) {
 
     if (search) {
       try {
-        const res = await fetch(`${SEARCH_URL}?query=${encodeURIComponent(search)}&type=place`, {
+        const searchQueryParams = new URLSearchParams({
+          query: search,
+          type: 'place',
+          city,
+        });
+
+        const res = await fetch(`${SEARCH_URL}?${searchQueryParams.toString()}`, {
           method: 'GET',
           headers: API_HEADERS,
         });
@@ -127,7 +136,8 @@ export default function Places({initialPlaces}) {
             ],
             page: pageIndex,
             limit: limit,
-            order_by: 'id-asc'
+            order_by: 'id-asc',
+            city,
           }),
         });
 
@@ -170,12 +180,19 @@ export default function Places({initialPlaces}) {
     isValidating,
   } = useSWRInfinite(getKey, fetcherPlaces, {
     revalidateFirstPage: false,
-    revalidateOnMount: false,
+    revalidateOnMount: !hasServerData,
     revalidateOnFocus: false,
-    fallbackData: [initialPlaces],
+    fallbackData: hasServerData ? [initialPlaces] : undefined,
     initialSize: 1,
   });
 
+
+  // Сменился город — накопленные площадки другого города больше не нужны
+  useEffect(() => {
+    setAllPlaces([]);
+    setSortedPlaces([]);
+    loadedPlacesIdsRef.current = new Set();
+  }, [city]);
 
   useEffect(() => {
     if (dataPlaces) {
