@@ -11,10 +11,23 @@ import { Provider } from 'react-redux';
 import { store } from '../store/store';
 import { useTokenRefresh } from '../hooks/useTokenRefresh';
 import TelegramAuth from '../components/TelegramAuth';
-import { parseTelegramStartParam } from '../utils/telegramStartParam';
+import {
+  parseTelegramStartParam,
+  parseTelegramStartCity,
+} from '../utils/telegramStartParam';
+import { CityProvider, useCity } from '../context/CityContext';
 
-export default function RootLayout({ children, isAuth }) {
+export default function RootLayout({ children, isAuth, initialCity }) {
+  return (
+    <CityProvider initialCity={initialCity}>
+      <RootShell isAuth={isAuth}>{children}</RootShell>
+    </CityProvider>
+  );
+}
+
+function RootShell({ children, isAuth }) {
   const router = useRouter();
+  const { city, setCity } = useCity();
   useTokenRefresh();
 
   useEffect(() => {
@@ -33,6 +46,11 @@ export default function RootLayout({ children, isAuth }) {
       console.log('📦 start_param:', startParam);
 
       const startRoute = parseTelegramStartParam(startParam);
+      const startCity = parseTelegramStartCity(startParam);
+
+      if (startCity && startCity !== city) {
+        setCity(startCity, { refresh: !startRoute });
+      }
 
       if (startRoute) {
         router.replace(startRoute);
@@ -50,6 +68,8 @@ export default function RootLayout({ children, isAuth }) {
       }, 100); // Проверяем каждые 100 мс
       setTimeout(() => clearInterval(interval), 3000); // Остановить через 3 сек
     }
+    // start_param разбираем один раз при загрузке аппа
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   return (

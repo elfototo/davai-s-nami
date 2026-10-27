@@ -35,6 +35,14 @@ const Filtres = ({ filters, dispatch }) => {
     Представления: ['Концерт', 'Театр', 'Перформанс', 'Стендап'],
   };
 
+  const keepSelectionParam = (params) => {
+    const selection = searchParams.get('sel');
+
+    if (selection) {
+      params.set('sel', selection);
+    }
+  };
+
   // Функция для обновления URL на основе текущих фильтров
   const updateURL = (
     tags,
@@ -46,6 +54,7 @@ const Filtres = ({ filters, dispatch }) => {
     order,
   ) => {
     const params = new URLSearchParams();
+    keepSelectionParam(params);
 
     // Добавляем теги
     // if (tags && tags.length > 0) {
@@ -181,7 +190,13 @@ const Filtres = ({ filters, dispatch }) => {
       );
     } else {
       // Очищаем URL если все фильтры сброшены
-      router.replace(pathname, { scroll: false });
+      const params = new URLSearchParams();
+      keepSelectionParam(params);
+      const queryString = params.toString();
+
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
+        scroll: false,
+      });
     }
   }, [
     selectedTags,

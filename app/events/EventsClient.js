@@ -20,7 +20,9 @@ import {
   initialFiltersState,
   filterActions,
 } from '../../components/filtersReducer';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import Selection from '../../components/Selection';
+import { useCity } from '../../context/CityContext';
 
 dayjs.locale('ru');
 dayjs.extend(utc);
@@ -124,11 +126,15 @@ function Page({ sortedEvents, isLoadingEvents, isValidating }) {
   );
 }
 
-export default function Events({ initialEvents }) {
+export default function Events({ initialEvents, serverCity }) {
+  const { city } = useCity();
+  const hasServerData = city === serverCity;
   const [hasMore, setHasMore] = useState(true);
   const limit = 100;
 
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const [filters, dispatch] = useReducer(filtersReducer, initialFiltersState);
 
   useEffect(() => {
@@ -179,7 +185,7 @@ export default function Events({ initialEvents }) {
   const getKey = (pageIndex, previousPageData) => {
     if (previousPageData && previousPageData.length < limit) return null;
     const offset = pageIndex * limit;
-    return `/api/events/valid?filter=${selectedTagsId.join(',')},${dateRange.date_from},${dateRange.date_to},${search},${debouncedPrice || ''},${orderBy}&page=${pageIndex}&offset=${offset}`;
+    return `/api/events/valid?filter=${selectedTagsId.join(',')},${dateRange.date_from},${dateRange.date_to},${search},${debouncedPrice || ''},${orderBy}&city=${city}&page=${pageIndex}&offset=${offset}`;
   };
 
   const fetchEvents = async (url) => {
@@ -193,6 +199,7 @@ export default function Events({ initialEvents }) {
         const searchQueryParams = new URLSearchParams({
           query: search,
           type: 'event',
+          city,
         });
         if (priceMax !== null) {
           searchQueryParams.set('price_max', priceMax);
@@ -237,6 +244,7 @@ export default function Events({ initialEvents }) {
         page: pageIndex,
         limit,
         order_by: orderBy,
+        city,
       };
 
       if (selectedTagsId.length > 0) {
@@ -287,7 +295,7 @@ export default function Events({ initialEvents }) {
     revalidateFirstPage: false,
     revalidateOnMount: true,
     revalidateOnFocus: false,
-    fallbackData: [initialEvents],
+    fallbackData: hasServerData ? [initialEvents] : undefined,
     initialSize: 1,
     persistSize: false,
   });
@@ -353,6 +361,19 @@ export default function Events({ initialEvents }) {
     selectedTags,
   ]);
 
+  // Подборка из поста (?sel=<id>, из start_param events__sel-<id>)
+  const selectionId = searchParams.get('sel');
+
+  const closeSelection = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('sel');
+    const queryString = params.toString();
+
+    router.replace(queryString ? `${pathname}?${queryString}` : pathname, {
+      scroll: false,
+    });
+  };
+
   const loadMoreEvents = () => {
     if (isLoadingEvents || !hasMore) return;
     setSize((prev) => prev + 1);
@@ -374,6 +395,10 @@ export default function Events({ initialEvents }) {
         <section
           className={`w-full lg:w-[80%] ${isOpen ? 'hidden lg:block' : 'block'}`}
         >
+          {selectionId && (
+            <Selection selectionId={selectionId} onClose={closeSelection} />
+          )}
+
           <div className="mb-4 flex flex-wrap items-center gap-2">
             {orderOptions.map((option) => (
               <button

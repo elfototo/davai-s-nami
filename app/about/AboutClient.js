@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { API_URL, API_HEADERS } from '../../config';
+import { useCity } from '../../context/CityContext';
+import { getCity, getCityLinks } from '../../utils/cities';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -20,8 +22,10 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isBetween);
 
-export default function About({ initialEvents }) {
+export default function About({ initialEvents, serverCity }) {
   const { cache, findDataById } = useEvents();
+  const { city } = useCity();
+  const hasServerData = city === serverCity;
   const [filterEventsMonth, setFilterEventsMonth] = useState([]);
 
   const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
@@ -37,7 +41,7 @@ export default function About({ initialEvents }) {
 
   const dateRangemonth = { date_from: today, date_to: month, limit: 10 };
 
-  const fetcher = async (dateRange) => {
+  const fetcher = async (dateRange, city) => {
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
@@ -59,6 +63,7 @@ export default function About({ initialEvents }) {
             'main_category_id',
           ],
           limit: dateRange.limit,
+          city,
         }),
       });
 
@@ -90,12 +95,12 @@ export default function About({ initialEvents }) {
     isLoading: dataIsDateRangeMonth,
   } = useSWR(
     dateRangemonth
-      ? `/api/data?dateRange=${(dateRangemonth.date_from, dateRangemonth.date_to)}`
+      ? `/api/data?dateRange=${dateRangemonth.date_from}-${dateRangemonth.date_to}&city=${city}`
       : null,
-    () => fetcher(dateRangemonth),
+    () => fetcher(dateRangemonth, city),
     {
-      fallbackData: initialEvents,
-      revalidateOnMount: false,
+      fallbackData: hasServerData ? initialEvents : undefined,
+      revalidateOnMount: !hasServerData,
       revalidateOnFocus: false,
       dedupingInterval: 60000,
       revalidateIfStale: false,
@@ -103,7 +108,7 @@ export default function About({ initialEvents }) {
   );
 
   const cacheData = cache?.get(
-    `/api/data?dateRange=${(dateRangemonth.date_from, dateRangemonth.date_to)}`,
+    `/api/data?dateRange=${dateRangemonth.date_from}-${dateRangemonth.date_to}&city=${city}`,
   )?.data;
 
   useEffect(() => {
@@ -145,7 +150,7 @@ export default function About({ initialEvents }) {
               </h1>
               <p className="mb-6 text-lg leading-relaxed text-gray-700">
                 Мы предоставляем актуальную информацию о самых интересных
-                мероприятиях Санкт-Петербурга: выставки, концерты,
+                мероприятиях {getCity(city).nameOf}: выставки, концерты,
                 мастер-классы, лекции и многое другое. Наш сайт — это ваш гид по
                 лучшим событиям города!
               </p>
@@ -305,7 +310,7 @@ export default function About({ initialEvents }) {
 
         <div className="flex justify-center gap-8">
           <Link
-            href="https://t.me/DavaiSNami"
+            href={getCityLinks(city).telegram}
             target="_blank"
             className="transform rounded-lg bg-pink-500 px-8 py-2 font-roboto text-lg text-white transition-transform hover:scale-105 group-hover:bg-white group-hover:text-sky-500"
           >

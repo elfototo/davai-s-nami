@@ -20,6 +20,8 @@ import {
   API_URL_PL_BY_ID,
 } from '../../../config';
 import BackButton from '../../../components/BackButton';
+import { useCity } from '../../../context/CityContext';
+import { getItemCity } from '../../../utils/cities';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -29,6 +31,7 @@ dayjs.extend(isBetween);
 
 export default function EventPlace({ initialPalce, initialPalcesEvents, id }) {
   const { cache, findDataByIdPlace } = useEvents();
+  const { city } = useCity();
 
   const [eventsInPlace, setEventsInPlace] = useState([]);
   const [place, setPlace] = useState(null);
@@ -48,6 +51,7 @@ export default function EventPlace({ initialPalce, initialPalcesEvents, id }) {
             'place_url',
             'place_metro',
             'place_image',
+            'city_id',
           ],
         }),
       });
@@ -90,13 +94,18 @@ export default function EventPlace({ initialPalce, initialPalcesEvents, id }) {
     },
   );
 
-  const fetchEventsInPlaceByID = async (id) => {
+  // События площадки — запрос коллекции: город берём у площадки,
+  // иначе площадка из другого города покажется пустой
+  const placeCity = getItemCity(dataPlaceById) || city;
+
+  const fetchEventsInPlaceByID = async (id, city) => {
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: API_HEADERS,
         body: JSON.stringify({
           place: [id],
+          city,
           fields: [
             'event_id',
             'id',
@@ -140,8 +149,8 @@ export default function EventPlace({ initialPalce, initialPalcesEvents, id }) {
     error: errorEventsPlaceId,
     isLoading: isLoadingEventsPlaceId,
   } = useSWR(
-    idNumber ? `/api/data?event_from_place=${idNumber}` : null,
-    () => fetchEventsInPlaceByID(idNumber),
+    idNumber ? `/api/data?event_from_place=${idNumber}&city=${placeCity}` : null,
+    () => fetchEventsInPlaceByID(idNumber, placeCity),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,

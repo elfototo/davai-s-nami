@@ -1,5 +1,6 @@
 import HomePage from "./HomeClient";
 import { API_URL, API_HEADERS } from '../config';
+import { getServerCity } from '../utils/cityServer';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
@@ -13,7 +14,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isBetween);
 
-async function fetchEvents(dateRange) {
+async function fetchEvents(dateRange, city) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -35,6 +36,7 @@ async function fetchEvents(dateRange) {
           'main_category_id',
         ],
         limit: dateRange.limit,
+        city,
       }),
       
       next: { 
@@ -64,6 +66,8 @@ async function fetchEvents(dateRange) {
 }
 
 export default async function Home() {
+  const city = getServerCity();
+
   const todayforcount = dayjs().utc().tz('Europe/Moscow').startOf('day');
 
   const today = todayforcount.format('YYYY-MM-DD');
@@ -112,9 +116,9 @@ export default async function Home() {
     dataEventDateRange2,
     dataEventDateRangeMonth
   ] = await Promise.all([
-    fetchEvents(dateRange1),
-    fetchEvents(dateRange2),
-    fetchEvents(dateRangemonth)
+    fetchEvents(dateRange1, city),
+    fetchEvents(dateRange2, city),
+    fetchEvents(dateRangemonth, city)
   ]);
 
   return (
@@ -122,6 +126,7 @@ export default async function Home() {
       initialDataDateRange1={dataEventDateRange1}
       initialDataDateRange2={dataEventDateRange2}
       initialDataDateRangeMonth={dataEventDateRangeMonth}
+      serverCity={city}
       
       dateRangeForGame={dateRangeForGame}
       dateRange2={dateRange2}

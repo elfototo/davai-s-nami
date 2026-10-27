@@ -1,4 +1,7 @@
-import { parseTelegramStartParam } from '../../../utils/telegramStartParam';
+import {
+  parseTelegramStartParam,
+  parseTelegramStartCity,
+} from '../../../utils/telegramStartParam';
 
 describe('parseTelegramStartParam', () => {
   test('сохраняет старый формат открытия мероприятия', () => {
@@ -37,5 +40,61 @@ describe('parseTelegramStartParam', () => {
 
   test('игнорирует неизвестный формат', () => {
     expect(parseTelegramStartParam('place_10')).toBeNull();
+  });
+
+  test('не теряет фильтры при секции города', () => {
+    expect(parseTelegramStartParam('events__city-kzn__date-weekend')).toBe(
+      '/events?date=weekend',
+    );
+  });
+
+  test('открывает подборку', () => {
+    expect(parseTelegramStartParam('events__sel-412')).toBe('/events?sel=412');
+  });
+
+  test('подборка вместе с городом и фильтрами', () => {
+    expect(
+      parseTelegramStartParam('events__city-kzn__date-weekend__sel-412'),
+    ).toBe('/events?date=weekend&sel=412');
+    expect(parseTelegramStartCity('events__city-kzn__sel-412')).toBe('kzn');
+  });
+
+  test('игнорирует некорректный номер подборки', () => {
+    expect(parseTelegramStartParam('events__sel-abc')).toBe('/events');
+  });
+
+  test('игнорирует неизвестные секции', () => {
+    expect(
+      parseTelegramStartParam('events__foo-bar__date-weekend__baz'),
+    ).toBe('/events?date=weekend');
+  });
+});
+
+describe('parseTelegramStartCity', () => {
+  test('берёт город из секции city-', () => {
+    expect(parseTelegramStartCity('events__city-kzn__date-weekend')).toBe(
+      'kzn',
+    );
+  });
+
+  test('без секции city- — Петербург', () => {
+    expect(parseTelegramStartCity('events')).toBe('spb');
+    expect(parseTelegramStartCity('events__date-weekend__cat-1-3')).toBe(
+      'spb',
+    );
+  });
+
+  test('неизвестный город — Петербург', () => {
+    expect(parseTelegramStartCity('events__city-xyz')).toBe('spb');
+    expect(parseTelegramStartCity('events__city-all')).toBe('spb');
+  });
+
+  test('ссылка на событие город не меняет', () => {
+    expect(parseTelegramStartCity('event_4242')).toBeNull();
+  });
+
+  test('неизвестный формат город не меняет', () => {
+    expect(parseTelegramStartCity('place_10')).toBeNull();
+    expect(parseTelegramStartCity(undefined)).toBeNull();
   });
 });

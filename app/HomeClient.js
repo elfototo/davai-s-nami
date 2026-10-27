@@ -18,6 +18,8 @@ import Loader from '../components/Loader';
 import useSWR from 'swr';
 import { useEvents } from '../context/SwrContext';
 import { API_URL, API_HEADERS } from '../config';
+import { useCity } from '../context/CityContext';
+import { getCity } from '../utils/cities';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -25,7 +27,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isBetween);
 
-const fetcher = async (dateRange) => {
+const fetcher = async (dateRange, city) => {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -47,6 +49,7 @@ const fetcher = async (dateRange) => {
           'main_category_id',
         ],
         limit: dateRange.limit,
+        city,
       }),
     });
 
@@ -77,7 +80,12 @@ export default function HomePage({
   dateRange2,
   dateRange1,
   dateRangemonth,
+  serverCity,
 }) {
+  const { city } = useCity();
+  // Данные с сервера годятся, только если они для текущего города
+  const hasServerData = city === serverCity;
+
   const [showGame, setShowGame] = useState(false);
   const [randomEv, setRandomEv] = useState(null);
   const [isLoadingGame, setIsLoadingGame] = useState(false);
@@ -91,11 +99,11 @@ export default function HomePage({
     error: dataErrorDateRange1,
     isLoading: dataIsDateRange1,
   } = useSWR(
-    `/api/data?dateRange=${dateRange1.date_from}-${dateRange1.date_to}`,
-    () => fetcher(dateRange1),
+    `/api/data?dateRange=${dateRange1.date_from}-${dateRange1.date_to}&city=${city}`,
+    () => fetcher(dateRange1, city),
     {
-      fallbackData: initialDataDateRange1,
-      revalidateOnMount: false,
+      fallbackData: hasServerData ? initialDataDateRange1 : undefined,
+      revalidateOnMount: !hasServerData,
       revalidateOnFocus: false,
       // dedupingInterval: 60000,
       revalidateIfStale: false,
@@ -107,11 +115,11 @@ export default function HomePage({
     error: dataErrorDateRange2,
     isLoading: dataIsDateRange2,
   } = useSWR(
-    `/api/data?dateRange=${dateRange2.date_from}-${dateRange2.date_to}`,
-    () => fetcher(dateRange2),
+    `/api/data?dateRange=${dateRange2.date_from}-${dateRange2.date_to}&city=${city}`,
+    () => fetcher(dateRange2, city),
     {
-      fallbackData: initialDataDateRange2,
-      revalidateOnMount: false,
+      fallbackData: hasServerData ? initialDataDateRange2 : undefined,
+      revalidateOnMount: !hasServerData,
       revalidateOnFocus: false,
       // dedupingInterval: 60000,
       revalidateIfStale: false,
@@ -123,11 +131,11 @@ export default function HomePage({
     error: dataErrorDateRangeMonth,
     isLoading: dataIsDateRangeMonth,
   } = useSWR(
-    `/api/data?dateRange=${dateRangemonth.date_from}-${dateRangemonth.date_to}`,
-    () => fetcher(dateRangemonth),
+    `/api/data?dateRange=${dateRangemonth.date_from}-${dateRangemonth.date_to}&city=${city}`,
+    () => fetcher(dateRangemonth, city),
     {
-      fallbackData: initialDataDateRangeMonth,
-      revalidateOnMount: false,
+      fallbackData: hasServerData ? initialDataDateRangeMonth : undefined,
+      revalidateOnMount: !hasServerData,
       revalidateOnFocus: false,
       // dedupingInterval: 60000,
       revalidateIfStale: false,
@@ -237,7 +245,7 @@ export default function HomePage({
               <br className="hidden sm:block smd:hidden" />{' '}
               <br className="ssm:block sm:hidden" />
               на свой уикенд в <br className="smd:hidden" />{' '}
-              <span className="whitespace-nowrap">Санкт - Петербурге</span>
+              <span className="whitespace-nowrap">{getCity(city).nameIn}</span>
             </p>
 
             {dataIsDateRangeMonth ? (

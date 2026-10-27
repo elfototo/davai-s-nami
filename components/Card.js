@@ -22,6 +22,8 @@ import {
   selectWishlistInitialized,
 } from '../store/slices/wishlistSlice.js';
 import { useWishlist } from '../hooks/useWishList';
+import { useCity } from '../context/CityContext';
+import { getCity, getItemCity } from '../utils/cities';
 
 dayjs.extend(isoWeek);
 dayjs.locale('ru');
@@ -38,6 +40,7 @@ const Card = ({
   id,
   image,
   to_date,
+  data,
 }) => {
   const idNumber = typeof id === 'number' ? id : parseInt(id, 10);
 
@@ -51,6 +54,12 @@ const Card = ({
   console.log('Card ID:', idNumber, 'Is in wishlist:', isInWishlist);
 
   const { convertImageUrlToJpeg } = useEvents();
+  const { city } = useCity();
+
+  // Событие из другого города (например, в избранном) — подписываем город
+  const eventCity = getItemCity(data);
+  const otherCityName =
+    eventCity && eventCity !== city ? getCity(eventCity).name : null;
   const [showFulltext, setShowFulltext] = useState(false);
   const [showFullTitletext, setShowFullTitletext] = useState(false);
 
@@ -109,6 +118,13 @@ const Card = ({
                   {price ? `${price}` : 'Без цены'}
                 </p>
               </div>
+              {otherCityName && (
+                <div className="flex items-baseline rounded-full border border-[#D9D9D9] bg-[#fff] px-2 py-1">
+                  <p className="flex-nowrap font-roboto text-sm font-medium text-[#444]">
+                    {otherCityName}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Category template */}

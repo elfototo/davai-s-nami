@@ -1,3 +1,5 @@
+import { DEFAULT_CITY, normalizeCity } from './cities';
+
 const DATE_SHORTCUTS = new Set(['today', 'tomorrow', 'weekend']);
 
 const CATEGORY_BY_ID = {
@@ -84,6 +86,27 @@ function resolveCategories(value) {
     .filter(Boolean);
 }
 
+// Город из start_param списка событий: секция `city-<код>`.
+// Для `event_<id>` и неизвестных форматов -> null: город не меняется
+// (у события город свой).
+export function parseTelegramStartCity(startParam) {
+  if (!startParam || typeof startParam !== 'string') {
+    return null;
+  }
+
+  if (startParam !== 'events' && !startParam.startsWith('events__')) {
+    return null;
+  }
+
+  const cityToken = startParam
+    .split('__')
+    .slice(1)
+    .map(splitToken)
+    .find(([key]) => key === 'city');
+
+  return cityToken ? normalizeCity(cityToken[1]) : DEFAULT_CITY;
+}
+
 export function parseTelegramStartParam(startParam) {
   if (!startParam || typeof startParam !== 'string') {
     return null;
@@ -158,6 +181,12 @@ export function parseTelegramStartParam(startParam) {
 
     if (key === 'order' && ORDER_VALUES.has(value)) {
       params.set('order', value);
+      return;
+    }
+
+    // Подборка из поста: events__sel-412 (секция идёт последней)
+    if (key === 'sel' && /^\d+$/.test(value)) {
+      params.set('sel', value);
     }
   });
 

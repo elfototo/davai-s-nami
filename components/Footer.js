@@ -6,11 +6,15 @@ import { FaTelegramPlane } from "react-icons/fa";
 import { FaVk } from "react-icons/fa";
 import Image from 'next/image';
 import Link from 'next/link';
+import { useCity } from '../context/CityContext';
+import { getCityLinks } from '../utils/cities';
 
 
 
 const Footer = () => {
     const [dataCategories, setDataCategories] = useState(categories);
+    const { city } = useCity();
+    const cityLinks = getCityLinks(city);
 
     return (
         <div className='max-w-custom-container text-white px-6 py-8 mx-auto'>
@@ -69,14 +73,14 @@ const Footer = () => {
 
                         <div className='mx-2'>
 
-                            <Link href='https://t.me/DavaiSNami' className='hover:bg-sky-600 transform transition-colors duration-200 border border-white hover:border-transparent rounded-full flex items-center justify-center cursor-pointer w-[40px] h-[40px]'>
+                            <Link href={cityLinks.telegram} className='hover:bg-sky-600 transform transition-colors duration-200 border border-white hover:border-transparent rounded-full flex items-center justify-center cursor-pointer w-[40px] h-[40px]'>
                                 <FaTelegramPlane size={20} color='white' className='' />
                             </Link>
 
                         </div>
                         <div className='mx-2'>
 
-                            <Link href='https://vk.com/davaisnamispb' className='hover:bg-blue-600 transform transition-colors duration-200 border border-white hover:border-transparent rounded-full flex items-center justify-center cursor-pointer w-[40px] h-[40px]'>
+                            <Link href={cityLinks.vk} className='hover:bg-blue-600 transform transition-colors duration-200 border border-white hover:border-transparent rounded-full flex items-center justify-center cursor-pointer w-[40px] h-[40px]'>
                                 <FaVk size={20} color='white' className='' />
                             </Link>
 

@@ -1,6 +1,7 @@
 import './globals.css';
 import { headers } from 'next/headers';
 import RootClient from './layoutClient';
+import { getServerCity } from '../utils/cityServer';
 
 export default function RootLayout({ children }) {
   const pathname = headers().get("x-pathname") || "";
@@ -10,7 +11,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ru">
       <body>
-        <RootClient isAuth={isAuth}>{children}</RootClient>
+        <RootClient isAuth={isAuth} initialCity={getServerCity()}>
+          {children}
+        </RootClient>
       </body>
     </html>
   );

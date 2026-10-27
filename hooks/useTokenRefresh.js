@@ -425,15 +425,7 @@ export const useTokenRefresh = () => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('tokenExpiresAt');
 
-        // Пытаемся вызвать logout на бэкенде
-        try {
-          await fetch(`${API_URL1}api/auth/logout`, {
-            method: 'POST',
-            credentials: 'include',
-          });
-        } catch (logoutError) {
-          log.error('Logout request failed', logoutError);
-        }
+        // Эндпоинта api/auth/logout на бэкенде нет, поэтому его не вызываем
 
         if (shouldRedirectToLogin()) {
           redirectToLogin();
