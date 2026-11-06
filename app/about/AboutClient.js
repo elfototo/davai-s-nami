@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { API_URL, API_HEADERS } from '../../config';
+import { withClientContext } from '../../utils/clientContext';
 import { useCity } from '../../context/CityContext';
 import { getCity, getCityLinks } from '../../utils/cities';
 
@@ -45,7 +46,7 @@ export default function About({ initialEvents, serverCity }) {
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: API_HEADERS,
+        headers: withClientContext(API_HEADERS),
         body: JSON.stringify({
           date_from: dateRange.date_from,
           date_to: dateRange.date_to,

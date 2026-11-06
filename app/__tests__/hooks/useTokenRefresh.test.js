@@ -67,9 +67,9 @@ describe(useTokenRefresh, () => {
         expect.objectContaining({
           method: 'POST',
           credentials: 'include',
-          headers: {
+          headers: expect.objectContaining({
             'Content-Type': 'application/json',
-          },
+          }),
         }),
       );
 
@@ -138,9 +138,9 @@ describe(useTokenRefresh, () => {
         expect.objectContaining({
           method: 'POST',
           credentials: 'include',
-          headers: {
+          headers: expect.objectContaining({
             'Content-Type': 'application/json',
-          },
+          }),
         }),
       );
     });

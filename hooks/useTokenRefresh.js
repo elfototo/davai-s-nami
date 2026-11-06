@@ -306,6 +306,7 @@
 
 import { useEffect, useRef } from 'react';
 import { API_URL1 } from '../config';
+import { withClientContext } from '../utils/clientContext';
 import { redirectToLogin } from '../utils/redirect';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -386,9 +387,9 @@ export const useTokenRefresh = () => {
         const response = await fetch(`${API_URL1}api/auth/refresh`, {
           method: 'POST',
           credentials: 'include',
-          headers: {
+          headers: withClientContext({
             'Content-Type': 'application/json',
-          },
+          }),
         });
 
         if (!response.ok) {

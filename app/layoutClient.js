@@ -16,8 +16,16 @@ import {
   parseTelegramStartCity,
 } from '../utils/telegramStartParam';
 import { CityProvider, useCity } from '../context/CityContext';
+import { setClientIp } from '../utils/clientContext';
 
-export default function RootLayout({ children, isAuth, initialCity }) {
+export default function RootLayout({
+  children,
+  isAuth,
+  initialCity,
+  clientIp,
+}) {
+  setClientIp(clientIp);
+
   return (
     <CityProvider initialCity={initialCity}>
       <RootShell isAuth={isAuth}>{children}</RootShell>

@@ -23,6 +23,7 @@ import {
   API_EVENTS_SIMILAR_URL,
   API_TASKS_STATUS_URL,
 } from '../../../config';
+import { withClientContext } from '../../../utils/clientContext';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -47,7 +48,7 @@ const fetchIdEvent = async (id) => {
   try {
     const res = await fetch(`${API_URL_BY_ID}${id}`, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withClientContext(API_HEADERS),
       body: JSON.stringify({
         fields: [
           'event_id',
@@ -98,7 +99,7 @@ const fetchSimilarEvents = async (eventId) => {
     `${API_EVENTS_SIMILAR_URL}${eventId}/similar?limit=${SIMILAR_EVENTS_LIMIT}`,
     {
     method: 'GET',
-    headers: API_HEADERS,
+    headers: withClientContext(API_HEADERS),
     },
   );
 
@@ -129,7 +130,7 @@ const fetchSimilarEvents = async (eventId) => {
 const fetchTaskStatus = async (taskId) => {
   const res = await fetch(`${API_TASKS_STATUS_URL}${taskId}`, {
     method: 'GET',
-    headers: API_HEADERS,
+    headers: withClientContext(API_HEADERS),
   });
 
   const result = await res.json();

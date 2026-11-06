@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { IoMdClose } from 'react-icons/io';
 import Card from './Card';
 import { API_URL, API_SELECTION_URL, API_HEADERS } from '../config';
+import { withClientContext } from '../utils/clientContext';
 import { normalizeEventsList } from '../utils/normalizeEvents';
 
 const EVENT_FIELDS = [
@@ -27,7 +28,7 @@ const EVENT_FIELDS = [
 const fetchEventsByIds = async (ids) => {
   const res = await fetch(API_URL, {
     method: 'POST',
-    headers: API_HEADERS,
+    headers: withClientContext(API_HEADERS),
     body: JSON.stringify({ ids, fields: EVENT_FIELDS, limit: ids.length }),
   });
 
@@ -49,7 +50,7 @@ const fetchEventsByIds = async (ids) => {
 const fetchSelection = async (selectionId) => {
   const res = await fetch(`${API_SELECTION_URL}${selectionId}/`, {
     method: 'GET',
-    headers: API_HEADERS,
+    headers: withClientContext(API_HEADERS),
   });
 
   if (!res.ok) {

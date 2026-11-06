@@ -6,6 +6,7 @@ import PlaceCard from '../../components/PlaceCard';
 import { useEvents } from '../../context/SwrContext';
 import useSWRInfinite from "swr/infinite";
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+import { withClientContext } from '../../utils/clientContext';
 import { useCity } from '../../context/CityContext';
 
 function PagePlaces({ sortedPlaces, isLoadingDataPlaces }) {
@@ -108,7 +109,7 @@ export default function Places({initialPlaces, serverCity}) {
 
         const res = await fetch(`${SEARCH_URL}?${searchQueryParams.toString()}`, {
           method: 'GET',
-          headers: API_HEADERS,
+          headers: withClientContext(API_HEADERS),
         });
 
         if (!res.ok) throw new Error('Ошибка поиска');
@@ -125,7 +126,7 @@ export default function Places({initialPlaces, serverCity}) {
       try {
         const res = await fetch(API_URL_PL, {
           method: 'POST',
-          headers: API_HEADERS,
+          headers: withClientContext(API_HEADERS),
           body: JSON.stringify({
             fields: [
               'id',

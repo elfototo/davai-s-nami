@@ -1,5 +1,6 @@
 import EventsClient from './EventsClient';
 import { API_URL, API_HEADERS } from '../../config';
+import { withServerClientContext } from '../../utils/clientContextServer';
 import dayjs from 'dayjs';
 import { getServerCity } from '../../utils/cityServer';
 import { getCity } from '../../utils/cities';
@@ -8,7 +9,7 @@ async function getInitialEvents(city) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withServerClientContext(API_HEADERS),
       body: JSON.stringify({
         fields: [
           'event_id',

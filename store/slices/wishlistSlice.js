@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { API_URL1 } from '../../config';
+import { withClientContext } from '../../utils/clientContext';
 
 // Async thunks
 export const fetchWishlist = createAsyncThunk(
@@ -13,10 +14,10 @@ export const fetchWishlist = createAsyncThunk(
 
       const res = await fetch(`${API_URL1}api/users/me/events`, {
         method: 'GET',
-        headers: {
+        headers: withClientContext({
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
-        },
+        }),
       });
 
       if (!res.ok) {
@@ -48,10 +49,10 @@ export const addToWishlist = createAsyncThunk(
         `${API_URL1}api/users/me/events/${normalizedId}`,
         {
           method: 'POST',
-          headers: {
+          headers: withClientContext({
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-          },
+          }),
         },
       );
 
@@ -85,10 +86,10 @@ export const removeFromWishlist = createAsyncThunk(
         `${API_URL1}api/users/me/events/${normalizedId}`,
         {
           method: 'DELETE',
-          headers: {
+          headers: withClientContext({
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-          },
+          }),
         },
       );
 

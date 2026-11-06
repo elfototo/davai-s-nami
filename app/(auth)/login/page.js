@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { NEXT_PUBLIC_Login, API_URL1 } from '../../../config';
+import { withClientContext } from '../../../utils/clientContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaTelegramPlane } from 'react-icons/fa';
@@ -64,10 +65,10 @@ export default function LoginPage() {
         const response = await fetch(NEXT_PUBLIC_Login, {
           method: 'POST',
           credentials: 'include',
-          headers: {
+          headers: withClientContext({
             'Content-Type': 'application/json',
             Accept: 'application/json',
-          },
+          }),
           body: JSON.stringify(user),
         });
 
@@ -121,9 +122,9 @@ export default function LoginPage() {
       const response = await fetch(`${API_URL1}api/auth/telegram/login`, {
         method: 'POST',
         credentials: 'include',
-        headers: {
+        headers: withClientContext({
           'Content-Type': 'application/json',
-        },
+        }),
         body: JSON.stringify({
           init_data: getTelegramWebApp().initData,
         }),
