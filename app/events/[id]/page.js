@@ -1,12 +1,13 @@
 import React from 'react';
 import EventPageClient from './EventPageClient';
 import { API_HEADERS, API_URL_BY_ID } from '../../../config';
+import { withServerClientContext } from '../../../utils/clientContextServer';
 
 async function fetchIdEvent(id) {
   try {
     const res = await fetch(`${API_URL_BY_ID}${id}`, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withServerClientContext(API_HEADERS),
       body: JSON.stringify({
         fields: [
           'event_id',

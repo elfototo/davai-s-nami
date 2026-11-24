@@ -19,6 +19,7 @@ import {
   API_HEADERS,
   API_URL_PL_BY_ID,
 } from '../../../config';
+import { withClientContext } from '../../../utils/clientContext';
 import BackButton from '../../../components/BackButton';
 import { useCity } from '../../../context/CityContext';
 import { getItemCity } from '../../../utils/cities';
@@ -42,7 +43,7 @@ export default function EventPlace({ initialPalce, initialPalcesEvents, id }) {
     try {
       const res = await fetch(`${API_URL_PL_BY_ID}${id}`, {
         method: 'POST',
-        headers: API_HEADERS,
+        headers: withClientContext(API_HEADERS),
         body: JSON.stringify({
           fields: [
             'id',
@@ -102,7 +103,7 @@ export default function EventPlace({ initialPalce, initialPalcesEvents, id }) {
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: API_HEADERS,
+        headers: withClientContext(API_HEADERS),
         body: JSON.stringify({
           place: [id],
           city,

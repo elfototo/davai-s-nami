@@ -405,6 +405,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { FaEdit } from 'react-icons/fa';
 import { IoIosSave } from 'react-icons/io';
 import { API_URL1 } from '../../config';
+import { withClientContext } from '../../utils/clientContext';
 import { IoCloseOutline } from 'react-icons/io5';
 import Card from '../../components/Card';
 import { useDispatch, useSelector } from 'react-redux';
@@ -421,7 +422,7 @@ const fetchIdEvent = async (id) => {
   try {
     const res = await fetch(`${API_URL_BY_ID}${id}`, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withClientContext(API_HEADERS),
       body: JSON.stringify({
         fields: [
           'event_id',
@@ -569,11 +570,11 @@ export default function DashBoard() {
     try {
       const res = await fetch(`${url}api/auth/me`, {
         method: 'GET',
-        headers: {
+        headers: withClientContext({
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-        },
+        }),
       });
 
       if (!res.ok) {
@@ -633,10 +634,10 @@ export default function DashBoard() {
       try {
         const res = await fetch(`${API_URL1}api/auth/me`, {
           method: 'PUT',
-          headers: {
+          headers: withClientContext({
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-          },
+          }),
           body: JSON.stringify({
             full_name: userInput.full_name || user.full_name,
             telegram_nickname:

@@ -1,5 +1,6 @@
 import Places from './PlacesClient';
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+import { withServerClientContext } from '../../utils/clientContextServer';
 import { getServerCity } from '../../utils/cityServer';
 
 async function fetcherPlaces(url, city) {
@@ -11,7 +12,7 @@ async function fetcherPlaces(url, city) {
   try {
     const res = await fetch(API_URL_PL, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withServerClientContext(API_HEADERS),
       body: JSON.stringify({
         fields: [
           'id',

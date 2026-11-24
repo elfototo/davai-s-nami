@@ -1,4 +1,5 @@
 import { API_URL, API_URL_PL, SEARCH_URL, API_HEADERS } from '../../config';
+import { withServerClientContext } from '../../utils/clientContextServer';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import utc from 'dayjs/plugin/utc';
@@ -18,7 +19,7 @@ async function fetcher(dateRange, city) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withServerClientContext(API_HEADERS),
       body: JSON.stringify({
         date_from: dateRange.date_from,
         date_to: dateRange.date_to,

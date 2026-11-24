@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { keys } from 'lodash';
 import { NEXT_PUBLIC_Register, API_HEADERS } from '../../../config';
+import { withClientContext } from '../../../utils/clientContext';
 import { IoMdArrowBack } from 'react-icons/io';
 
 export default function RegisterPage() {
@@ -62,10 +63,10 @@ export default function RegisterPage() {
       try {
         const response = await fetch(NEXT_PUBLIC_Register, {
           method: 'POST',
-          headers: {
+          headers: withClientContext({
             'Content-Type': 'application/json',
             Accept: 'application/json',
-          },
+          }),
           body: JSON.stringify({
             nickname: user.nickname,
             email: user.email,

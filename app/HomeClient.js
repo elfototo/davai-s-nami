@@ -18,6 +18,7 @@ import Loader from '../components/Loader';
 import useSWR from 'swr';
 import { useEvents } from '../context/SwrContext';
 import { API_URL, API_HEADERS } from '../config';
+import { withClientContext } from '../utils/clientContext';
 import { useCity } from '../context/CityContext';
 import { getCity } from '../utils/cities';
 
@@ -31,7 +32,7 @@ const fetcher = async (dateRange, city) => {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withClientContext(API_HEADERS),
       body: JSON.stringify({
         date_from: dateRange.date_from,
         date_to: dateRange.date_to,

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import useSWR, { SWRConfig } from 'swr';
 import { useEvents } from '../context/SwrContext';
 import { SEARCH_URL, API_HEADERS } from '../config';
+import { withClientContext } from '../utils/clientContext';
 import { FaUserCircle } from 'react-icons/fa';
 import { TbLogin2 } from 'react-icons/tb';
 import {
@@ -75,7 +76,7 @@ const Navbar = () => {
 
       const res = await fetch(`${SEARCH_URL}?${searchQueryParams.toString()}`, {
         method: 'GET',
-        headers: API_HEADERS,
+        headers: withClientContext(API_HEADERS),
       });
 
       if (!res.ok) {

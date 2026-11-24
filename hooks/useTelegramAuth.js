@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { API_URL1 } from '../config';
+import { withClientContext } from '../utils/clientContext';
 import {
   getTelegramWebApp,
   hasTelegramAuthData,
@@ -50,9 +51,9 @@ export const useTelegramAuth = () => {
         const response = await fetch(`${API_URL1}api/auth/telegram/login`, {
           method: 'POST',
           credentials: 'include',
-          headers: {
+          headers: withClientContext({
             'Content-Type': 'application/json',
-          },
+          }),
           body: JSON.stringify({
             init_data: initData,
           }),

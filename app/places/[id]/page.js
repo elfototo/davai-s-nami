@@ -6,6 +6,7 @@ import {
   API_HEADERS,
   API_URL_PL_BY_ID,
 } from '../../../config';
+import { withServerClientContext } from '../../../utils/clientContextServer';
 import { getServerCity } from '../../../utils/cityServer';
 import { getItemCity } from '../../../utils/cities';
 
@@ -13,7 +14,7 @@ async function fetchPlaceById(id) {
   try {
     const res = await fetch(`${API_URL_PL_BY_ID}${id}`, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withServerClientContext(API_HEADERS),
       body: JSON.stringify({
         fields: [
           'id',
@@ -56,7 +57,7 @@ async function fetchEventsInPlaceByID(id, city) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: API_HEADERS,
+      headers: withServerClientContext(API_HEADERS),
       body: JSON.stringify({
         place: [id],
         city,

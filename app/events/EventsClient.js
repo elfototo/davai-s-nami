@@ -14,6 +14,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import useSWRInfinite from 'swr/infinite';
 import { API_URL, SEARCH_URL, API_HEADERS } from '../../config';
+import { withClientContext } from '../../utils/clientContext';
 import { useMemo } from 'react';
 import {
   filtersReducer,
@@ -210,7 +211,7 @@ export default function Events({ initialEvents, serverCity }) {
           `${SEARCH_URL}?${searchQueryParams.toString()}`,
           {
             method: 'GET',
-            headers: API_HEADERS,
+            headers: withClientContext(API_HEADERS),
           },
         );
 
@@ -261,7 +262,7 @@ export default function Events({ initialEvents, serverCity }) {
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
-          headers: API_HEADERS,
+          headers: withClientContext(API_HEADERS),
           body: JSON.stringify(body),
         });
 
